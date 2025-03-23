@@ -8,6 +8,9 @@ import org.junit.runner.RunWith
 
 import org.junit.Assert.*
 
+// Can be run using ``gradle connectedAndroidTest``. Requires a running (emulated) Android device.
+// Not run as a GitHub action, and we doubt that it is necessary either way.
+
 /**
  * Instrumented test, which will execute on an Android device.
  *
