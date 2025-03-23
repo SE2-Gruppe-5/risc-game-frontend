@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("org.sonarqube") version "6.0.1.5171"
 }
 
 android {
@@ -43,4 +44,12 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "SE2-Gruppe-5_game-project-frontend")
+        property("sonar.organization", "se2-gruppe-5")
+        property("sonar.host.url", "https://sonarcloud.io")
+    }
 }
