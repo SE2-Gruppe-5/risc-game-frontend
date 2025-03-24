@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    jacoco
+    id("org.sonarqube") version "5.1.0.4882"
 }
 
 android {
@@ -27,11 +29,18 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+    testOptions {
+        unitTests {
+            all {
+                it.finalizedBy(tasks.named("jacocoTestReport"))
+            }
+        }
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "21"
     }
 }
 
@@ -43,4 +52,39 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn(tasks.named("testDebugUnitTest"))
+
+    reports {
+        xml.required = true
+        csv.required = false
+        html.required = false
+    }
+
+    val srcDirs = listOf(
+        "${project.projectDir}/src/main/java",
+        "${project.projectDir}/src/main/kotlin"
+    )
+    val classDirs = listOf(
+        "${project.layout.buildDirectory.get().asFile}/tmp/kotlin-classes/debug",
+        "${project.layout.buildDirectory.get().asFile}/intermediates/javac/debug"
+    )
+    val execData = listOf(
+        "${project.layout.buildDirectory.get().asFile}/jacoco/testDebugUnitTest.exec",
+        "${project.layout.buildDirectory.get().asFile}/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
+    )
+
+    sourceDirectories.setFrom(files(srcDirs))
+    classDirectories.setFrom(files(classDirs))
+    executionData.setFrom(files(execData))
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "SE2-Gruppe-5_game-project-frontend")
+        property("sonar.organization", "se2-gruppe-5")
+        property("sonar.host.url", "https://sonarcloud.io")
+    }
 }
