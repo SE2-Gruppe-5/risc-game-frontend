@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
     private suspend fun sendChat(message: String) {
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url("http://10.0.0.91:8080/chat/send")
+            .url(Constants.CHAT_URL)
             .post(MultipartBody.Builder()
                 .addFormDataPart("message", message)
                 .build())
