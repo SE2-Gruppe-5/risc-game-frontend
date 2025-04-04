@@ -45,6 +45,12 @@ jobs:
       - name: Run tests
         run: ./gradlew test
 
+      - name: Run Android Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 27
+          script: ./gradlew connectedDebugAndroidTest jacocoAndroidTestReport
+
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
