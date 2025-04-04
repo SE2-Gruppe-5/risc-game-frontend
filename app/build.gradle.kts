@@ -54,14 +54,18 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
     implementation(libs.core.ktx)
+
     testImplementation(libs.junit)
-    testImplementation(libs.mockito)
-    testImplementation(libs.mockito.kotlin)
-    testImplementation(libs.mockito.android)
-    testImplementation(libs.robolectric)
+    //testImplementation(libs.mockito)
+    //testImplementation(libs.mockito.kotlin)
+
+    //androidTestImplementation(libs.junit)
+    //androidTestImplementation(libs.mockito.android)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
+
+
 
 tasks.register<JacocoReport>("jacocoTestReport") {
     dependsOn(tasks.named("testDebugUnitTest"))
