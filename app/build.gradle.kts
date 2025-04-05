@@ -40,7 +40,7 @@ android {
     testOptions {
         unitTests {
             all {
-                it.finalizedBy(tasks.named("createDebugCoverageReport"))
+                //it.finalizedBy(tasks.named("createDebugCoverageReport"))
                 it.finalizedBy(tasks.named("jacocoTestReport"))
             }
         }
@@ -60,7 +60,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
     implementation(libs.core.ktx)
-
+    implementation(libs.dotenv.kotlin)
     testImplementation(libs.junit)
     //testImplementation(libs.mockito)
     //testImplementation(libs.mockito.kotlin)
@@ -74,8 +74,8 @@ dependencies {
 
 
 tasks.register<JacocoReport>("jacocoTestReport") {
-    dependsOn("testDebugUnitTest", "testReleaseUnitTest", "connectedDebugAndroidTest")
-    dependsOn("createDebugCoverageReport", "createDebugAndroidTestCoverageReport","createDebugUnitTestCoverageReport")
+    //dependsOn("testDebugUnitTest", "testReleaseUnitTest", "connectedDebugAndroidTest")
+    //dependsOn("createDebugCoverageReport", "createDebugAndroidTestCoverageReport","createDebugUnitTestCoverageReport")
 
     reports {
         xml.required = true
@@ -95,8 +95,16 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     val execData = files(
         fileTree("${project.layout.buildDirectory.get().asFile}/jacoco") { include("*.exec") },
         fileTree("${project.layout.buildDirectory.get().asFile}/outputs/code_coverage") { include("*.ec") },
-        fileTree("${project.layout.buildDirectory.get().asFile}/outputs/connected_android_test_additional_output") { include("*.ec") },
-        fileTree("${project.layout.buildDirectory.get().asFile}/outputs/unit_test_code_coverage") { include("*.exec") }
+        fileTree("${project.layout.buildDirectory.get().asFile}/outputs/connected_android_test_additional_output") {
+            include(
+                "*.ec"
+            )
+        },
+        fileTree("${project.layout.buildDirectory.get().asFile}/outputs/unit_test_code_coverage") {
+            include(
+                "*.exec"
+            )
+        }
     )
     //execData.files.forEach {
     //    println("Coverage file: ${it.absolutePath}")
@@ -111,8 +119,12 @@ sonar {
         property("sonar.projectKey", "SE2-Gruppe-5_game-project-frontend")
         property("sonar.organization", "se2-gruppe-5")
         property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.coverage.jacoco.xmlReportPaths",
-            "${project.layout.buildDirectory.get().asFile}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml," +
-            "${project.layout.buildDirectory.get().asFile}/outputs/code_coverage/androidTest/debug/connected/report.xml")
+        property(
+            "sonar.coverage.jacoco.xmlReportPaths", listOf(
+                "${project.layout.buildDirectory.get().asFile}/reports/coverage/androidTest/debug/connected/report.xml",
+                "${project.layout.buildDirectory.get().asFile}/reports/coverage/test/debug/report.xml",
+                "${project.layout.buildDirectory.get().asFile}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+            ).joinToString(",")
+        )
     }
 }

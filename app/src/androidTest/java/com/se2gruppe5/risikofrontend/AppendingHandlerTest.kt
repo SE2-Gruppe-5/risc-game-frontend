@@ -2,9 +2,11 @@ package com.se2gruppe5.risikofrontend
 
 import android.widget.TextView
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.launchdarkly.eventsource.MessageEvent
 import org.junit.Assert.assertTrue
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -15,6 +17,10 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class) //<-- Android VM Test
 class AppendingHandlerInstrumentedTest {
+
+    // Launches and closes activity automatically
+    @get:Rule
+    val activityRule = ActivityScenarioRule(MainActivity::class.java)
 
     /**
      * Tests whether incoming messages are being displayed in the Textview.
