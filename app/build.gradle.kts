@@ -71,7 +71,9 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 }
 
-
+tasks.withType<Test>().configureEach {
+    systemProperty("env_dir", "src/main/assets")
+}
 
 tasks.register<JacocoReport>("jacocoTestReport") {
     //dependsOn("testDebugUnitTest", "testReleaseUnitTest", "connectedDebugAndroidTest")
