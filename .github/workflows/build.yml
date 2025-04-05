@@ -42,14 +42,15 @@ jobs:
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x gradlew
 
+      - name: Run Unit Tests
+        run: ./gradlew test
+        
       - name: Run Android Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 28
-          script: ./gradlew connectedDebugAndroidTest createDebugCoverageReport
-
-      - name: Run tests
-        run: ./gradlew test     
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: ./gradlew connectedDebugAndroidTest
 
       - name: Build and analyze
         env:
