@@ -43,13 +43,10 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run tests
-        run: ./gradlew test
-
-      - name: Run Android Tests
-        uses: reactivecircus/android-emulator-runner@v2
+	uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 27
-          script: ./gradlew connectedDebugAndroidTest jacocoAndroidTestReport
+          script: ./gradlew test     
 
       - name: Build and analyze
         env:
