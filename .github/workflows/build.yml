@@ -48,6 +48,11 @@ jobs:
             ~/.android/adb*
           key: avd
 
+      - name: Allow using Kernel-based Virtual Machine (KVM)
+        # See recommendation at https://github.com/ReactiveCircus/android-emulator-runner
+        # This solution accomplishes the same but more concisely
+        run: sudo chmod 666 /dev/kvm
+
       - name: Create AVD Snapshot for Caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
