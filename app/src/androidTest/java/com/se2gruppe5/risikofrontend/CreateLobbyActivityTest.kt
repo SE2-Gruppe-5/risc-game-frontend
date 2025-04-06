@@ -1,6 +1,5 @@
 package com.se2gruppe5.risikofrontend
 
-
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -11,8 +10,14 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.Espresso.closeSoftKeyboard
+
+
+import com.se2gruppe5.risikofrontend.lobby.LobbyActivity
 import com.se2gruppe5.risikofrontend.lobby.CreateLobbyActivity
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
+
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -20,10 +25,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class MenuActivityTest {
-
+class CreateLobbyActivityTest {
     @get:Rule
-    val activityRule = ActivityScenarioRule(MenuActivity::class.java)
+    val activityRule = ActivityScenarioRule(CreateLobbyActivity::class.java)
 
     @Before
     fun setup() {
@@ -36,32 +40,25 @@ class MenuActivityTest {
     }
 
     @Test
-    fun testCreateLobbyButtonNavigatesToLobbyActivity() {
-        onView(withId(R.id.createLobbyBtn)).perform(click())
-        Intents.intended(hasComponent(CreateLobbyActivity::class.java.name))
-    }
-    @Test
-    fun testButtonsAreDisplayed() {
+    fun testUIElementsAreDisplayed() {
+        onView(withId(R.id.title)).check(matches(isDisplayed()))
+        onView(withId(R.id.yourname)).check(matches(isDisplayed()))
+        onView(withId(R.id.name_input)).check(matches(isDisplayed()))
         onView(withId(R.id.createLobbyBtn)).check(matches(isDisplayed()))
-        onView(withId(R.id.joinLobbyBtn)).check(matches(isDisplayed()))
-        onView(withId(R.id.tutorialBtn)).check(matches(isDisplayed()))
+        onView(withId(R.id.backBtn)).check(matches(isDisplayed()))
     }
-
     @Test
-    fun testButtonsAreClickable() {
+    fun testCreateLobbyButtonWorks() {
         onView(withId(R.id.createLobbyBtn)).check(matches(isClickable()))
-        onView(withId(R.id.joinLobbyBtn)).check(matches(isClickable()))
-        onView(withId(R.id.tutorialBtn)).check(matches(isClickable()))
+        onView(withId(R.id.createLobbyBtn)).perform(click())
+        Intents.intended(hasComponent(LobbyActivity::class.java.name))
     }
 
     @Test
-    fun testJoinLobbyButtonClickDoesNotCrash() {
-        onView(withId(R.id.joinLobbyBtn)).perform(click())
+    fun testBackButtonWorks() {
+        onView(withId(R.id.backBtn)).check(matches(isClickable()))
+        onView(withId(R.id.backBtn)).perform(click())
+        Intents.intended(hasComponent(MenuActivity::class.java.name))
     }
-
-    @Test
-    fun testTutorialButtonClickDoesNotCrash() {
-        onView(withId(R.id.tutorialBtn)).perform(click())
-    }
-
 }
+
