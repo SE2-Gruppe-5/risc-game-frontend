@@ -3,8 +3,11 @@ package com.se2gruppe5.risikofrontend
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.matcher.ViewMatchers.isClickable
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -37,4 +40,28 @@ class MenuActivityTest {
         onView(withId(R.id.createLobbyBtn)).perform(click())
         Intents.intended(hasComponent(LobbyActivity::class.java.name))
     }
+    @Test
+    fun testButtonsAreDisplayed() {
+        onView(withId(R.id.createLobbyBtn)).check(matches(isDisplayed()))
+        onView(withId(R.id.joinLobbyBtn)).check(matches(isDisplayed()))
+        onView(withId(R.id.tutorialBtn)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testButtonsAreClickable() {
+        onView(withId(R.id.createLobbyBtn)).check(matches(isClickable()))
+        onView(withId(R.id.joinLobbyBtn)).check(matches(isClickable()))
+        onView(withId(R.id.tutorialBtn)).check(matches(isClickable()))
+    }
+
+    @Test
+    fun testJoinLobbyButtonClickDoesNotCrash() {
+        onView(withId(R.id.joinLobbyBtn)).perform(click())
+    }
+
+    @Test
+    fun testTutorialButtonClickDoesNotCrash() {
+        onView(withId(R.id.tutorialBtn)).perform(click())
+    }
+
 }

@@ -3,8 +3,11 @@ package com.se2gruppe5.risikofrontend
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.matcher.ViewMatchers.isClickable
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -36,5 +39,28 @@ class LobbyActivityTest {
     fun testCreateLobbyButtonNavigatesToLobbyActivity() {
         onView(withId(R.id.backBtn)).perform(click())
         Intents.intended(hasComponent(MenuActivity::class.java.name))
+    }
+    @Test
+    fun testAllButtonsAreDisplayed() {
+        onView(withId(R.id.player1Btn)).check(matches(isDisplayed()))
+        onView(withId(R.id.player2Btn)).check(matches(isDisplayed()))
+        onView(withId(R.id.player3Btn)).check(matches(isDisplayed()))
+        onView(withId(R.id.player4Btn)).check(matches(isDisplayed()))
+        onView(withId(R.id.player5Btn)).check(matches(isDisplayed()))
+        onView(withId(R.id.player6Btn)).check(matches(isDisplayed()))
+        onView(withId(R.id.backBtn)).check(matches(isDisplayed()))
+        onView(withId(R.id.startGameBtn)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testAllButtonsAreClickable() {
+        onView(withId(R.id.player1Btn)).check(matches(isClickable()))
+        onView(withId(R.id.player2Btn)).check(matches(isClickable()))
+        onView(withId(R.id.player3Btn)).check(matches(isClickable()))
+        onView(withId(R.id.player4Btn)).check(matches(isClickable()))
+        onView(withId(R.id.player5Btn)).check(matches(isClickable()))
+        onView(withId(R.id.player6Btn)).check(matches(isClickable()))
+        onView(withId(R.id.backBtn)).check(matches(isClickable()))
+        onView(withId(R.id.startGameBtn)).check(matches(isClickable()))
     }
 }
