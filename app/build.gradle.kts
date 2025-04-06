@@ -71,15 +71,26 @@ dependencies {
     implementation(libs.material)
     implementation(libs.core.ktx)
     implementation(libs.dotenv.kotlin)
+    implementation(libs.androidx.junit.ktx)
+    implementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.espresso.intents)
     //--------------------------------------------------------
     testImplementation(libs.junit)
-    //testImplementation(libs.mockito)
-    //testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.robolectric)
     //--------------------------------------------------------
-    //androidTestImplementation(libs.junit)
-    //androidTestImplementation(libs.mockito.android)
+    androidTestImplementation(libs.junit)
+    androidTestImplementation(libs.mockito.android)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.espresso.intents)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.core)
+    androidTestImplementation(libs.androidx.truth)
+    androidTestUtil(libs.androidx.orchestrator)
+    
 }
 
 /*

@@ -1,14 +1,16 @@
 [versions]
-agp = "8.9.0"
-dotenvKotlin = "6.5.1"
+agp = "8.9.1"
+androidxCoreKtx = "1.6.1"
+core = "1.6.1"
 kotlin = "1.9.24"
 kotlinxCoroutines = "1.7.3"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
-mockito = "4.3.1"
+mockito = "5.14.2"
 mockitoKotlin = "4.0.0"
 mockitoAndroid = "4.3.1"
+orchestrator = "1.5.1"
 robolectric = "4.14.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
@@ -17,10 +19,17 @@ constraintlayout = "2.2.1"
 material = "1.12.0"
 okhttp = "4.12.0"
 okhttpeventsource = "2.5.0"
-coreKtxVersion = "1.6.1"
+coreKtxVersion = "1.6.2"
+junitKtx = "1.2.1"
+truth = "1.6.0"
 
 [libraries]
 dotenv-kotlin = { module = "io.github.cdimascio:dotenv-kotlin", version.ref = "dotenvKotlin" }
+androidx-core = { module = "androidx.test:core", version.ref = "core" }
+androidx-espresso-intents = { module = "androidx.test.espresso:espresso-intents", version.ref = "espressoCore" }
+androidx-orchestrator = { module = "androidx.test:orchestrator", version.ref = "orchestrator" }
+androidx-runner = { module = "androidx.test:runner", version.ref = "coreKtxVersion" }
+androidx-truth = { module = "androidx.test.ext:truth", version.ref = "truth" }
 kotlinxCoroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -37,7 +46,8 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttpeventsource = { group = "com.launchdarkly", name = "okhttp-eventsource", version.ref = "okhttpeventsource" }
-core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
+core-ktx = { group = "androidx.test", name = "core-ktx", version = "1.6.0" }
+androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 
 
 [plugins]
