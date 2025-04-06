@@ -13,8 +13,8 @@ class SSEClient {
         this.eventHandler = eventHandler
 
         eventSource = EventSource.Builder(eventHandler, URI.create(Constants.HOST + Constants.SSE_URL))
-            .connectTimeout(Duration.ofSeconds(10))
-            .backoffResetThreshold(Duration.ofSeconds(10))
+            .connectTimeout(Duration.ofSeconds(100))
+            .backoffResetThreshold(Duration.ofSeconds(100))
             .build()
         eventSource!!.start()
     }
