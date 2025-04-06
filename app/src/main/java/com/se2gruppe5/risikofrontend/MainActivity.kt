@@ -21,6 +21,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 
 class MainActivity : AppCompatActivity() {
+    val client = OkHttpClient()
+
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +52,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private suspend fun sendChat(message: String) {
-        val client = OkHttpClient()
         val request = Request.Builder()
             .url(Constants.CHAT_URL)
             .post(MultipartBody.Builder()
