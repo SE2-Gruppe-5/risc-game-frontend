@@ -20,19 +20,17 @@ class MenuActivity : AppCompatActivity() {
         val joinLobbyBtn = this.findViewById<Button>(R.id.joinLobbyBtn)
         val tutorialBtn = this.findViewById<Button>(R.id.tutorialBtn)
         createLobbyBtn.setOnClickListener({
-            Log.i("WEBCHAT", "Sending message: create")
+            Log.i("NAVIGATION", "Sending message: Creating Lobby")
             val intent = Intent(this, LobbyActivity::class.java)
             startActivity(intent)
         })
 
         joinLobbyBtn.setOnClickListener({
-            Log.i("WEBCHAT", "Sending message: join")
-
+            Log.i("NAVIGATION", "Sending message: Joining Lobby")
         })
 
         tutorialBtn.setOnClickListener({
-            Log.i("WEBCHAT", "Sending message: tuto")
-
+            Log.i("NAVIGATION", "Sending message: Entering Tutorial")
         })
     }
 

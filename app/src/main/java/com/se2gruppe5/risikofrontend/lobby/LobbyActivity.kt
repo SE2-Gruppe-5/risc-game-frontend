@@ -36,7 +36,7 @@ class LobbyActivity :AppCompatActivity() {
         val startGameBtn = this.findViewById<Button>(R.id.startGameBtn)
 
         backBtn.setOnClickListener({
-            Log.i("WEBCHAT", "Sending message: create")
+            Log.i("NAVIGATION", "Sending message: Quit lobby")
             val intent = Intent(this, MenuActivity::class.java)
             startActivity(intent)
         })
