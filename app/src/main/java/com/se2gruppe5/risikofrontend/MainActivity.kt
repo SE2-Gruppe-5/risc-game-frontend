@@ -22,10 +22,10 @@ import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.util.concurrent.TimeUnit
+import java.net.ConnectException
 
 class MainActivity : AppCompatActivity() {
-    val client = OkHttpClient.Builder().connectTimeout(1000, TimeUnit.SECONDS).build()
+    val client = OkHttpClient()
 
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,8 +71,13 @@ class MainActivity : AppCompatActivity() {
         val call = client.newCall(request)
         return withContext(Dispatchers.IO) {
             Log.i("WEBCHAT", "Executing request")
-            call.execute()
-            Log.i("WEBCHAT", "Executed request")
+            try {
+                call.execute()
+                Log.i("WEBCHAT", "Executed request")
+            }
+            catch (e: ConnectException) {
+                Log.i("WEBCHAT", "Connecting to host failed")
+            }
         }
     }
 }
