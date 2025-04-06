@@ -13,7 +13,8 @@ class Constants {
             directory = env_path
             filename = "env"
         }
+        val HOST: String = dotenv["HOST"]
         val SSE_URL: String = dotenv["SSE_URL"]
-        val CHAT_URL: String = dotenv["CHAT_URL"]
+        val CHAT_SEND_URL: String = dotenv["CHAT_SEND_URL"]
     }
 }

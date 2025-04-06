@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     private suspend fun sendChat(message: String) {
         val request = Request.Builder()
-            .url(Constants.CHAT_URL)
+            .url(Constants.HOST + Constants.CHAT_SEND_URL)
             .post(MultipartBody.Builder()
                 .addFormDataPart("message", message)
                 .build())

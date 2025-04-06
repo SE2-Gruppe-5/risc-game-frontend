@@ -1,2 +1,3 @@
-SSE_URL="https://10.0.0.91:8080/sse"
-CHAT_URL="https://10.0.0.91:8080/chat/send"
+HOST="https://10.0.0.91:8080"
+SSE_URL="/sse"
+CHAT_SEND_URL="/chat/send"
