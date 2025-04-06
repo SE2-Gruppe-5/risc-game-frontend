@@ -27,8 +27,11 @@
             android:exported="false" />
         <activity android:name=".lobby.CreateLobbyActivity"
             android:exported="false" />
+        <activity android:name=".lobby.JoinLobbyActivity"
+            android:exported="false" />
         <activity android:name=".game.GameActivity"
             android:exported="false" />
+
 
     </application>
 

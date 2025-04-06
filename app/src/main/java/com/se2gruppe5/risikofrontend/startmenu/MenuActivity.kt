@@ -8,6 +8,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.lobby.CreateLobbyActivity
+import com.se2gruppe5.risikofrontend.lobby.JoinLobbyActivity
 
 
 class MenuActivity : AppCompatActivity() {
@@ -27,6 +28,8 @@ class MenuActivity : AppCompatActivity() {
 
         joinLobbyBtn.setOnClickListener({
             Log.i("NAVIGATION", "Sending message: Joining Lobby")
+            val intent = Intent(this, JoinLobbyActivity::class.java)
+            startActivity(intent)
         })
 
         tutorialBtn.setOnClickListener({
