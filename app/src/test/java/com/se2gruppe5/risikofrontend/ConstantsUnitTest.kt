@@ -10,7 +10,7 @@ import java.net.URL
  */
 class ConstantsUnitTest {
 
-    fun isValidUrl(url: String): Boolean {
+    private fun isValidUrl(url: String): Boolean {
         return try {
             URL(url)
             true
@@ -18,17 +18,33 @@ class ConstantsUnitTest {
             false
         }
     }
+
+    private fun isValidEndpoint(endpoint: String): Boolean {
+        return endpoint.startsWith("/")
+    }
+
     @Test
-    fun instantiateTest(){
+    fun instantiateTest() {
         Constants()
     }
+
     @Test
-    fun checkConstantsExistAndValid(){
-        // Not Null ?
+    fun checkConstantsExist() {
+        assertNotNull(Constants.HOST)
         assertNotNull(Constants.SSE_URL)
-        assertNotNull(Constants.CHAT_URL)
+        assertNotNull(Constants.CHAT_SEND_URL)
+    }
+
+    @Test
+    fun checkHostValid() {
         // Valid URL ?
-        assertTrue(isValidUrl(Constants.SSE_URL))
-        assertTrue(isValidUrl(Constants.CHAT_URL))
+        assertTrue(isValidUrl(Constants.HOST))
+    }
+
+    @Test
+    fun checkEndpointsValid() {
+        // Starts with backslash ?
+        assertTrue(isValidEndpoint(Constants.SSE_URL))
+        assertTrue(isValidEndpoint(Constants.CHAT_SEND_URL))
     }
 }
