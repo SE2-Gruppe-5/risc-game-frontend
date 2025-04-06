@@ -7,7 +7,7 @@ import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.se2gruppe5.risikofrontend.R
-import com.se2gruppe5.risikofrontend.lobby.LobbyActivity
+import com.se2gruppe5.risikofrontend.lobby.CreateLobbyActivity
 
 
 class MenuActivity : AppCompatActivity() {
@@ -21,7 +21,7 @@ class MenuActivity : AppCompatActivity() {
         val tutorialBtn = this.findViewById<Button>(R.id.tutorialBtn)
         createLobbyBtn.setOnClickListener({
             Log.i("NAVIGATION", "Sending message: Creating Lobby")
-            val intent = Intent(this, LobbyActivity::class.java)
+            val intent = Intent(this, CreateLobbyActivity::class.java)
             startActivity(intent)
         })
 
