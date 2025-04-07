@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
             txtMessage.setText("")
         })
         menuButton.setOnClickListener({
-            Log.i("NAVIGATION", "Sending message: Going to Menu")
+            Log.i("NAVIGATION", "Going to Menu")
             val intent = Intent(this, MenuActivity::class.java)
             startActivity(intent)
         })
