@@ -64,26 +64,18 @@ dependencies {
     implementation(libs.kotlinxCoroutines)
     implementation(libs.okhttp)
     implementation(libs.okhttpeventsource)
-    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
-    implementation(libs.core.ktx)
     implementation(libs.dotenv.kotlin)
     //--------------------------------------------------------
     testImplementation(libs.junit)
-    testImplementation(libs.mockito)
-    testImplementation(libs.mockito.kotlin)
     //--------------------------------------------------------
     androidTestImplementation(libs.junit)
-    androidTestImplementation(libs.mockito.android)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.espresso.intents)
-    androidTestImplementation(libs.androidx.truth)
-    androidTestUtil(libs.androidx.orchestrator)
-    
 }
 
 /*

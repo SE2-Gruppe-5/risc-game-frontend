@@ -1,6 +1,5 @@
 [versions]
 agp = "8.9.1"
-androidxCoreKtx = "1.6.1"
 dotenvKotlin = "6.5.1"
 kotlin = "1.9.24"
 kotlinxCoroutines = "1.7.3"
@@ -18,7 +17,6 @@ constraintlayout = "2.2.1"
 material = "1.12.0"
 okhttp = "4.12.0"
 okhttpeventsource = "2.5.0"
-coreKtxVersion = "1.6.2"
 junitKtx = "1.2.1"
 truth = "1.6.0"
 
