@@ -55,8 +55,9 @@ class MenuActivityTest {
     }
 
     @Test
-    fun testJoinLobbyButtonClickDoesNotCrash() {
+    fun testJoinLobbyButtonNavigatesToActivity() {
         onView(withId(R.id.joinLobbyBtn)).perform(click())
+        Intents.intended(hasComponent(JoinLobbyActivity::class.java.name))
     }
 
     @Test
