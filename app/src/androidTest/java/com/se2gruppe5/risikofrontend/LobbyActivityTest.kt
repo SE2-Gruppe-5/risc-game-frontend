@@ -39,7 +39,7 @@ class LobbyActivityTest {
     }
 
     @Test
-    fun testBackButtonNavigatesToCreateLobbyActivity() {
+    fun testBackButtonNavigatesToMenuActivity() {
         onView(withId(R.id.backBtn)).perform(click())
         Intents.intended(hasComponent(MenuActivity::class.java.name))
     }
