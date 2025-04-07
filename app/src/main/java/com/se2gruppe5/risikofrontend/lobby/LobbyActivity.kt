@@ -11,6 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.GameActivity
+import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 
 class LobbyActivity :AppCompatActivity() {
 
@@ -43,28 +44,28 @@ class LobbyActivity :AppCompatActivity() {
         val player5Txt = this.findViewById<TextView>(R.id.namePlayer5)
         val player6Txt = this.findViewById<TextView>(R.id.namePlayer6)
 
-        findViewById<ImageButton>(R.id.player2Btn).visibility = View.GONE
-        findViewById<ImageButton>(R.id.player3Btn).visibility = View.GONE
-        findViewById<ImageButton>(R.id.player4Btn).visibility = View.GONE
-        findViewById<ImageButton>(R.id.player5Btn).visibility = View.GONE
-        findViewById<ImageButton>(R.id.player6Btn).visibility = View.GONE
+        player2Btn.visibility = View.GONE
+        player3Btn.visibility = View.GONE
+        player4Btn.visibility = View.GONE
+        player5Btn.visibility = View.GONE
+        player6Btn.visibility = View.GONE
 
-        findViewById<TextView>(R.id.namePlayer2).visibility = View.GONE
-        findViewById<TextView>(R.id.namePlayer3).visibility = View.GONE
-        findViewById<TextView>(R.id.namePlayer4).visibility = View.GONE
-        findViewById<TextView>(R.id.namePlayer5).visibility = View.GONE
-        findViewById<TextView>(R.id.namePlayer6).visibility = View.GONE
+        player2Txt.visibility = View.GONE
+        player3Txt.visibility = View.GONE
+        player4Txt.visibility = View.GONE
+        player5Txt.visibility = View.GONE
+        player6Txt.visibility = View.GONE
 
         val backBtn = this.findViewById<ImageButton>(R.id.backBtn)
         val startGameBtn = this.findViewById<Button>(R.id.startGameBtn)
 
         backBtn.setOnClickListener({
-            Log.i("NAVIGATION", "Sending message: Quit lobby")
-            val intent = Intent(this, CreateLobbyActivity::class.java)
+            Log.i("NAVIGATION", "Quit lobby")
+            val intent = Intent(this, MenuActivity::class.java)
             startActivity(intent)
         })
         startGameBtn.setOnClickListener({
-            Log.i("NAVIGATION", "Sending message: Starting Game")
+            Log.i("NAVIGATION", "Starting Game")
             val intent = Intent(this, GameActivity::class.java)
             startActivity(intent)
         })

@@ -19,7 +19,7 @@ class JoinLobbyActivity :AppCompatActivity() {
 
         val backBtn = this.findViewById<ImageButton>(R.id.backBtn)
         backBtn.setOnClickListener({
-            Log.i("NAVIGATION", "Sending message: Quit lobby")
+            Log.i("NAVIGATION", "Quit lobby")
             val intent = Intent(this, MenuActivity::class.java)
             startActivity(intent)
         })
@@ -30,7 +30,7 @@ class JoinLobbyActivity :AppCompatActivity() {
         joinBtn.setOnClickListener({
             val name = nameInput.text.toString()
             val joincode = joinInput.text.toString()
-            Log.i("NAVIGATION", "Sending message: Create lobby")
+            Log.i("NAVIGATION", "Create lobby")
             val intent = Intent(this, LobbyActivity::class.java)
             intent.putExtra("PLAYER_NAME", name)
             intent.putExtra("JOIN_CODE", joincode)

@@ -21,19 +21,19 @@ class MenuActivity : AppCompatActivity() {
         val joinLobbyBtn = this.findViewById<Button>(R.id.joinLobbyBtn)
         val tutorialBtn = this.findViewById<Button>(R.id.tutorialBtn)
         createLobbyBtn.setOnClickListener({
-            Log.i("NAVIGATION", "Sending message: Creating Lobby")
+            Log.i("NAVIGATION", "Creating Lobby")
             val intent = Intent(this, CreateLobbyActivity::class.java)
             startActivity(intent)
         })
 
         joinLobbyBtn.setOnClickListener({
-            Log.i("NAVIGATION", "Sending message: Joining Lobby")
+            Log.i("NAVIGATION", "Joining Lobby")
             val intent = Intent(this, JoinLobbyActivity::class.java)
             startActivity(intent)
         })
 
         tutorialBtn.setOnClickListener({
-            Log.i("NAVIGATION", "Sending message: Entering Tutorial")
+            Log.i("NAVIGATION", "Entering Tutorial")
         })
     }
 
