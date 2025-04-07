@@ -1,6 +1,8 @@
 package com.se2gruppe5.risikofrontend
 
 import android.annotation.SuppressLint
+import android.content.Intent
+
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -13,12 +15,14 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.launchdarkly.eventsource.EventHandler
 import com.launchdarkly.eventsource.MessageEvent
+import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.net.ConnectException
 
 class MainActivity : AppCompatActivity() {
     val client = OkHttpClient()
@@ -37,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         val textView = this.findViewById<TextView>(R.id.textView)
         val txtMessage = this.findViewById<EditText>(R.id.txtMessage)
         val button = this.findViewById<Button>(R.id.button)
+        val menuButton = this.findViewById<Button>(R.id.menuButton)
 
         run {
             SSEClient().init(AppendingHandler(textView))
@@ -48,6 +53,11 @@ class MainActivity : AppCompatActivity() {
                 sendChat(txtMessage.text.toString())
             }
             txtMessage.setText("")
+        })
+        menuButton.setOnClickListener({
+            Log.i("NAVIGATION", "Going to Menu")
+            val intent = Intent(this, MenuActivity::class.java)
+            startActivity(intent)
         })
     }
 
@@ -61,8 +71,13 @@ class MainActivity : AppCompatActivity() {
         val call = client.newCall(request)
         return withContext(Dispatchers.IO) {
             Log.i("WEBCHAT", "Executing request")
-            call.execute()
-            Log.i("WEBCHAT", "Executed request")
+            try {
+                call.execute()
+                Log.i("WEBCHAT", "Executed request")
+            }
+            catch (e: ConnectException) {
+                Log.i("WEBCHAT", "Connecting to host failed")
+            }
         }
     }
 }

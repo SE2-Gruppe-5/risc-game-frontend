@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lobby"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1E1E1E"
+    tools:context=".lobby.CreateLobbyActivity">
+
+    <!-- Back Button -->
+    <ImageButton
+        android:id="@+id/backBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp"
+        android:background="@null"
+        android:contentDescription="Back"
+        android:importantForAccessibility="no"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/back_button"
+        app:tint="@color/white" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="Create Lobby"
+        android:textColor="#FBFBFB"
+        android:textSize="36sp"
+        android:fontFamily="sans-serif-condensed-light"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="center" />
+
+    <!-- Label: Your Name -->
+    <TextView
+        android:id="@+id/yourname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Your Name"
+        android:textColor="#FBFBFB"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-condensed-light"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- EditText: Name Input -->
+    <EditText
+        android:id="@+id/name_input"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:hint="Your Name"
+        android:padding="16dp"
+        android:textColor="#000000"
+        android:textColorHint="#CCCCCC"
+        android:background="#CCCCCC"
+        app:layout_constraintTop_toBottomOf="@+id/yourname"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Create Button -->
+    <Button
+        android:id="@+id/createLobbyBtn"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginTop="48dp"
+        android:text="Create"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:backgroundTint="@color/button_color"
+        app:layout_constraintTop_toBottomOf="@id/name_input"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

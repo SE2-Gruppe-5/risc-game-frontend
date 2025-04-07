@@ -80,6 +80,7 @@ dependencies {
     //androidTestImplementation(libs.mockito.android)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.espresso.intents)
 }
 
 /*
