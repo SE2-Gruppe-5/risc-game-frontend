@@ -13,6 +13,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.se2gruppe5.risikofrontend.lobby.LobbyActivity
 import com.se2gruppe5.risikofrontend.lobby.CreateLobbyActivity
+import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
+import com.se2gruppe5.risikofrontend.game.GameActivity
 
 import org.junit.After
 import org.junit.Before
@@ -39,7 +41,7 @@ class LobbyActivityTest {
     @Test
     fun testBackButtonNavigatesToCreateLobbyActivity() {
         onView(withId(R.id.backBtn)).perform(click())
-        Intents.intended(hasComponent(CreateLobbyActivity::class.java.name))
+        Intents.intended(hasComponent(MenuActivity::class.java.name))
     }
     @Test
     fun testAllButtonsAreDisplayed() {
@@ -63,6 +65,11 @@ class LobbyActivityTest {
         onView(withId(R.id.player6Btn)).check(matches(isClickable()))
         onView(withId(R.id.backBtn)).check(matches(isClickable()))
         onView(withId(R.id.startGameBtn)).check(matches(isClickable()))
+    }
+        @Test
+    fun testStartGameButtonNavigatesToGame() {
+        onView(withId(R.id.startGameBtn)).perform(click())
+        Intents.intended(hasComponent(GameActivity::class.java.name))
     }
 
 
