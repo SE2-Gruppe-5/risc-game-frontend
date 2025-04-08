@@ -19,7 +19,9 @@ material = "1.12.0"
 okhttp = "4.12.0"
 okhttpeventsource = "2.5.0"
 coreKtxVersion = "1.6.1"
+
 uiautomator = "2.3.0"
+
 
 [libraries]
 dotenv-kotlin = { module = "io.github.cdimascio:dotenv-kotlin", version.ref = "dotenvKotlin" }
@@ -40,6 +42,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttpeventsource = { group = "com.launchdarkly", name = "okhttp-eventsource", version.ref = "okhttpeventsource" }
 core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
+
 androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
 
 
