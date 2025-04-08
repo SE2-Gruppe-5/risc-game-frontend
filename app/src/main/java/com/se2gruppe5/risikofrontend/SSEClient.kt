@@ -18,4 +18,8 @@ class SSEClient {
             .build()
         eventSource!!.start()
     }
+
+    fun close() {
+        eventSource?.close()
+    }
 }

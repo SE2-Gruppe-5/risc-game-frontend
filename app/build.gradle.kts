@@ -61,6 +61,12 @@ afterEvaluate { //afterEvaluate needed, as task is unknown in early stage
 }
 
 dependencies {
+
+    implementation(libs.androidx.uiautomator)
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.+")
+    testImplementation("org.mockito:mockito-core:5.+")
+    androidTestImplementation("org.mockito:mockito-android:5.+")
+    implementation("com.google.code.gson:gson:2.10.1")
     implementation(libs.kotlinxCoroutines)
     implementation(libs.okhttp)
     implementation(libs.okhttpeventsource)
@@ -71,6 +77,9 @@ dependencies {
     implementation(libs.material)
     implementation(libs.core.ktx)
     implementation(libs.dotenv.kotlin)
+    androidTestImplementation("androidx.test:core:1.5.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     //--------------------------------------------------------
     testImplementation(libs.junit)
     //testImplementation(libs.mockito)
