@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.launchdarkly.eventsource.EventHandler
 import com.launchdarkly.eventsource.MessageEvent
+import com.se2gruppe5.risikofrontend.network.NetworkClient
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,7 +26,7 @@ import okhttp3.Request
 import java.net.ConnectException
 
 class MainActivity : AppCompatActivity() {
-    val client = OkHttpClient()
+    val client = NetworkClient()
 
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         button.setOnClickListener({
             Log.i("WEBCHAT", "Sending message: " + txtMessage.text)
             lifecycleScope.launch {
-                sendChat(txtMessage.text.toString())
+                client.sendChat(txtMessage.text.toString())
             }
             txtMessage.setText("")
         })
@@ -58,29 +59,8 @@ class MainActivity : AppCompatActivity() {
             Log.i("NAVIGATION", "Going to Menu")
             val intent = Intent(this, MenuActivity::class.java)
             startActivity(intent)
-        })
-    }
-
-    private suspend fun sendChat(message: String) {
-        val request = Request.Builder()
-            .url(Constants.HOST + Constants.CHAT_SEND_URL)
-            .post(MultipartBody.Builder()
-                .addFormDataPart("message", message)
-                .build())
-            .build()
-        val call = client.newCall(request)
-        return withContext(Dispatchers.IO) {
-            Log.i("WEBCHAT", "Executing request")
-            try {
-                call.execute()
-                Log.i("WEBCHAT", "Executed request")
-            }
-            catch (e: ConnectException) {
-                Log.i("WEBCHAT", "Connecting to host failed")
-            }
         }
     }
-}
 
 class AppendingHandler(private val textView: TextView) : EventHandler {
     override fun onOpen() {
