@@ -15,6 +15,7 @@ class Constants {
         }
         val HOST: String = dotenv["HOST"]
         val SSE_URL: String = dotenv["SSE_URL"]
+        val SSE_URL_REJOIN: String = dotenv["SSE_URL_REJOIN"]
         val CHAT_SEND_URL: String = dotenv["CHAT_SEND_URL"]
     }
 }

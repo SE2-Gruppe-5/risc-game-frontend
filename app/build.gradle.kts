@@ -61,6 +61,7 @@ afterEvaluate { //afterEvaluate needed, as task is unknown in early stage
 }
 
 dependencies {
+    implementation(libs.gson)
     implementation(libs.kotlinxCoroutines)
     implementation(libs.okhttp)
     implementation(libs.okhttpeventsource)
