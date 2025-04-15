@@ -13,13 +13,27 @@ class NetworkClient {
     val client = OkHttpClient()
 
     suspend fun sendChat(message: String) {
-        val request = Request.Builder()
-            .url(Constants.HOST + Constants.CHAT_SEND_URL)
-            .post(MultipartBody.Builder()
-                .addFormDataPart("message", message)
-                .build())
-            .build()
+        val request = createRequest("POST", Constants.CHAT_SEND_URL,
+            "message", message)
         execute(request)
+    }
+
+    private fun createRequest(method: String, path: String, vararg params: String): Request {
+        val body = if (params.isNotEmpty()) {
+            MultipartBody.Builder()
+                .apply {
+                    for (i in params.indices step 2) {
+                        addFormDataPart(params[i], params[i + 1])
+                    }
+                }
+                .build()
+        } else {
+            null
+        }
+        return Request.Builder()
+            .url(Constants.HOST + path)
+            .method(method, body)
+            .build()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
