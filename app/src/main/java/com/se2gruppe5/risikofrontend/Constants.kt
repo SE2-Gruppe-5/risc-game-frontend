@@ -17,5 +17,9 @@ class Constants {
         val SSE_URL: String = dotenv["SSE_URL"]
         val SSE_URL_REJOIN: String = dotenv["SSE_URL_REJOIN"]
         val CHAT_SEND_URL: String = dotenv["CHAT_SEND_URL"]
+        val LOBBY_CREATE_URL: String = dotenv["LOBBY_CREATE_URL"]
+        val LOBBY_RESOURCE_URL: String = dotenv["LOBBY_RESOURCE_URL"]
+        val LOBBY_PLAYER_URL: String = dotenv["LOBBY_PLAYER_URL"]
+        val LOBBY_START_GAME_URL: String = dotenv["LOBBY_START_GAME_URL"]
     }
 }
