@@ -1,32 +1,54 @@
 package com.se2gruppe5.risikofrontend.game.board
 
+import org.json.JSONArray
+import org.json.JSONObject
 
-class Board {
-    private val territoryMap: Map<Int, Territory> = listOf(
-        Territory(1, Continent.RAM, Pair(100f, 100f), Pair(100f, 100f)),
-        Territory(2, Continent.RAM, Pair(100f, 200f), Pair(100f, 100f)),
-        Territory(3, Continent.RAM, Pair(100f, 300f), Pair(100f, 100f)),
-        Territory(4, Continent.RAM, Pair(100f, 400f), Pair(100f, 100f)),
-        Territory(5, Continent.RAM, Pair(100f, 500f), Pair(100f, 100f)),
-        Territory(6, Continent.RAM, Pair(100f, 600f), Pair(100f, 100f))
-    ).associateBy { it.id }
 
-    private val connections: List<Pair<Int, Int>> = listOf(
-        Pair(1, 2), Pair(2, 3), Pair(3, 4), Pair(4, 5), Pair(5, 6)
-    )
+class Board(jsonSrc: String) {
+    private val territories: List<Territory> = loadTerritories(jsonSrc)
 
-    init {
-        for(connection in connections) {
-            val territoryA: Territory = territoryMap[connection.first]!!
-            val territoryB: Territory = territoryMap[connection.second]!!
+    fun getTerritories(): List<Territory> {
+        return territories
+    }
+
+    private fun loadTerritories(jsonString: String): List<Territory> {
+        val json = JSONObject(jsonString)
+
+        val territories: HashMap<Int, Territory> = HashMap()
+        val jsonTerritories: JSONArray = json.getJSONArray("territories")
+
+        for(i in 0 until jsonTerritories.length()) {
+            val t: JSONObject = jsonTerritories.getJSONObject(i)
+
+            val id: Int = t.getInt("id")
+            val continent: Continent = Continent.get_by_name(t.getString("continent"))!!
+            val position: Pair<Float, Float> = xyJsonToFloatPair(t.getJSONObject("position"))
+            val size: Pair<Float, Float> = xyJsonToFloatPair(t.getJSONObject("size"))
+
+            territories[id] = Territory(id, continent, position, size)
+        }
+
+        val jsonConnections: JSONArray = json.getJSONArray("connections")
+        for(i in 0 until jsonConnections.length()) {
+            val connection: JSONArray = jsonConnections.getJSONArray(i)
+            if (connection.length() != 2) {
+                throw IllegalStateException("More than two territories share the same connection.")
+            }
+
+            val territoryA = territories[connection[0]]!!
+            val territoryB = territories[connection[1]]!!
 
             territoryA.connections.add(territoryB)
             territoryB.connections.add(territoryA)
         }
+
+        return territories.values.toList()
     }
 
-    fun getTerritories(): List<Territory> {
-        return territoryMap.values.toList()
+    private fun xyJsonToFloatPair(obj: JSONObject): Pair<Float, Float> {
+        val x = obj.getDouble("x").toFloat()
+        val y = obj.getDouble("y").toFloat()
+        return Pair(x, y)
     }
 }
 
@@ -53,7 +75,18 @@ enum class Continent {
     SOUTHBRIDGE,
     WIRELESS_MESH,
     EMBEDDED_CONTROLLER,
-    CMOS
+    CMOS;
+
+    companion object {
+        fun get_by_name(name: String): Continent? {
+            for(entry in Continent.entries) {
+                if(entry.name == name) {
+                    return entry
+                }
+            }
+            return null
+        }
+    }
 }
 
 data class Player(val name: String, val id: Int)

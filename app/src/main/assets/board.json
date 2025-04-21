@@ -1,0 +1,44 @@
+{
+  "territories": [
+    {
+      "id": 1,
+      "position": {"x": 100, "y": 100},
+      "size": {"x": 100, "y": 100},
+      "continent": "RAM"
+    },
+    {
+      "id": 2,
+      "position": {"x": 200, "y": 100},
+      "size": {"x": 100, "y": 100},
+      "continent": "RAM"
+    },
+    {
+      "id": 3,
+      "position": {"x": 300, "y": 100},
+      "size": {"x": 100, "y": 100},
+      "continent": "RAM"
+    },
+    {
+      "id": 4,
+      "position": {"x": 400, "y": 100},
+      "size": {"x": 100, "y": 100},
+      "continent": "RAM"
+    },
+    {
+      "id": 5,
+      "position": {"x": 500, "y": 100},
+      "size": {"x": 100, "y": 100},
+      "continent": "RAM"
+    },
+    {
+      "id": 6,
+      "position": {"x": 600, "y": 100},
+      "size": {"x": 100, "y": 100},
+      "continent": "RAM"
+    }
+  ],
+
+  "connections": [
+    [1, 2], [2, 3], [3, 4], [4, 5], [5, 6]
+  ]
+}
