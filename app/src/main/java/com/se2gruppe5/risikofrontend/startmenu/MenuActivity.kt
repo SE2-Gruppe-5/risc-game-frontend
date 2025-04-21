@@ -5,8 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.se2gruppe5.risikofrontend.R
+import com.se2gruppe5.risikofrontend.game.interactables.DiceButton
 import com.se2gruppe5.risikofrontend.lobby.CreateLobbyActivity
 import com.se2gruppe5.risikofrontend.lobby.JoinLobbyActivity
 
@@ -35,6 +38,11 @@ class MenuActivity : AppCompatActivity() {
         tutorialBtn.setOnClickListener({
             Log.i("NAVIGATION", "Entering Tutorial")
         })
+        //Placeholder
+        val diceBtn = this.findViewById<ImageButton>(R.id.diceButton)
+        val diceTxt = this.findViewById<TextView>(R.id.diceText)
+        DiceButton(diceBtn,diceTxt,1,6)
+        //-------------
     }
 
 

@@ -5,44 +5,41 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".startmenu.MenuActivity"
     android:background="@color/background"
-    >
+    tools:context=".startmenu.MenuActivity">
 
     <Button
         android:id="@+id/createLobbyBtn"
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/button_color"
         android:text="Create Lobby"
         app:layout_constraintBottom_toTopOf="@+id/joinLobbyBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:backgroundTint="@color/button_color"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/joinLobbyBtn"
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/button_color"
         android:text="Join Lobby"
         app:layout_constraintBottom_toTopOf="@+id/tutorialBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:backgroundTint="@color/button_color"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/tutorialBtn"
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/button_color"
         android:text="Tutorial"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:backgroundTint="@color/button_color"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/headline"
@@ -86,4 +83,31 @@
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.97" />
+
+    <ImageButton
+        android:id="@+id/diceButton"
+        android:layout_width="61dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="54dp"
+        android:layout_marginBottom="335dp"
+        android:accessibilityHeading="false"
+        android:contentDescription="Press me to roll the dice!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/dice_symbol" />
+
+    <TextView
+        android:id="@+id/diceText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="120dp"
+        android:text="Dice Button"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
