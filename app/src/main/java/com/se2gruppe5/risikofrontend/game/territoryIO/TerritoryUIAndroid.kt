@@ -2,8 +2,9 @@ package com.se2gruppe5.risikofrontend.game.territoryIO
 
 import android.widget.ImageButton
 import android.widget.TextView
+import com.se2gruppe5.risikofrontend.game.dataclasses.Territory
 
-class TerritoryUIAndroid(val bgColorRibbon: TextView, val textContent: TextView, val imgBTN: ImageButton) : ITerritoryUIWrapper{
+class TerritoryUIAndroid(override val territory: Territory, val bgColorRibbon: TextView, val textContent: TextView, val imgBTN: ImageButton) : ITerritoryUIWrapper{
 
 
     override fun highlightSelected() {
@@ -18,9 +19,9 @@ class TerritoryUIAndroid(val bgColorRibbon: TextView, val textContent: TextView,
         TODO("Not yet implemented")
     }
 
-    override fun subscribeLambda(lambda: () -> Unit) {
+    override fun subscribeLambda(lambda: (ITerritoryUIWrapper) -> Unit) {
         imgBTN.setOnClickListener {
-            lambda()
+            lambda(this)
         }
     }
 

@@ -2,6 +2,7 @@ package com.se2gruppe5.risikofrontend.startmenu
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -9,9 +10,10 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.toColorInt
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.territoryIO.ITerritoryUIWrapper
-import com.se2gruppe5.risikofrontend.game.territoryIO.TerritoryManager
+import com.se2gruppe5.risikofrontend.game.territoryManagement.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.territoryIO.TerritoryUIAndroid
 import com.se2gruppe5.risikofrontend.game.dataclasses.Player
 import com.se2gruppe5.risikofrontend.game.dataclasses.Territory
@@ -56,22 +58,30 @@ class MenuActivity : AppCompatActivity() {
         val p1 = Player(1,"Markus", Color.rgb(255,100,0))
         val p2 = Player(2, "Leo", Color.rgb(0,100,255))
 
+        val t1 = Territory(1)
         val t1_txt = this.findViewById<TextView>(R.id.territoryAtext)
         val t1_btn = this.findViewById<ImageButton>(R.id.territoryAbtn)
-        val t1_vis: ITerritoryUIWrapper = TerritoryUIAndroid(t1_txt,t1_txt,t1_btn)
-        val t1 = Territory(1, t1_vis)
+        val t1_vis: ITerritoryUIWrapper = TerritoryUIAndroid(t1, t1_txt,t1_txt,t1_btn)
 
+        val t2 = Territory(2)
         val t2_txt = this.findViewById<TextView>(R.id.territoryBtext)
         val t2_btn = this.findViewById<ImageButton>(R.id.territoryBbtn)
-        val t2_vis: ITerritoryUIWrapper = TerritoryUIAndroid(t2_txt,t2_txt,t2_btn)
-        val t2 = Territory(2, t2_vis)
+        val t2_vis: ITerritoryUIWrapper = TerritoryUIAndroid(t2,t2_txt,t2_txt,t2_btn)
 
-        val territoryManager: TerritoryManager = TerritoryManager()
-        territoryManager.addTerritory(t1)
-        territoryManager.addTerritory(t2)
+        val territoryManager: TerritoryManager = TerritoryManager(p1)
+        territoryManager.addTerritory(t1_vis)
+        territoryManager.addTerritory(t2_vis)
 
-        territoryManager.assignOwner(t1,p1)
-        territoryManager.assignOwner(t2,p2)
+        territoryManager.assignOwner(t1_vis,p1)
+        territoryManager.assignOwner(t2_vis,p2)
+
+
+        this.findViewById<ImageButton>(R.id.goattack).setOnClickListener({
+            territoryManager.enterSelectMode()
+            territoryManager.enterAttackMode()
+            this.findViewById<ImageButton>(R.id.goattack).backgroundTintList = ColorStateList.valueOf(Color.RED)
+        })
+
 
         //-------------
     }
