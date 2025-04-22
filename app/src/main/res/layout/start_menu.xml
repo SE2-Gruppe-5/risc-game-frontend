@@ -8,6 +8,58 @@
     android:background="@color/background"
     tools:context=".startmenu.MenuActivity">
 
+    <FrameLayout
+        android:id="@+id/territoryA"
+        android:layout_width="124dp"
+        android:layout_height="105dp"
+        android:layout_marginStart="24dp"
+        android:contentDescription="Territory A"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/territoryAbtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="Press to select Territory"
+            app:srcCompat="@android:drawable/btn_star" />
+
+        <TextView
+            android:id="@+id/territoryAtext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#504949"
+            android:text="Territory A"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/territoryB"
+        android:layout_width="124dp"
+        android:layout_height="105dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="128dp"
+        android:contentDescription="Territory B"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/territoryBbtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="Press to select Territory"
+            app:srcCompat="@android:drawable/btn_star" />
+
+        <TextView
+            android:id="@+id/territoryBtext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#646883"
+            android:text="Territory B"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF" />
+    </FrameLayout>
     <Button
         android:id="@+id/createLobbyBtn"
         android:layout_width="250dp"
