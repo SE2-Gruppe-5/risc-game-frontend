@@ -68,7 +68,8 @@ class MenuActivity : AppCompatActivity() {
         val t2_btn = this.findViewById<ImageButton>(R.id.territoryBbtn)
         val t2_vis: ITerritoryUIWrapper = TerritoryUIAndroid(t2,t2_txt,t2_txt,t2_btn)
 
-        val territoryManager: TerritoryManager = TerritoryManager(p1)
+        TerritoryManager.init(p1)
+        val territoryManager = TerritoryManager.get()
         territoryManager.addTerritory(t1_vis)
         territoryManager.addTerritory(t2_vis)
 

@@ -1,20 +1,33 @@
 package com.se2gruppe5.risikofrontend.game.territoryManagement
 
-import android.graphics.Color
 import com.se2gruppe5.risikofrontend.game.dataclasses.Player
-import com.se2gruppe5.risikofrontend.game.dataclasses.Territory
 import com.se2gruppe5.risikofrontend.game.territoryIO.ITerritoryUIWrapper
 
-class TerritoryManager(val me: Player) {
+class TerritoryManager private constructor(val me: Player) {
+    companion object {
+
+        private lateinit var singleton: TerritoryManager
+
+        fun init(me: Player) {
+            if (!::singleton.isInitialized) {
+                singleton = TerritoryManager(me)
+            }
+        }
+
+        fun get(): TerritoryManager {
+            return singleton
+        }
+    }
 
     private var isInSelectMode: Boolean = false
     private var isInAttackMode: Boolean = false
     private val territoryList: MutableList<ITerritoryUIWrapper> = mutableListOf()
 
-    fun enterAttackMode(){
+    fun enterAttackMode() {
         isInAttackMode = true
     }
-    fun exitAttackMode(){
+
+    fun exitAttackMode() {
         isInAttackMode = false
     }
 
@@ -88,5 +101,4 @@ class TerritoryManager(val me: Player) {
             throw IllegalArgumentException("Player ID invalid.")
         }
     }
-
 }
