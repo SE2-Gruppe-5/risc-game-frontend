@@ -7,9 +7,10 @@ coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 
-#mockito = "5.14.2"
-#mockitoKotlin = "4.0.0"
-#mockitoAndroid = "4.3.1"
+mockito = "5.14.2"
+mockitoInline = "5.2.0"
+mockitoKotlin = "4.0.0"
+mockitoAndroid = "4.3.1"
 
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
@@ -29,9 +30,10 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 
-#mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
-#mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
-#mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoAndroid" }
+mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
+mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoAndroid" }
 
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }

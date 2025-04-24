@@ -73,8 +73,9 @@ dependencies {
     implementation(libs.dotenv.kotlin)
     //--------------------------------------------------------
     testImplementation(libs.junit)
-    //testImplementation(libs.mockito)
-    //testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito.inline)
     //--------------------------------------------------------
     //androidTestImplementation(libs.junit)
     //androidTestImplementation(libs.mockito.android)
