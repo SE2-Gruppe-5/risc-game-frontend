@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.graphics.toColorInt
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 
 /**
@@ -18,7 +19,7 @@ class TerritoryVisualAndroid(
     val outline: View
 ) : ITerritoryVisual {
 
-    init{
+    init {
         setHighlightSelected(false)
     }
 
@@ -31,11 +32,19 @@ class TerritoryVisualAndroid(
     }
 
     override fun changeColor(color: Int) {
-        bgColorRibbon.setBackgroundColor(color)
+        try {
+            bgColorRibbon.setBackgroundColor(color)
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Failed to apply color: $color")
+        }
     }
 
-    override fun changeStat() {
-        TODO("Not yet implemented")
+    override fun changeStat(stat: Int) {
+        if (stat <= 0 || stat > 99) {
+            throw IllegalArgumentException("Invalid territory stat: $stat")
+        }
+        territoryRecord.stat = stat
+        textContent.text = stat.toString()
     }
 
     override fun clickSubscription(lambda: (ITerritoryVisual) -> Unit) {
@@ -49,9 +58,9 @@ class TerritoryVisualAndroid(
         imgBTN.getLocationInWindow(location)
         var x = location[0].toFloat()
         var y = location[1].toFloat()
-        if (center){
-            x += imgBTN.width/2
-            y += imgBTN.height/2
+        if (center) {
+            x += imgBTN.width / 2
+            y += imgBTN.height / 2
         }
         return Pair(x, y)
     }

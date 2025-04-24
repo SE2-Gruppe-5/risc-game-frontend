@@ -10,7 +10,7 @@ class Dice1d6Cheating: IDice{
     override fun roll(): Int {
         var rdmNumber = Random.Default.nextInt(1, 6 + 1)
         var rdmNew = 0
-        for (i in 1..2) {
+        repeat(2) { //Best of 3
             rdmNew = Random.Default.nextInt(1, 6 + 1)
             if(rdmNew>rdmNumber){
                 rdmNumber = rdmNew

@@ -101,10 +101,12 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
                     it.getCoordinatesAsFloat(true),
                     t.getCoordinatesAsFloat(true))
             }
-            updateSelected(t)
             if (isInAttackMode) {
                 attackTerritory(t)
+                t.changeStat(22)
+                prevSelTerritory?.changeStat(11)
             }
+            updateSelected(t)
         }
     }
 

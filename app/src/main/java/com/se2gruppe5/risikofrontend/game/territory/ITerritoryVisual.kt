@@ -25,8 +25,9 @@ interface ITerritoryVisual {
 
     /**
      * Changes the Stats of the territory
+     * (for now only "stats" meaning # of troops)
      */
-    fun changeStat() //todo implement as needed
+    fun changeStat(stat: Int)
 
     /**
      * Observer-Pattern like system
