@@ -6,18 +6,20 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColorInt
 import com.se2gruppe5.risikofrontend.R
-import com.se2gruppe5.risikofrontend.game.territoryIO.ITerritoryUIWrapper
-import com.se2gruppe5.risikofrontend.game.territoryManagement.TerritoryManager
-import com.se2gruppe5.risikofrontend.game.territoryIO.TerritoryUIAndroid
-import com.se2gruppe5.risikofrontend.game.dataclasses.Player
-import com.se2gruppe5.risikofrontend.game.dataclasses.Territory
-import com.se2gruppe5.risikofrontend.game.interactables.DiceButton
+import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
+import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
+import com.se2gruppe5.risikofrontend.game.territory.TerritoryVisualAndroid
+import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dice.DiceButton
+import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.lobby.CreateLobbyActivity
 import com.se2gruppe5.risikofrontend.lobby.JoinLobbyActivity
 
@@ -51,24 +53,30 @@ class MenuActivity : AppCompatActivity() {
         val diceBtn = this.findViewById<ImageButton>(R.id.diceButton)
         val diceTxt = this.findViewById<TextView>(R.id.diceText)
         DiceButton(diceBtn,diceTxt,1,6)
-        //-------------
 
-        //Playerholder
+        val p1 = PlayerRecord(1,"Markus", Color.rgb(255,100,0))
+        val p2 = PlayerRecord(2, "Leo", Color.rgb(0,100,255))
 
-        val p1 = Player(1,"Markus", Color.rgb(255,100,0))
-        val p2 = Player(2, "Leo", Color.rgb(0,100,255))
-
-        val t1 = Territory(1)
+        val t1 = TerritoryRecord(1)
         val t1_txt = this.findViewById<TextView>(R.id.territoryAtext)
         val t1_btn = this.findViewById<ImageButton>(R.id.territoryAbtn)
-        val t1_vis: ITerritoryUIWrapper = TerritoryUIAndroid(t1, t1_txt,t1_txt,t1_btn)
+        val t1_vis: ITerritoryVisual = TerritoryVisualAndroid(t1, t1_txt,t1_txt,t1_btn)
 
-        val t2 = Territory(2)
+        val t2 = TerritoryRecord(2)
         val t2_txt = this.findViewById<TextView>(R.id.territoryBtext)
         val t2_btn = this.findViewById<ImageButton>(R.id.territoryBbtn)
-        val t2_vis: ITerritoryUIWrapper = TerritoryUIAndroid(t2,t2_txt,t2_txt,t2_btn)
+        val t2_vis: ITerritoryVisual = TerritoryVisualAndroid(t2,t2_txt,t2_txt,t2_btn)
 
-        TerritoryManager.init(p1)
+        val pointingArrow = PointingArrowAndroid(this,"#FF0000".toColorInt(),15f)
+        pointingArrow.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        findViewById<ViewGroup>(R.id.main).addView(pointingArrow)
+
+        pointingArrow.setCoordinates(Pair(0f,0f),Pair(250f,250f))
+
+        TerritoryManager.init(p1,pointingArrow)
         val territoryManager = TerritoryManager.get()
         territoryManager.addTerritory(t1_vis)
         territoryManager.addTerritory(t2_vis)
@@ -82,6 +90,7 @@ class MenuActivity : AppCompatActivity() {
             territoryManager.enterAttackMode()
             this.findViewById<ImageButton>(R.id.goattack).backgroundTintList = ColorStateList.valueOf(Color.RED)
         })
+
 
 
         //-------------

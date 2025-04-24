@@ -1,4 +1,4 @@
-package com.se2gruppe5.risikofrontend.game.interactables
+package com.se2gruppe5.risikofrontend.game.dice
 
 import android.widget.ImageButton
 import android.widget.TextView

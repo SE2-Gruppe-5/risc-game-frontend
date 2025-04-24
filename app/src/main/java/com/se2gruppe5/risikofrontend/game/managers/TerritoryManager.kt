@@ -1,0 +1,115 @@
+package com.se2gruppe5.risikofrontend.game.managers
+
+import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
+import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
+
+class TerritoryManager private constructor(val me: PlayerRecord, private val pointingArrow: PointingArrowAndroid) {
+    companion object {
+
+        private lateinit var singleton: TerritoryManager
+
+        fun init(me: PlayerRecord, pointingArrow: PointingArrowAndroid) {
+            if (!::singleton.isInitialized) {
+                singleton = TerritoryManager(me, pointingArrow)
+            }
+        }
+
+        fun get(): TerritoryManager {
+            return singleton
+        }
+    }
+
+    private var isInSelectMode: Boolean = false
+    private var isInAttackMode: Boolean = false
+    private val territoryList: MutableList<ITerritoryVisual> = mutableListOf()
+    private var prevSelTerritory: ITerritoryVisual? = null;
+
+    fun enterAttackMode() {
+        isInAttackMode = true
+    }
+
+    fun exitAttackMode() {
+        isInAttackMode = false
+    }
+
+    fun enterSelectMode() {
+        isInSelectMode = true
+    }
+
+    fun exitSelectMode() {
+        isInSelectMode = false
+    }
+
+    fun addTerritory(t: ITerritoryVisual) {
+        checkTerritoryValid(t)
+        if (territoryList.contains(t)) {
+            throw IllegalArgumentException("Territory (object) already in list.")
+
+        }
+        if (territoryList.any { it.territoryRecord.id == t.territoryRecord.id }) {
+            throw IllegalArgumentException("Territory ID duplicated!?")
+        }
+
+        territoryList.add(t)
+        addLambdaSubscriptions(t)
+
+    }
+
+
+    //This should never be needed
+    fun removeTerritory(t: ITerritoryVisual) {
+        checkTerritoryValid(t)
+        if (!territoryList.contains(t)) {
+            throw IllegalArgumentException("Territory not in list.")
+        }
+        territoryList.remove(t)
+
+    }
+
+    /**
+     * let player=null be "no owner"
+     */
+    fun assignOwner(t: ITerritoryVisual, playerRecord: PlayerRecord?) {
+        checkTerritoryValid(t)
+        if (playerRecord != null) {
+            checkPlayerValid(playerRecord)
+            t.changeColor(playerRecord.color)
+        }
+        t.territoryRecord.owner = playerRecord
+    }
+
+    private fun addLambdaSubscriptions(t: ITerritoryVisual) {
+        checkTerritoryValid(t)
+        t.clickSubscription(::hasBeenClicked) //Observer design pattern //todo comment
+    }
+
+    private fun hasBeenClicked(t: ITerritoryVisual) {
+        //todo: this is a very basic implementation,
+        // as soon as we settled on a GameManager (or something similar that imposes the
+        // games core gameplay loop 'phases'); this needs to be overhauled!
+        if (isInSelectMode) {
+            prevSelTerritory?.let {
+                pointingArrow.setCoordinates(
+                    it.getCoordinatesAsFloat(),
+                    t.getCoordinatesAsFloat())
+            }
+            prevSelTerritory = t
+            if (isInAttackMode) {
+                t.changeColor(me.color)
+            }
+        }
+    }
+
+    private fun checkTerritoryValid(t: ITerritoryVisual) {
+        if (t.territoryRecord.id <= 0) {
+            throw IllegalArgumentException("Territory ID invalid.")
+        }
+    }
+
+    private fun checkPlayerValid(playerRecord: PlayerRecord) {
+        if (playerRecord.id <= 0) {
+            throw IllegalArgumentException("Player ID invalid.")
+        }
+    }
+}
