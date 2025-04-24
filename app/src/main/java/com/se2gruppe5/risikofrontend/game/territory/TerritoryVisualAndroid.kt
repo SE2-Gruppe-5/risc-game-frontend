@@ -4,10 +4,13 @@ import android.widget.ImageButton
 import android.widget.TextView
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 
+/**
+ * Concrete Implementation of Territory Visualization for Android
+ * [!] For method comments please refer to Interface
+ */
 class TerritoryVisualAndroid(override val territoryRecord: TerritoryRecord, val bgColorRibbon: TextView, val textContent: TextView, val imgBTN: ImageButton) : ITerritoryVisual{
 
-
-    override fun highlightSelected() {
+    override fun setHighlightSelected(b: Boolean) {
         TODO("Not yet implemented")
     }
 
