@@ -7,6 +7,9 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.graphics.toColorInt
 import kotlin.Float
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
 
 /**
  * Custom View Class for painting pointing arrows
@@ -19,7 +22,7 @@ class PointingArrowAndroid : View, IPointingArrowUI{
 
     private val arrowPaint = Paint()
     private var startPoint: Pair<Float, Float> = Pair(0f, 0f)
-    private var endPoint: Pair<Float, Float> = Pair(10f, 10f)
+    private var endPoint: Pair<Float, Float> = Pair(0f, 0f)
 
 
     //Secondary Constructor for in-code initialization
@@ -44,10 +47,13 @@ class PointingArrowAndroid : View, IPointingArrowUI{
         arrowPaint.strokeWidth = strokeWidth
         arrowPaint.style = Paint.Style.STROKE
         arrowPaint.isAntiAlias = true
+        arrowPaint.strokeCap = Paint.Cap.ROUND
+        arrowPaint.strokeJoin = Paint.Join.ROUND
     }
 
     override fun setColor(color: Int) {
         arrowPaint.color = color
+        redraw()
     }
 
     override fun setWidth(width: Float) {
@@ -55,16 +61,22 @@ class PointingArrowAndroid : View, IPointingArrowUI{
             throw IllegalArgumentException("Invalid stroke-width")
         }
         arrowPaint.strokeWidth = width
+        redraw()
     }
 
     override fun setCoordinates(startPoint: Pair<Float, Float>, endPoint: Pair<Float, Float>) {
-        //todo assert wether values are valid maybe(?)
+        //todo assert whether values are valid maybe(?)
         this.startPoint = startPoint
         this.endPoint = endPoint
+        redraw()
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        // Early return - don't draw if selection is the same (i.e double click on same territory)
+        if(startPoint==endPoint){
+            return
+        }
         canvas.drawLine(
             startPoint.first,
             startPoint.second,
@@ -74,8 +86,27 @@ class PointingArrowAndroid : View, IPointingArrowUI{
 
             arrowPaint
         )
+        drawFancyArrowHead(canvas,50f,35f)
+
+    }
+    private fun redraw(){
         invalidate() //<- force redraw
-        //todo: arrow head or fancy arc?
+    }
+    private fun drawFancyArrowHead(canvas: Canvas, arrowHeadLength: Float, arrowHeadAngle: Float){
+        val arrowDirectionAngle = atan2(
+            (endPoint.second - startPoint.second).toDouble(),
+            (endPoint.first - startPoint.first).toDouble()
+        )
+        val angleOffset = Math.toRadians(arrowHeadAngle.toDouble())
+
+        val x0 = endPoint.first - arrowHeadLength * cos(arrowDirectionAngle - angleOffset).toFloat()
+        val y0 = endPoint.second - arrowHeadLength * sin(arrowDirectionAngle - angleOffset).toFloat()
+        val x1 = endPoint.first - arrowHeadLength * cos(arrowDirectionAngle + angleOffset).toFloat()
+        val y1 = endPoint.second - arrowHeadLength * sin(arrowDirectionAngle + angleOffset).toFloat()
+
+        canvas.drawLine(endPoint.first, endPoint.second, x0, y0, arrowPaint)
+        canvas.drawLine(endPoint.first, endPoint.second, x1, y1, arrowPaint)
+
     }
 
 }
