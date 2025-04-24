@@ -44,10 +44,16 @@ class TerritoryVisualAndroid(
         }
     }
 
-    override fun getCoordinatesAsFloat(): Pair<Float, Float> {
+    override fun getCoordinatesAsFloat(center: Boolean): Pair<Float, Float> {
         val location = IntArray(2)
         imgBTN.getLocationInWindow(location)
-        return Pair(location[0].toFloat(), location[1].toFloat())
+        var x = location[0].toFloat()
+        var y = location[1].toFloat()
+        if (center){
+            x += imgBTN.width/2
+            y += imgBTN.height/2
+        }
+        return Pair(x, y)
     }
 
 }

@@ -19,7 +19,7 @@ import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.territory.TerritoryVisualAndroid
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
-import com.se2gruppe5.risikofrontend.game.dice.Dice1d6Generic
+import com.se2gruppe5.risikofrontend.game.dice.dies.Dice1d6Generic
 import com.se2gruppe5.risikofrontend.game.dice.DiceVisualAndroid
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.lobby.CreateLobbyActivity
@@ -79,9 +79,7 @@ class MenuActivity : AppCompatActivity() {
         )
         findViewById<ViewGroup>(R.id.main).addView(pointingArrow)
 
-        pointingArrow.setCoordinates(Pair(0f,0f),Pair(250f,250f))
-
-        TerritoryManager.init(p1,pointingArrow)
+        TerritoryManager.init(p2,pointingArrow)
         val territoryManager = TerritoryManager.get()
         territoryManager.addTerritory(t1_vis)
         territoryManager.addTerritory(t2_vis)

@@ -1,6 +1,6 @@
 package com.se2gruppe5.risikofrontend.game.dice
 
-import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
+import com.se2gruppe5.risikofrontend.game.dice.dies.IDice
 
 interface IDiceVisual {
     /**

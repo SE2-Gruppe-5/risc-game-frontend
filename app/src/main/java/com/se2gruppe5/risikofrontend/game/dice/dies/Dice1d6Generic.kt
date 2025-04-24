@@ -1,4 +1,4 @@
-package com.se2gruppe5.risikofrontend.game.dice
+package com.se2gruppe5.risikofrontend.game.dice.dies
 
 import kotlin.random.Random
 

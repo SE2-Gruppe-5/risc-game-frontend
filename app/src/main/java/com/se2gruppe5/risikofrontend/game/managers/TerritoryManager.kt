@@ -83,6 +83,8 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
         t.territoryRecord.owner = playerRecord
     }
 
+
+
     private fun addLambdaSubscriptions(t: ITerritoryVisual) {
         checkTerritoryValid(t)
         t.clickSubscription(::hasBeenClicked) //Observer design pattern //todo comment
@@ -92,17 +94,22 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
         //todo: this is a very basic implementation,
         // as soon as we settled on a GameManager (or something similar that imposes the
         // games core gameplay loop 'phases'); this needs to be overhauled!
+        // (also don't allow clicking on self!)
         if (isInSelectMode) {
             prevSelTerritory?.let {
                 pointingArrow.setCoordinates(
-                    it.getCoordinatesAsFloat(),
-                    t.getCoordinatesAsFloat())
+                    it.getCoordinatesAsFloat(true),
+                    t.getCoordinatesAsFloat(true))
             }
             updateSelected(t)
             if (isInAttackMode) {
-                t.changeColor(me.color)
+                attackTerritory(t)
             }
         }
+    }
+
+    private fun attackTerritory(t: ITerritoryVisual){
+        t.changeColor(me.color)
     }
 
     private fun updateSelected(t: ITerritoryVisual){

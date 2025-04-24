@@ -31,6 +31,7 @@ interface ITerritoryVisual {
     /**
      * Observer-Pattern like system
      * Pass a functions that is to be executed upon the underlying Territory getting clicked on
+     * Multiple may be provided
      * (This is to abstract away the onClickListener implementation detail)
      * A reference to whom called the function is passed as a param
      *
@@ -42,5 +43,5 @@ interface ITerritoryVisual {
     /**
      * Returns the Territory's local center coordinates (in respect to window not screen)
      */
-    fun getCoordinatesAsFloat(): Pair<Float, Float>
+    fun getCoordinatesAsFloat(center: Boolean): Pair<Float, Float>
 }
