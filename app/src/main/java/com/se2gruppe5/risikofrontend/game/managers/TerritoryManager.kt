@@ -41,6 +41,10 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
         isInSelectMode = false
     }
 
+    fun clearSelection(){
+        prevSelTerritory = null;
+    }
+
     fun addTerritory(t: ITerritoryVisual) {
         checkTerritoryValid(t)
         if (territoryList.contains(t)) {
@@ -94,11 +98,17 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
                     it.getCoordinatesAsFloat(),
                     t.getCoordinatesAsFloat())
             }
-            prevSelTerritory = t
+            updateSelected(t)
             if (isInAttackMode) {
                 t.changeColor(me.color)
             }
         }
+    }
+
+    private fun updateSelected(t: ITerritoryVisual){
+        prevSelTerritory?.setHighlightSelected(false)
+        prevSelTerritory = t
+        t.setHighlightSelected(true)
     }
 
     private fun checkTerritoryValid(t: ITerritoryVisual) {

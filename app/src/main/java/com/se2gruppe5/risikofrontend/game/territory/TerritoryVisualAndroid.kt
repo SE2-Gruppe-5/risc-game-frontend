@@ -1,5 +1,7 @@
 package com.se2gruppe5.risikofrontend.game.territory
 
+import android.graphics.Color
+import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
@@ -8,10 +10,24 @@ import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
  * Concrete Implementation of Territory Visualization for Android
  * [!] For method comments please refer to Interface
  */
-class TerritoryVisualAndroid(override val territoryRecord: TerritoryRecord, val bgColorRibbon: TextView, val textContent: TextView, val imgBTN: ImageButton) : ITerritoryVisual{
+class TerritoryVisualAndroid(
+    override val territoryRecord: TerritoryRecord,
+    val bgColorRibbon: TextView,
+    val textContent: TextView,
+    val imgBTN: ImageButton,
+    val outline: View
+) : ITerritoryVisual {
+
+    init{
+        setHighlightSelected(false)
+    }
 
     override fun setHighlightSelected(b: Boolean) {
-        TODO("Not yet implemented")
+        if (b) {
+            outline.setBackgroundColor(Color.argb(0, 255, 255, 0))
+        } else {
+            outline.setBackgroundColor(Color.argb(0, 255, 255, 0))
+        }
     }
 
     override fun changeColor(color: Int) {
@@ -31,7 +47,7 @@ class TerritoryVisualAndroid(override val territoryRecord: TerritoryRecord, val 
     override fun getCoordinatesAsFloat(): Pair<Float, Float> {
         val location = IntArray(2)
         imgBTN.getLocationInWindow(location)
-        return Pair(location[0].toFloat(),location[1].toFloat())
+        return Pair(location[0].toFloat(), location[1].toFloat())
     }
 
 }

@@ -6,6 +6,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
@@ -60,12 +61,14 @@ class MenuActivity : AppCompatActivity() {
         val t1 = TerritoryRecord(1)
         val t1_txt = this.findViewById<TextView>(R.id.territoryAtext)
         val t1_btn = this.findViewById<ImageButton>(R.id.territoryAbtn)
-        val t1_vis: ITerritoryVisual = TerritoryVisualAndroid(t1, t1_txt,t1_txt,t1_btn)
+        val t1_outline = this.findViewById<View>(R.id.territoryAoutline)
+        val t1_vis: ITerritoryVisual = TerritoryVisualAndroid(t1, t1_txt,t1_txt,t1_btn,t1_outline)
 
         val t2 = TerritoryRecord(2)
         val t2_txt = this.findViewById<TextView>(R.id.territoryBtext)
         val t2_btn = this.findViewById<ImageButton>(R.id.territoryBbtn)
-        val t2_vis: ITerritoryVisual = TerritoryVisualAndroid(t2,t2_txt,t2_txt,t2_btn)
+        val t2_outline = this.findViewById<View>(R.id.territoryBoutline)
+        val t2_vis: ITerritoryVisual = TerritoryVisualAndroid(t2,t2_txt,t2_txt,t2_btn,t2_outline)
 
         val pointingArrow = PointingArrowAndroid(this,"#FF0000".toColorInt(),15f)
         pointingArrow.layoutParams = ViewGroup.LayoutParams(

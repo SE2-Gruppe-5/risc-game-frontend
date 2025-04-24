@@ -17,6 +17,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+        <View
+            android:id="@+id/territoryAoutline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF00"
+            android:clickable="false" />
+
         <ImageButton
             android:id="@+id/territoryAbtn"
             android:layout_width="match_parent"
@@ -43,6 +50,13 @@
         android:contentDescription="Territory B"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+
+        <View
+            android:id="@+id/territoryBoutline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF00"
+            android:clickable="false" />
 
         <ImageButton
             android:id="@+id/territoryBbtn"
