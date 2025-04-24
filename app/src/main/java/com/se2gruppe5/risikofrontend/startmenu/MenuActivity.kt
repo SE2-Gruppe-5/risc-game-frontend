@@ -19,7 +19,8 @@ import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.territory.TerritoryVisualAndroid
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
-import com.se2gruppe5.risikofrontend.game.dice.DiceButton
+import com.se2gruppe5.risikofrontend.game.dice.Dice1d6Generic
+import com.se2gruppe5.risikofrontend.game.dice.DiceVisualAndroid
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.lobby.CreateLobbyActivity
 import com.se2gruppe5.risikofrontend.lobby.JoinLobbyActivity
@@ -53,7 +54,8 @@ class MenuActivity : AppCompatActivity() {
         //Placeholder
         val diceBtn = this.findViewById<ImageButton>(R.id.diceButton)
         val diceTxt = this.findViewById<TextView>(R.id.diceText)
-        DiceButton(diceBtn,diceTxt,1,6)
+        val diceVisualAndroid = DiceVisualAndroid(Dice1d6Generic(),diceBtn,diceTxt)
+        diceVisualAndroid.clickSubscription {it.roll()}
 
         val p1 = PlayerRecord(1,"Markus", Color.rgb(255,100,0))
         val p2 = PlayerRecord(2, "Leo", Color.rgb(0,100,255))
