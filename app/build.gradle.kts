@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     jacoco
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.1.20"
     id("org.sonarqube") version "5.1.0.4882"
 }
 
@@ -62,6 +63,7 @@ afterEvaluate { //afterEvaluate needed, as task is unknown in early stage
 
 dependencies {
     implementation(libs.kotlinxCoroutines)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp)
     implementation(libs.okhttpeventsource)
     implementation(libs.androidx.core.ktx)

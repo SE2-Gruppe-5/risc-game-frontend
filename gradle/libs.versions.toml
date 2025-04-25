@@ -15,6 +15,7 @@ espressoCore = "3.6.1"
 appcompat = "1.7.0"
 activity = "1.10.1"
 constraintlayout = "2.2.1"
+kotlinxSerializationJson = "1.8.0"
 material = "1.12.0"
 okhttp = "4.12.0"
 okhttpeventsource = "2.5.0"
@@ -25,6 +26,7 @@ junitKtx = "1.2.1"
 dotenv-kotlin = { module = "io.github.cdimascio:dotenv-kotlin", version.ref = "dotenvKotlin" }
 androidx-espresso-intents = { module = "androidx.test.espresso:espresso-intents", version.ref = "espressoCore" }
 kotlinxCoroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
