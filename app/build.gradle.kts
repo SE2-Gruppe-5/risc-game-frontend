@@ -62,10 +62,10 @@ afterEvaluate { //afterEvaluate needed, as task is unknown in early stage
 }
 
 dependencies {
-    implementation(libs.kotlinxCoroutines)
+    implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp)
-    implementation(libs.okhttpeventsource)
+    implementation(libs.okhttp.eventsource)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity)
