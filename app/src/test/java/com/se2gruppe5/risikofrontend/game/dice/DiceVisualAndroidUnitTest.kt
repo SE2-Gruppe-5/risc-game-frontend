@@ -24,6 +24,7 @@ class DiceVisualAndroidUnitTest(private val diceRollParam: Int) {
     lateinit var imgBTNMock: ImageButton
     lateinit var txtViewMock: TextView
 
+    //Parameterized Test Data
     companion object {
         @JvmStatic
         @Parameterized.Parameters
