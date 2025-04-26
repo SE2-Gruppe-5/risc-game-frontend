@@ -4,7 +4,7 @@ import android.graphics.Color
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.core.graphics.toColorInt
+import androidx.annotation.ColorInt
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 
 /**
@@ -16,18 +16,20 @@ class TerritoryVisualAndroid(
     val bgColorRibbon: TextView,
     val textContent: TextView,
     val imgBTN: ImageButton,
-    val outline: View
+    val outline: View,
 ) : ITerritoryVisual {
 
     init {
         setHighlightSelected(false)
     }
+    val backgroundHighlightColor: Int = Color.argb(255, 255, 255, 0)
+    val backgroundNoHighlightColor: Int = Color.argb(0, 255, 255, 0)
 
     override fun setHighlightSelected(b: Boolean) {
         if (b) {
-            outline.setBackgroundColor(Color.argb(0, 255, 255, 0))
+            outline.setBackgroundColor(backgroundHighlightColor)
         } else {
-            outline.setBackgroundColor(Color.argb(0, 255, 255, 0))
+            outline.setBackgroundColor(backgroundNoHighlightColor)
         }
     }
 
@@ -35,7 +37,7 @@ class TerritoryVisualAndroid(
         try {
             bgColorRibbon.setBackgroundColor(color)
         } catch (e: Exception) {
-            throw IllegalArgumentException("Failed to apply color: $color")
+            throw IllegalArgumentException("Failed to apply color: $color", e)
         }
     }
 
