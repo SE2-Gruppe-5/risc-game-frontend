@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.launchdarkly.eventsource.EventHandler
 import com.launchdarkly.eventsource.MessageEvent
+import com.se2gruppe5.risikofrontend.Popup.ContinentDialog
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,6 +44,13 @@ class MainActivity : AppCompatActivity() {
         val button = this.findViewById<Button>(R.id.button)
         val menuButton = this.findViewById<Button>(R.id.menuButton)
 
+
+        val btnShowContinents = findViewById<Button>(R.id.btnShowContinents)
+        btnShowContinents.setOnClickListener {
+            val continentDialog = ContinentDialog()
+            continentDialog.show(supportFragmentManager, "ContinentDialog")
+            Log.d("MainActivity", "Kontinente Button clicked")
+        }
         run {
             SSEClient().init(AppendingHandler(textView))
         }
