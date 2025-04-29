@@ -1,5 +1,5 @@
 [versions]
-agp = "8.9.1"
+agp = "8.9.2"
 dotenvKotlin = "6.5.1"
 kotlin = "1.9.24"
 kotlinxCoroutines = "1.7.3"
