@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 
 import android.os.Bundle
+import android.os.StrictMode
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -25,6 +26,12 @@ class MainActivity : AppCompatActivity() {
     val client = NetworkClient()
     var sseService: SseClientService? = null
     val serviceConnection = constructServiceConnection { service ->
+        // Allow network calls on main thread for testing purposes
+        // GitHub Actions Android emulator action with stricter policy fails otherwise
+        StrictMode.setThreadPolicy(
+            StrictMode.ThreadPolicy.Builder().permitAll().build()
+        )
+
         sseService = service
         if (service != null) {
             setupHandlers(service)
