@@ -7,16 +7,25 @@ import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 class TerritoryManager private constructor(val me: PlayerRecord, private val pointingArrow: PointingArrowAndroid) {
     companion object {
 
-        private lateinit var singleton: TerritoryManager
+        //Intentionally not using non-nullable lateInit var for unit test reset funcitonality
+        private var singleton: TerritoryManager? = null
 
         fun init(me: PlayerRecord, pointingArrow: PointingArrowAndroid) {
-            if (!::singleton.isInitialized) {
+            if (singleton==null) {
                 singleton = TerritoryManager(me, pointingArrow)
             }
         }
 
+        //Throws when null [i.e. .get() before .init()]
         fun get(): TerritoryManager {
-            return singleton
+            return checkNotNull(singleton) { "TerritoryManager must be .init() first!" }
+        }
+
+        /**
+         * Do not call this. It is for unit tests only.
+         */
+        fun unitTestReset(){
+            singleton=null
         }
     }
 

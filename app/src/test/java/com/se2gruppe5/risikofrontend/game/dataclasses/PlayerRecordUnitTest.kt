@@ -8,7 +8,7 @@ import org.junit.Assert.*
 class PlayerRecordUnitTest {
     @Test
     fun inst() {
-        val p = PlayerRecord(1,"a","#FFFFFF".toColorInt())
+        val p = PlayerRecord(1,"a",0xFFFFFF)
         assertNotNull(p)
     }
 }

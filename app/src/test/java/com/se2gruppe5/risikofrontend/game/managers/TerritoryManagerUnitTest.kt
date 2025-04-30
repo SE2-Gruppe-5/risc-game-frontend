@@ -27,19 +27,11 @@ class TerritoryManagerTestUnitTest {
         pointingArrow = mock()
         mePlayerRecord = PlayerRecord(123, "TestPlayer", 0xFF00FF)
 
-        //Singleton
-        try {
-            val companion = TerritoryManager.Companion
-            val field = companion.javaClass.getDeclaredField("singleton")
-            field.isAccessible = true
-            field.set(companion, null)
-        } catch (_: Exception) {
-
-        }
+        TerritoryManager.unitTestReset()
     }
 
     //TerritoryManager-Singleton should throw Error when singleton has not been initialized
-    @Test(expected = UninitializedPropertyAccessException::class)
+    @Test(expected = IllegalStateException::class)
     fun getBeforeInitThrowsTest() {
         TerritoryManager.get()
     }
@@ -63,6 +55,7 @@ class TerritoryManagerTestUnitTest {
 
     @Test
     fun meReferenceSetCorrect() {
+        TerritoryManager.init(mePlayerRecord,pointingArrow)
         assertEquals(mePlayerRecord, TerritoryManager.get().me)
     }
 
