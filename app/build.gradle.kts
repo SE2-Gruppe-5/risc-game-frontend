@@ -141,5 +141,8 @@ sonar {
                 "${project.layout.buildDirectory.get().asFile}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
             ).joinToString(",")
         )
+        property("sonar.coverage.exclusions", listOf(
+            "**/network/**"
+        ).joinToString(","))
     }
 }
