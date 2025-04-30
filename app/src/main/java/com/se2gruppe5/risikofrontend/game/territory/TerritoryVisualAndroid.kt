@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.annotation.ColorInt
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 
 /**

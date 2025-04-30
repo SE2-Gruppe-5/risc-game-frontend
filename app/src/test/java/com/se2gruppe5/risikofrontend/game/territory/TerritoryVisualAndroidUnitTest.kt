@@ -135,7 +135,6 @@ class TerritoryVisualAndroidUnitTest(
         //Note: Color passed here doesn't matter, mocked bgColorRibbon always throws error
     }
 
-    //Test if changeStat changes Stat
     @Test
     fun changeStatTest() {
         territoryVisualAndroid.changeStat(statPTestData)
@@ -143,13 +142,11 @@ class TerritoryVisualAndroidUnitTest(
         verify(textContentMock).text = statPTestData.toString()
     }
 
-    //Test lower limit of allowed stat
     @Test(expected = IllegalArgumentException::class)
     fun changeStatTestTooLowTest() {
         territoryVisualAndroid.changeStat(0)
     }
 
-    //Test upper limit of allowed stat
     @Test(expected = IllegalArgumentException::class)
     fun changeStatTestTooHighTest() {
         territoryVisualAndroid.changeStat(100)

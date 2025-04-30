@@ -20,10 +20,13 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
         }
     }
 
+    val noOwnerColor: Int = 0x999999 //todo abstract away?
+
     private var isInSelectMode: Boolean = false
     private var isInAttackMode: Boolean = false
     private val territoryList: MutableList<ITerritoryVisual> = mutableListOf()
     private var prevSelTerritory: ITerritoryVisual? = null;
+
 
     fun enterAttackMode() {
         isInAttackMode = true
@@ -45,21 +48,21 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
         prevSelTerritory = null;
     }
 
+
     fun addTerritory(t: ITerritoryVisual) {
         checkTerritoryValid(t)
         if (territoryList.contains(t)) {
             throw IllegalArgumentException("Territory (object) already in list.")
 
         }
-        if (territoryList.any { it.territoryRecord.id == t.territoryRecord.id }) {
-            throw IllegalArgumentException("Territory ID duplicated!?")
+        if (territoryList.any { it.territoryRecord.id == t.territoryRecord.id }) { //just in case
+            throw IllegalArgumentException("Territory ID duplicated [!?] how is this even possible")
         }
 
         territoryList.add(t)
         addLambdaSubscriptions(t)
 
     }
-
 
     //This should never be needed
     fun removeTerritory(t: ITerritoryVisual) {
@@ -68,17 +71,25 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
             throw IllegalArgumentException("Territory not in list.")
         }
         territoryList.remove(t)
+    }
 
+    //fun removeTerritoryById(id: Int){} //todo if needed (but this being needed would indicate a smell
+
+    fun containsTerritory(t: ITerritoryVisual): Boolean {
+        checkTerritoryValid(t)
+        return (territoryList.contains(t))
     }
 
     /**
-     * let player=null be "no owner"
+     * let player:=null semantically mean "no owner"
      */
     fun assignOwner(t: ITerritoryVisual, playerRecord: PlayerRecord?) {
         checkTerritoryValid(t)
         if (playerRecord != null) {
             checkPlayerValid(playerRecord)
             t.changeColor(playerRecord.color)
+        }else{
+            t.changeColor(noOwnerColor)
         }
         t.territoryRecord.owner = playerRecord
     }
@@ -87,7 +98,7 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
 
     private fun addLambdaSubscriptions(t: ITerritoryVisual) {
         checkTerritoryValid(t)
-        t.clickSubscription(::hasBeenClicked) //Observer design pattern //todo comment
+        t.clickSubscription(::hasBeenClicked) //Observer design pattern
     }
 
     private fun hasBeenClicked(t: ITerritoryVisual) {
