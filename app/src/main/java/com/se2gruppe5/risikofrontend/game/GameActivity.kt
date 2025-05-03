@@ -57,7 +57,8 @@ class GameActivity : AppCompatActivity() {
         )
         findViewById<ViewGroup>(R.id.main).addView(pointingArrow)
 
-        TerritoryManager.init(p1, pointingArrow)
+        val troopCountText = findViewById<TextView>(R.id.troopCountGlobalText)
+        TerritoryManager.init(p1, pointingArrow, this, troopCountText)
         val territoryManager = TerritoryManager.get()
         territoryManager.addTerritory(t1_vis)
         territoryManager.addTerritory(t2_vis)

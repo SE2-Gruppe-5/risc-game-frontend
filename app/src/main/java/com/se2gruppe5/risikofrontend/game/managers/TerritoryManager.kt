@@ -1,18 +1,21 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
+import android.content.Context
+import android.widget.TextView
+import com.se2gruppe5.risikofrontend.TroopCount.TroopCountManager
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 
-class TerritoryManager private constructor(val me: PlayerRecord, private val pointingArrow: PointingArrowAndroid) {
+class TerritoryManager private constructor(val me: PlayerRecord, private val pointingArrow: PointingArrowAndroid, private val context: Context, private val troopTextView: TextView) {
     companion object {
 
         //Intentionally not using non-nullable lateInit var for unit test reset funcitonality
         private var singleton: TerritoryManager? = null
 
-        fun init(me: PlayerRecord, pointingArrow: PointingArrowAndroid) {
+        fun init(me: PlayerRecord, pointingArrow: PointingArrowAndroid, context: Context, troopTextView: TextView) {
             if (singleton==null) {
-                singleton = TerritoryManager(me, pointingArrow)
+                singleton = TerritoryManager(me, pointingArrow, context, troopTextView)
             }
         }
 
@@ -127,6 +130,8 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
                 prevSelTerritory?.changeStat(11)
             }
             updateSelected(t)
+
+            TroopCountManager(context).fetchTroopsForTerritory(t.territoryRecord.id, troopTextView)
         }
     }
 
