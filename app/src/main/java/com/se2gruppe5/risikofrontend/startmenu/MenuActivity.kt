@@ -32,12 +32,7 @@ class MenuActivity : AppCompatActivity() {
             val intent = Intent(this, JoinLobbyActivity::class.java)
             startActivity(intent)
         })
-
-        val debugBTN = this.findViewById<Button>(R.id.debugme)
-        debugBTN.setOnClickListener({
-            val intent = Intent(this, GameActivity::class.java)
-            startActivity(intent)
-        })
+        
 
         tutorialBtn.setOnClickListener({
             Log.i("NAVIGATION", "Entering Tutorial")
