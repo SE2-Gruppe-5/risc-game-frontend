@@ -5,44 +5,51 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".startmenu.MenuActivity"
     android:background="@color/background"
-    >
+    tools:context=".startmenu.MenuActivity">
 
     <Button
         android:id="@+id/createLobbyBtn"
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/button_color"
         android:text="Create Lobby"
         app:layout_constraintBottom_toTopOf="@+id/joinLobbyBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:backgroundTint="@color/button_color"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/joinLobbyBtn"
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/button_color"
         android:text="Join Lobby"
         app:layout_constraintBottom_toTopOf="@+id/tutorialBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:backgroundTint="@color/button_color"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/tutorialBtn"
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/button_color"
         android:text="Tutorial"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:backgroundTint="@color/button_color"/>
+        app:layout_constraintStart_toStartOf="parent" />
+    <Button
+        android:id="@+id/debugme"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/button_color"
+        android:text="Take me to game for testing"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/headline"
@@ -86,4 +93,6 @@
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.97" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

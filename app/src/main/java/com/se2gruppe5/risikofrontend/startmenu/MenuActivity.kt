@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.se2gruppe5.risikofrontend.R
+import com.se2gruppe5.risikofrontend.game.GameActivity
 import com.se2gruppe5.risikofrontend.lobby.CreateLobbyActivity
 import com.se2gruppe5.risikofrontend.lobby.JoinLobbyActivity
 
@@ -32,9 +33,16 @@ class MenuActivity : AppCompatActivity() {
             startActivity(intent)
         })
 
+        val debugBTN = this.findViewById<Button>(R.id.debugme)
+        debugBTN.setOnClickListener({
+            val intent = Intent(this, GameActivity::class.java)
+            startActivity(intent)
+        })
+
         tutorialBtn.setOnClickListener({
             Log.i("NAVIGATION", "Entering Tutorial")
         })
+
     }
 
 
