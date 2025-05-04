@@ -32,7 +32,7 @@ class MenuActivity : AppCompatActivity() {
             val intent = Intent(this, JoinLobbyActivity::class.java)
             startActivity(intent)
         })
-        
+
 
         tutorialBtn.setOnClickListener({
             Log.i("NAVIGATION", "Entering Tutorial")

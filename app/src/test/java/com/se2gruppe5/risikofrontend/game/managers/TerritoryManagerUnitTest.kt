@@ -199,7 +199,7 @@ class TerritoryManagerTestUnitTest {
         manager.assignOwner(t, initialOwner)
         manager.assignOwner(t, null)
         //No-owner color set called?
-        verify(t).changeColor(manager.noOwnerColor)
+        verify(t).changeColor(TERRITORY_NO_OWNER_COLOR)
         //No owner assigned?
         assertNull(record.owner)
     }

@@ -10,10 +10,10 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
-const val strokeColor: Int = 0xFF0000
-const val strokeWidth: Float = 10f
-const val arrowHeadLength: Float = 50f
-const val arrowHeadAngle: Float = 35f
+const val POINTING_ARROW_STROKE_COLOR: Int = 0xFF0000
+const val POINTING_ARROW_STROKE_WIDTH: Float = 10f
+const val POINTING_ARROW_ARROWHEAD_LENGTH: Float = 50f
+const val POINTING_ARROW_ARROWHEAD_ANGLE: Float = 35f
 
 /**
  * Custom View Class for painting pointing arrows
@@ -34,12 +34,12 @@ class PointingArrowAndroid : View, IPointingArrowUI{
         init(color, strokeWidth)
     }
     constructor(context: Context) : super(context) {
-        init(strokeColor, strokeWidth)
+        init(POINTING_ARROW_STROKE_COLOR, POINTING_ARROW_STROKE_WIDTH)
     }
 
     //Secondary Constructor for XML initialization
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        init(strokeColor, strokeWidth)
+        init(POINTING_ARROW_STROKE_COLOR, POINTING_ARROW_STROKE_WIDTH)
         //XML-initialization cannot pass parameters programmatically, will always be default
         //Certainly possible via some properties... But certainly not worth it
     }
@@ -101,12 +101,12 @@ class PointingArrowAndroid : View, IPointingArrowUI{
             (endPoint.second - startPoint.second).toDouble(),
             (endPoint.first - startPoint.first).toDouble()
         )
-        val angleOffset = Math.toRadians(arrowHeadAngle.toDouble())
+        val angleOffset = Math.toRadians(POINTING_ARROW_ARROWHEAD_ANGLE.toDouble())
 
-        val x0 = endPoint.first - arrowHeadLength * cos(arrowDirectionAngle - angleOffset).toFloat()
-        val y0 = endPoint.second - arrowHeadLength * sin(arrowDirectionAngle - angleOffset).toFloat()
-        val x1 = endPoint.first - arrowHeadLength * cos(arrowDirectionAngle + angleOffset).toFloat()
-        val y1 = endPoint.second - arrowHeadLength * sin(arrowDirectionAngle + angleOffset).toFloat()
+        val x0 = endPoint.first - POINTING_ARROW_ARROWHEAD_LENGTH * cos(arrowDirectionAngle - angleOffset).toFloat()
+        val y0 = endPoint.second - POINTING_ARROW_ARROWHEAD_LENGTH * sin(arrowDirectionAngle - angleOffset).toFloat()
+        val x1 = endPoint.first - POINTING_ARROW_ARROWHEAD_LENGTH * cos(arrowDirectionAngle + angleOffset).toFloat()
+        val y1 = endPoint.second - POINTING_ARROW_ARROWHEAD_LENGTH * sin(arrowDirectionAngle + angleOffset).toFloat()
 
         canvas.drawLine(endPoint.first, endPoint.second, x0, y0, arrowPaint)
         canvas.drawLine(endPoint.first, endPoint.second, x1, y1, arrowPaint)
