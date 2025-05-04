@@ -7,7 +7,8 @@ import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.se2gruppe5.risikofrontend.R
-import com.se2gruppe5.risikofrontend.lobby.LobbyActivity
+import com.se2gruppe5.risikofrontend.lobby.CreateLobbyActivity
+import com.se2gruppe5.risikofrontend.lobby.JoinLobbyActivity
 
 
 class MenuActivity : AppCompatActivity() {
@@ -20,19 +21,19 @@ class MenuActivity : AppCompatActivity() {
         val joinLobbyBtn = this.findViewById<Button>(R.id.joinLobbyBtn)
         val tutorialBtn = this.findViewById<Button>(R.id.tutorialBtn)
         createLobbyBtn.setOnClickListener({
-            Log.i("WEBCHAT", "Sending message: create")
-            val intent = Intent(this, LobbyActivity::class.java)
+            Log.i("NAVIGATION", "Creating Lobby")
+            val intent = Intent(this, CreateLobbyActivity::class.java)
             startActivity(intent)
         })
 
         joinLobbyBtn.setOnClickListener({
-            Log.i("WEBCHAT", "Sending message: join")
-
+            Log.i("NAVIGATION", "Joining Lobby")
+            val intent = Intent(this, JoinLobbyActivity::class.java)
+            startActivity(intent)
         })
 
         tutorialBtn.setOnClickListener({
-            Log.i("WEBCHAT", "Sending message: tuto")
-
+            Log.i("NAVIGATION", "Entering Tutorial")
         })
     }
 
