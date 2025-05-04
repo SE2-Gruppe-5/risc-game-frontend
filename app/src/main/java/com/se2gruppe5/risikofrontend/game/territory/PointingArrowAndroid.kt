@@ -5,11 +5,15 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import androidx.core.graphics.toColorInt
 import kotlin.Float
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
+
+const val strokeColor: Int = 0xFF0000
+const val strokeWidth: Float = 10f
+const val arrowHeadLength: Float = 50f
+const val arrowHeadAngle: Float = 35f
 
 /**
  * Custom View Class for painting pointing arrows
@@ -30,12 +34,12 @@ class PointingArrowAndroid : View, IPointingArrowUI{
         init(color, strokeWidth)
     }
     constructor(context: Context) : super(context) {
-        init("#FF0000".toColorInt(), 10f)
+        init(strokeColor, strokeWidth)
     }
 
     //Secondary Constructor for XML initialization
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        init("#FF0000".toColorInt(), 10f)
+        init(strokeColor, strokeWidth)
         //XML-initialization cannot pass parameters programmatically, will always be default
         //Certainly possible via some properties... But certainly not worth it
     }
@@ -86,13 +90,13 @@ class PointingArrowAndroid : View, IPointingArrowUI{
 
             arrowPaint
         )
-        drawFancyArrowHead(canvas,50f,35f)
+        drawFancyArrowHead(canvas)
 
     }
     private fun redraw(){
         invalidate() //<- force redraw
     }
-    private fun drawFancyArrowHead(canvas: Canvas, arrowHeadLength: Float, arrowHeadAngle: Float){
+    private fun drawFancyArrowHead(canvas: Canvas){
         val arrowDirectionAngle = atan2(
             (endPoint.second - startPoint.second).toDouble(),
             (endPoint.first - startPoint.first).toDouble()
