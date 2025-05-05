@@ -3,7 +3,7 @@ package com.se2gruppe5.risikofrontend.game.dice
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import com.se2gruppe5.risikofrontend.game.dice.dies.IDice
+import com.se2gruppe5.risikofrontend.game.dice.diceModels.IDice
 import junit.framework.TestCase.assertSame
 import org.junit.Test
 

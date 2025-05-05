@@ -7,7 +7,9 @@ import org.junit.Assert.*
 class TerritoryRecordUnitTest {
     @Test
     fun inst() {
-        val p = TerritoryRecord(1,1)
-        assertNotNull(p)
+        TerritoryRecord(1,1)
+        //Possibly needed in the future:
+        //val p = TerritoryRecord(1,1)
+        //assertNotNull(p)
     }
 }

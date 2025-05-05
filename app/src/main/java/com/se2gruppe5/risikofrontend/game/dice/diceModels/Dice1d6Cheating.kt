@@ -1,4 +1,4 @@
-package com.se2gruppe5.risikofrontend.game.dice.dies
+package com.se2gruppe5.risikofrontend.game.dice.diceModels
 
 /**
  * A blatantly cheating six-sided die

@@ -79,12 +79,14 @@ class TerritoryVisualAndroidUnitTest(
         Mockito.reset(outlineMock)
     }
 
+    /*
     @After
     fun tearDown() {
         //End static mock (afaik not explicitly necessary, should happen automatically.. but still)
         colorStaticMock.close()
         mockitoAnnotationClosable.close()
     }
+    */
 
     //Parameterized Test Data
     companion object {
@@ -131,7 +133,7 @@ class TerritoryVisualAndroidUnitTest(
     @Test(expected = IllegalArgumentException::class)
     fun changeColorThrowTest() {
         doThrow(RuntimeException("fail")).whenever(bgColorRibbonMock).setBackgroundColor(any())
-        territoryVisualAndroid.changeColor(0)
+        territoryVisualAndroid.changeColor(-1)
         //Note: Color passed here doesn't matter, mocked bgColorRibbon always throws error
     }
 

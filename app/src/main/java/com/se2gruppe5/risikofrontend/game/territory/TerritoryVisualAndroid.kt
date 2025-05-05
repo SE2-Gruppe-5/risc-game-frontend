@@ -33,11 +33,10 @@ class TerritoryVisualAndroid(
     }
 
     override fun changeColor(color: Int) {
-        try {
-            bgColorRibbon.setBackgroundColor(color)
-        } catch (e: Exception) {
-            throw IllegalArgumentException("Failed to apply color: $color", e)
+        if (color< 0x000000 || color > 0xFFFFFF){
+            throw IllegalArgumentException("Failed to apply color: $color")
         }
+        bgColorRibbon.setBackgroundColor(color)
     }
 
     override fun changeStat(stat: Int) {

@@ -7,7 +7,6 @@ import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.se2gruppe5.risikofrontend.R
-import com.se2gruppe5.risikofrontend.game.GameActivity
 import com.se2gruppe5.risikofrontend.lobby.CreateLobbyActivity
 import com.se2gruppe5.risikofrontend.lobby.JoinLobbyActivity
 
