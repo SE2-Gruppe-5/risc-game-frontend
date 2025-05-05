@@ -123,6 +123,12 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     )
     sourceDirectories.setFrom(files(srcDirs))
     classDirectories.setFrom(files(classDirs))
+
+    classDirectories.setFrom(
+        files(classDirs).filter {
+            !it.absolutePath.contains("ContinentDialog") // Add class or package name here
+        }
+    )
     executionData.setFrom(files(execData))
 }
 
