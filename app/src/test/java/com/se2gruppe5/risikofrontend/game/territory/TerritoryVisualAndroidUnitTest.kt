@@ -79,14 +79,14 @@ class TerritoryVisualAndroidUnitTest(
         Mockito.reset(outlineMock)
     }
 
-    /*
+
     @After
     fun tearDown() {
         //End static mock (afaik not explicitly necessary, should happen automatically.. but still)
         colorStaticMock.close()
         mockitoAnnotationClosable.close()
     }
-    */
+
 
     //Parameterized Test Data
     companion object {
