@@ -129,14 +129,6 @@ class TerritoryVisualAndroidUnitTest(
         verify(bgColorRibbonMock).setBackgroundColor(colPTestData)
     }
 
-    //Test if exception is caught and IllegalArgument thrown instead
-    @Test(expected = IllegalArgumentException::class)
-    fun changeColorThrowTest() {
-        doThrow(RuntimeException("fail")).whenever(bgColorRibbonMock).setBackgroundColor(any())
-        territoryVisualAndroid.changeColor(-1)
-        //Note: Color passed here doesn't matter, mocked bgColorRibbon always throws error
-    }
-
     @Test
     fun changeStatTest() {
         territoryVisualAndroid.changeStat(statPTestData)
