@@ -9,7 +9,7 @@ import com.se2gruppe5.risikofrontend.network.sse.messages.SetUuidMessage
 import java.util.UUID
 import java.util.function.Function
 
-enum class MessageType(private val deserializer: Function<JsonObject, Message?>) {
+enum class MessageType(private val deserializer: Function<JsonObject, IMessage?>) {
     SET_UUID(
         Function { data: JsonObject ->
             SetUuidMessage(UUID.fromString(data.get("uuid")?.asString))
@@ -40,7 +40,7 @@ enum class MessageType(private val deserializer: Function<JsonObject, Message?>)
         }
     );
 
-    fun deserialize(data: JsonObject): Message? {
+    fun deserialize(data: JsonObject): IMessage? {
         return deserializer.apply(data)
     }
 }
