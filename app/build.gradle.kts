@@ -28,6 +28,7 @@ android {
             )
         }
         debug {
+            isMinifyEnabled = false
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
             //^ necessary for getting coverage reports from Android-Tests (DEBUG ONLY !)
@@ -141,8 +142,11 @@ sonar {
                 "${project.layout.buildDirectory.get().asFile}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
             ).joinToString(",")
         )
-        property("sonar.coverage.exclusions", listOf(
-            "**/network/**"
-        ).joinToString(","))
+        property(
+            "sonar.coverage.exclusions",
+            listOf(
+                "**/network/**"
+            ).joinToString(",")
+        )
     }
 }
