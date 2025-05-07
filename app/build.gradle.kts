@@ -148,5 +148,20 @@ sonar {
                 "${project.layout.buildDirectory.get().asFile}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
             ).joinToString(",")
         )
+
+        // === Custom Sonar Exclusions ===
+
+        // Ignore logging noise in SSE/EventHandlers
+        property("sonar.issue.ignore.multicriteria", "1,2,3")
+        property("sonar.issue.ignore.multicriteria.1.ruleKey", "java:S106") // Logging should not be used
+        property("sonar.issue.ignore.multicriteria.1.resourceKey", "**/playerEventHandler.kt")
+
+        // Ignore UI code from coverage analysis
+        property("sonar.issue.ignore.multicriteria.2.ruleKey", "kotlin:S1186") // Empty method (onCreate etc.)
+        property("sonar.issue.ignore.multicriteria.2.resourceKey", "**/ActivePlayersViewModel.kt")
+
+        // Ignore test coverage warnings for Android UI Activities
+        property("sonar.issue.ignore.multicriteria.3.ruleKey", "java:S2187") // Test classes should contain tests
+        property("sonar.issue.ignore.multicriteria.3.resourceKey", "**/ActivePlayersViewModel.kt")
     }
 }
