@@ -32,9 +32,11 @@ class MenuActivity : AppCompatActivity() {
             startActivity(intent)
         })
 
+
         tutorialBtn.setOnClickListener({
             Log.i("NAVIGATION", "Entering Tutorial")
         })
+
     }
 
 
