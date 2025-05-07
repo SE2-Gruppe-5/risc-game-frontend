@@ -7,9 +7,10 @@ coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 
-#mockito = "5.14.2"
-#mockitoKotlin = "4.0.0"
-#mockitoAndroid = "4.3.1"
+mockito = "5.14.2"
+mockitoInline = "5.2.0"
+mockitoKotlin = "4.0.0"
+mockitoAndroid = "4.3.1"
 
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
@@ -20,6 +21,7 @@ okhttp = "4.12.0"
 okhttpeventsource = "2.5.0"
 coreKtxVersion = "1.6.1"
 junitKtx = "1.2.1"
+slf4jNop = "1.7.36"
 
 [libraries]
 dotenv-kotlin = { module = "io.github.cdimascio:dotenv-kotlin", version.ref = "dotenvKotlin" }
@@ -29,9 +31,10 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 
-#mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
-#mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
-#mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoAndroid" }
+mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
+mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoAndroid" }
 
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -42,6 +45,7 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhtt
 okhttpeventsource = { group = "com.launchdarkly", name = "okhttp-eventsource", version.ref = "okhttpeventsource" }
 core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
+slf4j-nop = { module = "org.slf4j:slf4j-nop", version.ref = "slf4jNop" }
 
 
 [plugins]
