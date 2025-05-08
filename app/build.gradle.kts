@@ -22,13 +22,14 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
         debug {
+            isMinifyEnabled = false
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
             //^ necessary for getting coverage reports from Android-Tests (DEBUG ONLY !)
@@ -75,14 +76,17 @@ dependencies {
     implementation(libs.dotenv.kotlin)
     //--------------------------------------------------------
     testImplementation(libs.junit)
-    //testImplementation(libs.mockito)
-    //testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito.inline)
     //--------------------------------------------------------
     //androidTestImplementation(libs.junit)
     //androidTestImplementation(libs.mockito.android)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.espresso.intents)
+    //--------------------------------------------------------
+    releaseImplementation(libs.slf4j.nop)
 }
 
 /*
@@ -140,6 +144,18 @@ sonar {
             "sonar.coverage.jacoco.xmlReportPaths", listOf(
                 "${project.layout.buildDirectory.get().asFile}/reports/coverage/androidTest/debug/connected/report.xml",
                 "${project.layout.buildDirectory.get().asFile}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+            ).joinToString(",")
+        )
+        property(
+            "sonar.coverage.exclusions",
+            listOf(
+                "**/com/se2gruppe5/risikofrontend/game/territory/TerritoryVisualAndroid.kt",
+                "**/com/se2gruppe5/risikofrontend/game/territory/PointingArrowAndroid.kt",
+                " **/com/se2gruppe5/risikofrontend/game/dice/DiceVisualAndroid.kt",
+                "**/com/se2gruppe5/risikofrontend/lobby/**",
+                "**/com/se2gruppe5/risikofrontend/startmenu/**",
+                "**/com/se2gruppe5/risikofrontend/MainActivity.kt",
+                "**/com/se2gruppe5/risikofrontend/game/GameActivity.kt"
             ).joinToString(",")
         )
     }
