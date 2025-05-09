@@ -24,14 +24,15 @@ object CardHandler :ICardHandler {
 
 
     override fun getCard(player: PlayerRecord?) {
-        val rand = (1..3).random()
-        if(rand == 1 ){
-            player!!.cards.add(CardRecord(CardType.Infantry))
-        }else if (rand == 2){
-            player!!.cards.add(CardRecord(CardType.Cavalry))
-        }else if(rand == 3){
-            player!!.cards.add(CardRecord(CardType.Artillery))
+        if(player != null) {
+            val rand = (1..3).random()
+            if (rand == 1) {
+                player.cards.add(CardRecord(CardType.Infantry))
+            } else if (rand == 2) {
+                player.cards.add(CardRecord(CardType.Cavalry))
+            } else if (rand == 3) {
+                player.cards.add(CardRecord(CardType.Artillery))
+            }
         }
-
     }
 }

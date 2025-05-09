@@ -3,6 +3,7 @@ package com.se2gruppe5.risikofrontend.game.managers
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.widget.Toast
+import com.se2gruppe5.risikofrontend.game.Dialogs.AttackTroopDialog
 import com.se2gruppe5.risikofrontend.game.Dialogs.MoveTroopDialog
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.enums.Phases
@@ -106,7 +107,7 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
                     if(prevSelTerritory!!.territoryRecord.owner == me && t.territoryRecord.owner == me) {
                         MoveTroopDialog(
                             context = activity,
-                            maxTroops = prevSelTerritory!!.territoryRecord.stat - 2,
+                            maxTroops = prevSelTerritory!!.territoryRecord.stat - 1,
                             minTroops = 2,
                             fromTerritory = prevSelTerritory!!,
                             toTerritory = t
@@ -115,6 +116,23 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
                         Toast.makeText(activity, "You can only move between your own territories",
                             Toast.LENGTH_SHORT).show()
                     }
+                }else if(GameManager.phase == Phases.Attack){
+                    if(prevSelTerritory!!.territoryRecord.owner == me && t.territoryRecord.owner != me) {
+                        AttackTroopDialog(
+                            context = activity,
+                            maxTroops = prevSelTerritory!!.territoryRecord.stat - 1,
+                            minTroops = 1,
+                            fromTerritory = prevSelTerritory!!,
+                            toTerritory = t)
+                        { troops ->
+                            attackTerritory(t)
+                        }.show()
+                    }else{
+                        Toast.makeText(activity, "You cannot attack your own territories",
+                            Toast.LENGTH_SHORT).show()
+                    }
+
+
                 }
 
             }
@@ -126,6 +144,7 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
 
     private fun attackTerritory(t: ITerritoryVisual){
         t.changeColor(me.color)
+        me.capturedTerritory = true
     }
 
     private fun updateSelected(t: ITerritoryVisual){

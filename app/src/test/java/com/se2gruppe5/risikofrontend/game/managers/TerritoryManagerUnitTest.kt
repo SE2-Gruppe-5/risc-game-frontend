@@ -1,11 +1,15 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
+import android.app.Activity
+import com.se2gruppe5.risikofrontend.game.GameActivity
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import org.junit.*
 import org.junit.Assert.*
+import org.mockito.Mock
 import org.mockito.kotlin.*
 
 
@@ -25,6 +29,10 @@ class TerritoryManagerTestUnitTest {
     private lateinit var record: TerritoryRecord
     private lateinit var t: ITerritoryVisual
 
+    @Mock
+    private lateinit var activity: Activity
+    private lateinit var gameManager: GameManager
+
     @Before
     fun setUp() {
         pointingArrow = mock()
@@ -32,12 +40,13 @@ class TerritoryManagerTestUnitTest {
 
         TerritoryManager.unitTestReset()
 
-        TerritoryManager.init(mePlayerRecord, pointingArrow)
+        TerritoryManager.init(mePlayerRecord, pointingArrow,activity)
         manager = TerritoryManager.get()
         record = TerritoryRecord(1, 1)
         t = mock<ITerritoryVisual> {
             on { territoryRecord } doReturn record
         }
+
     }
 
     //TerritoryManager-Singleton should throw Error when singleton has not been initialized
@@ -59,7 +68,7 @@ class TerritoryManagerTestUnitTest {
     fun singletonNotMutableTest() {
 
         val newMe = PlayerRecord(999, "Test2", 0x00FF00)
-        TerritoryManager.init(newMe, pointingArrow) //<-- shouldn't do it
+        TerritoryManager.init(newMe, pointingArrow,activity) //<-- shouldn't do it
         val inst1 = TerritoryManager.get()
         assertEquals(mePlayerRecord, inst1.me)
     }
@@ -96,7 +105,7 @@ class TerritoryManagerTestUnitTest {
     //Try adding an invalid territory
     @Test(expected = IllegalArgumentException::class)
     fun addTerritoryInvalidTest() {
-        TerritoryManager.init(mePlayerRecord, pointingArrow)
+        TerritoryManager.init(mePlayerRecord, pointingArrow,activity)
         val invalidRecord = TerritoryRecord(-1,1)
         val invalidT = mock<ITerritoryVisual> {
             on { territoryRecord } doReturn invalidRecord
@@ -180,6 +189,7 @@ class TerritoryManagerTestUnitTest {
     @Test
     fun attackInteractionTest() {
         //Prepare Territories (and mock dependencies)
+        GameManager.phase = Phases.Attack
         val record1 = TerritoryRecord(1, 1)
         val record2 = TerritoryRecord(2, 2)
         val t1 = mock<ITerritoryVisual> {
@@ -190,10 +200,6 @@ class TerritoryManagerTestUnitTest {
             on { territoryRecord } doReturn record2
             on { getCoordinatesAsFloat(true) } doReturn Pair(10f, 11f)
         }
-
-        //Prepare TerritoryManager
-        manager.enterSelectMode()
-        manager.enterAttackMode()
 
         //Capture incoming subscriptions to APK onClick;
         // ... in simple words: The TerritoryManager want's to have hasBeenClicked() called,
