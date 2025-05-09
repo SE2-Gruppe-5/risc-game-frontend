@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.se2gruppe5.risikofrontend.Popup.ContinentDialog
+import com.se2gruppe5.risikofrontend.popup.ContinentDialog
 import com.se2gruppe5.risikofrontend.R
 
 class GameActivity :AppCompatActivity() {

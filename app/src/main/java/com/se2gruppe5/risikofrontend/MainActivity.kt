@@ -15,7 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.launchdarkly.eventsource.EventHandler
 import com.launchdarkly.eventsource.MessageEvent
-import com.se2gruppe5.risikofrontend.Popup.ContinentDialog
+import com.se2gruppe5.risikofrontend.popup.ContinentDialog
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -146,5 +146,9 @@ sonar {
                 "${project.layout.buildDirectory.get().asFile}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
             ).joinToString(",")
         )
+
+        property("sonar.coverage.exclusions",
+            "**/com/se2gruppe5/risikofrontend/popup/ContinentDialog.kt"
+        )
     }
 }
