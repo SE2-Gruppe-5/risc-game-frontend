@@ -10,40 +10,40 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 
-class NetworkClient {
+class NetworkClient : INetworkClient{
     val client = OkHttpClient()
 
-    suspend fun sendChat(message: String) {
+    override suspend fun sendChat(message: String) {
         val request = createRequest("POST", Constants.CHAT_SEND_URL,
             "message", message)
         execute(request)
     }
 
-    suspend fun createLobby(): String? {
+    override suspend fun createLobby(): String? {
         val request = createRequest("GET", Constants.LOBBY_CREATE_URL)
         val response = execute(request)
         return response.body?.string()
     }
 
-    suspend fun deleteLobby(lobbyCode: String) {
+    override suspend fun deleteLobby(lobbyCode: String) {
         val request = createRequest("DELETE", Constants.LOBBY_RESOURCE_URL.replace("{id}", lobbyCode))
         execute(request)
     }
 
-    suspend fun joinLobby(lobbyCode: String, playerName: String) {
+    override suspend fun joinLobby(lobbyCode: String, playerName: String) {
         val request = createRequest("PUT", Constants.LOBBY_PLAYER_URL.replace("{id}", lobbyCode),
             "uuid", SseClientService.uuid.toString(),
             "name", playerName)
         execute(request)
     }
 
-    suspend fun leaveLobby(lobbyCode: String) {
+    override suspend fun leaveLobby(lobbyCode: String) {
         val request = createRequest("DELETE", Constants.LOBBY_PLAYER_URL.replace("{id}", lobbyCode),
             "uuid", SseClientService.uuid.toString())
         execute(request)
     }
 
-    suspend fun startGame(lobbyCode: String) {
+    override suspend fun startGame(lobbyCode: String) {
         val request = createRequest("GET", Constants.LOBBY_START_GAME_URL.replace("{id}", lobbyCode))
         execute(request)
     }
