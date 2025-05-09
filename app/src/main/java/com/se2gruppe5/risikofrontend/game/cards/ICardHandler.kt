@@ -1,13 +1,14 @@
 package com.se2gruppe5.risikofrontend.game.cards
 
+import com.se2gruppe5.risikofrontend.game.dataclasses.CardRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 
 interface ICardHandler {
 
     /**
-     * Trade stars to get new troops
+     * Trade a list of cards for troops
      */
-    fun tradeCards(player: PlayerRecord, starCount: Int)
+    fun tradeCards(player: PlayerRecord, cards: List<CardRecord>, starCount: Int)
 
 
     /**
