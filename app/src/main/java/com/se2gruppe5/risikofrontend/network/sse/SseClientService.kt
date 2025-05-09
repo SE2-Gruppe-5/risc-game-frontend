@@ -8,7 +8,6 @@ import android.os.Binder
 import android.os.IBinder
 import com.launchdarkly.eventsource.EventSource
 import com.se2gruppe5.risikofrontend.Constants
-import com.se2gruppe5.risikofrontend.network.NetworkClient
 import com.se2gruppe5.risikofrontend.network.sse.messages.SetUuidMessage
 import java.net.URI
 import java.time.Duration
@@ -24,7 +23,7 @@ class SseClientService : Service() {
     private val eventHandler = SseEventHandler(this)
     private var eventSource: EventSource? = null
 
-    private val handlers: HashMap<MessageType, Consumer<Message>> = HashMap()
+    private val handlers: HashMap<MessageType, Consumer<IMessage>> = HashMap()
 
     override fun onBind(p0: Intent?): IBinder? {
         return binder
@@ -60,11 +59,11 @@ class SseClientService : Service() {
         eventSource!!.start()
     }
 
-    fun handleIncomingMessage(type: MessageType, message: Message) {
+    fun handleIncomingMessage(type: MessageType, message: IMessage) {
         handlers.get(type)?.accept(message)
     }
 
-    fun handler(type: MessageType, handler: Consumer<Message>) {
+    fun handler(type: MessageType, handler: Consumer<IMessage>) {
         handlers.put(type, handler)
     }
 

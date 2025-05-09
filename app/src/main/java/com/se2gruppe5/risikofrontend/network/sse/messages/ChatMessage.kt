@@ -1,5 +1,5 @@
 package com.se2gruppe5.risikofrontend.network.sse.messages
 
-import com.se2gruppe5.risikofrontend.network.sse.Message
+import com.se2gruppe5.risikofrontend.network.sse.IMessage
 
-data class ChatMessage(val message: String) : Message
+data class ChatMessage(val message: String) : IMessage
