@@ -40,16 +40,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-    <Button
-        android:id="@+id/debugme"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="24dp"
-        android:backgroundTint="@color/button_color"
-        android:text="Take me to game for testing"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/headline"

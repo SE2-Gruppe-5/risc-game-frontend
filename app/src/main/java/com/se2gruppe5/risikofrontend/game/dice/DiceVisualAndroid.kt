@@ -2,7 +2,7 @@ package com.se2gruppe5.risikofrontend.game.dice
 
 import android.widget.ImageButton
 import android.widget.TextView
-import com.se2gruppe5.risikofrontend.game.dice.dies.IDice
+import com.se2gruppe5.risikofrontend.game.dice.diceModels.IDice
 
 /**
  *  @param imgBTN Reference to the Image Button which rolls the dice!

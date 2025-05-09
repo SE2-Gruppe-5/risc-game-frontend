@@ -4,6 +4,8 @@ import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 
+const val TERRITORY_NO_OWNER_COLOR: Int = 0x999999
+
 class TerritoryManager private constructor(val me: PlayerRecord, private val pointingArrow: PointingArrowAndroid) {
     companion object {
 
@@ -28,8 +30,6 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
             singleton=null
         }
     }
-
-    val noOwnerColor: Int = 0x999999 //todo abstract away?
 
     private var isInSelectMode: Boolean = false
     private var isInAttackMode: Boolean = false
@@ -98,7 +98,7 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
             checkPlayerValid(playerRecord)
             t.changeColor(playerRecord.color)
         }else{
-            t.changeColor(noOwnerColor)
+            t.changeColor(TERRITORY_NO_OWNER_COLOR)
         }
         t.territoryRecord.owner = playerRecord
     }

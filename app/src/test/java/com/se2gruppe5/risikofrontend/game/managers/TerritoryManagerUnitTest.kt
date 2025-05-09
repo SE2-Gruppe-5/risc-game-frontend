@@ -21,6 +21,9 @@ The wrapper may however be needed, as it plays a role in color changes etc.
 class TerritoryManagerTestUnitTest {
     private lateinit var pointingArrow: PointingArrowAndroid
     private lateinit var mePlayerRecord: PlayerRecord
+    private lateinit var manager: TerritoryManager
+    private lateinit var record: TerritoryRecord
+    private lateinit var t: ITerritoryVisual
 
     @Before
     fun setUp() {
@@ -28,17 +31,25 @@ class TerritoryManagerTestUnitTest {
         mePlayerRecord = PlayerRecord(123, "TestPlayer", 0xFF00FF)
 
         TerritoryManager.unitTestReset()
+
+        TerritoryManager.init(mePlayerRecord, pointingArrow)
+        manager = TerritoryManager.get()
+        record = TerritoryRecord(1, 1)
+        t = mock<ITerritoryVisual> {
+            on { territoryRecord } doReturn record
+        }
     }
 
     //TerritoryManager-Singleton should throw Error when singleton has not been initialized
     @Test(expected = IllegalStateException::class)
     fun getBeforeInitThrowsTest() {
+        TerritoryManager.unitTestReset()
         TerritoryManager.get()
     }
 
     @Test
     fun singletonIsSameInstanceTest() {
-        TerritoryManager.init(mePlayerRecord, pointingArrow)
+
         val inst1 = TerritoryManager.get()
         val inst2 = TerritoryManager.get()
         assertSame(inst1, inst2)
@@ -46,7 +57,7 @@ class TerritoryManagerTestUnitTest {
 
     @Test
     fun singletonNotMutableTest() {
-        TerritoryManager.init(mePlayerRecord, pointingArrow)
+
         val newMe = PlayerRecord(999, "Test2", 0x00FF00)
         TerritoryManager.init(newMe, pointingArrow) //<-- shouldn't do it
         val inst1 = TerritoryManager.get()
@@ -55,33 +66,23 @@ class TerritoryManagerTestUnitTest {
 
     @Test
     fun meReferenceSetCorrect() {
-        TerritoryManager.init(mePlayerRecord,pointingArrow)
+
         assertEquals(mePlayerRecord, TerritoryManager.get().me)
     }
 
     //Try adding a valid territory
     @Test
     fun addTerritory() {
-        TerritoryManager.init(mePlayerRecord, pointingArrow)
-        val manager = TerritoryManager.get()
-        val record = TerritoryRecord(1,1)
-        val t = mock<ITerritoryVisual> {
-            on { territoryRecord } doReturn record
-        }
+
         manager.addTerritory(t)
         // Make sure a lambda subscription has been performed for the territory
         verify(t).clickSubscription(any())
 
     }
+
     //Try adding and subsequently removing a valid territory
     @Test
     fun addAndRemoveValidTerritoryTest() {
-        TerritoryManager.init(mePlayerRecord, pointingArrow)
-        val manager = TerritoryManager.get()
-        val record = TerritoryRecord(1,1)
-        val t = mock<ITerritoryVisual> {
-            on { territoryRecord } doReturn record
-        }
         manager.addTerritory(t)
         //Has been added?
         assertTrue(manager.containsTerritory(t))
@@ -96,25 +97,17 @@ class TerritoryManagerTestUnitTest {
     @Test(expected = IllegalArgumentException::class)
     fun addTerritoryInvalidTest() {
         TerritoryManager.init(mePlayerRecord, pointingArrow)
-        val manager = TerritoryManager.get()
-        val record = TerritoryRecord(-1,1)
-        val t = mock<ITerritoryVisual> {
-            on { territoryRecord } doReturn record
+        val invalidRecord = TerritoryRecord(-1,1)
+        val invalidT = mock<ITerritoryVisual> {
+            on { territoryRecord } doReturn invalidRecord
         }
-        manager.addTerritory(t)
-        //Has been added?
-        assertTrue(manager.containsTerritory(t))
+        manager.addTerritory(invalidT)
     }
 
     //Try adding the same territory twice (by reference)
     @Test(expected = IllegalArgumentException::class)
     fun addTerritoryDuplicateRefTest() {
-        TerritoryManager.init(mePlayerRecord, pointingArrow)
-        val manager = TerritoryManager.get()
-        val record = TerritoryRecord(1,1)
-        val t = mock<ITerritoryVisual> {
-            on { territoryRecord } doReturn record
-        }
+
         manager.addTerritory(t)
         //This should throw an error now ...
         manager.addTerritory(t)
@@ -123,10 +116,9 @@ class TerritoryManagerTestUnitTest {
     //Try adding the same territory twice (by id)
     @Test(expected = IllegalArgumentException::class)
     fun addTerritoryDuplicateIDTest() {
-        TerritoryManager.init(mePlayerRecord, pointingArrow)
-        val manager = TerritoryManager.get()
-        val record1 = TerritoryRecord(1,5)
-        val record2 = TerritoryRecord(1,10)
+
+        val record1 = TerritoryRecord(1, 5)
+        val record2 = TerritoryRecord(1, 10)
         val t1 = mock<ITerritoryVisual> {
             on { territoryRecord } doReturn record1
         }
@@ -141,12 +133,7 @@ class TerritoryManagerTestUnitTest {
     //Removing a territory that has not been added should throw an error
     @Test(expected = IllegalArgumentException::class)
     fun removeNotAddedTerritoryTest() {
-        TerritoryManager.init(mePlayerRecord, pointingArrow)
-        val manager = TerritoryManager.get()
-        val record = TerritoryRecord(1,1)
-        val t = mock<ITerritoryVisual> {
-            on { territoryRecord } doReturn record
-        }
+
         //This should throw an error
         manager.removeTerritory(t)
     }
@@ -154,12 +141,7 @@ class TerritoryManagerTestUnitTest {
     //Removing and adding territories should be allowed
     @Test
     fun reAddTerritoryTest() {
-        TerritoryManager.init(mePlayerRecord, pointingArrow)
-        val manager = TerritoryManager.get()
-        val record = TerritoryRecord(1,1)
-        val t = mock<ITerritoryVisual> {
-            on { territoryRecord } doReturn record
-        }
+
         manager.addTerritory(t)
         assertTrue(manager.containsTerritory(t))
         manager.removeTerritory(t)
@@ -170,12 +152,7 @@ class TerritoryManagerTestUnitTest {
     //"Overtake territory"
     @Test
     fun assignNewOwnerTest() {
-        TerritoryManager.init(mePlayerRecord, pointingArrow)
-        val manager = TerritoryManager.get()
-        val record = TerritoryRecord(id = 1, 1)
-        val t = mock<ITerritoryVisual> {
-            on { territoryRecord } doReturn record
-        }
+
         val newOwner = PlayerRecord(1, "Test", 0x123456)
         manager.assignOwner(t, newOwner)
         //Color change called?
@@ -188,18 +165,14 @@ class TerritoryManagerTestUnitTest {
     // Color should be changed to ownerless-color
     @Test
     fun removeAssignedOwnerTest() {
-        TerritoryManager.init(mePlayerRecord, pointingArrow)
-        val manager = TerritoryManager.get()
+
         val initialOwner = PlayerRecord(1, "Test", 0x123456)
-        val record = TerritoryRecord(1,1)
-        val t = mock<ITerritoryVisual> {
-            on { territoryRecord } doReturn record
-        }
+
         //Assign an owner
         manager.assignOwner(t, initialOwner)
         manager.assignOwner(t, null)
         //No-owner color set called?
-        verify(t).changeColor(manager.noOwnerColor)
+        verify(t).changeColor(TERRITORY_NO_OWNER_COLOR)
         //No owner assigned?
         assertNull(record.owner)
     }
@@ -211,16 +184,14 @@ class TerritoryManagerTestUnitTest {
         val record2 = TerritoryRecord(2, 2)
         val t1 = mock<ITerritoryVisual> {
             on { territoryRecord } doReturn record1
-            on { getCoordinatesAsFloat(true) } doReturn Pair(5f,6f)
+            on { getCoordinatesAsFloat(true) } doReturn Pair(5f, 6f)
         }
         val t2 = mock<ITerritoryVisual> {
             on { territoryRecord } doReturn record2
-            on { getCoordinatesAsFloat(true) } doReturn Pair(10f,11f)
+            on { getCoordinatesAsFloat(true) } doReturn Pair(10f, 11f)
         }
 
         //Prepare TerritoryManager
-        TerritoryManager.init(mePlayerRecord, pointingArrow)
-        val manager = TerritoryManager.get()
         manager.enterSelectMode()
         manager.enterAttackMode()
 
@@ -249,7 +220,7 @@ class TerritoryManagerTestUnitTest {
         capturedFunctionInvokeB(t2) //Calls manager's ::hasBeenClicked", i.e. what actually happens
 
         //Verify all click interaction shenanigans
-        verify(pointingArrow).setCoordinates(Pair(5f,6f), Pair(10f,11f))
+        verify(pointingArrow).setCoordinates(Pair(5f, 6f), Pair(10f, 11f))
         verify(t2).changeColor(mePlayerRecord.color)
         verify(t2).changeStat(22)
         verify(t1).changeStat(11)
