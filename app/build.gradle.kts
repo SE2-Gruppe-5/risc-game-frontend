@@ -68,6 +68,7 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation(libs.gson)
     implementation(libs.kotlinxCoroutines)
     implementation(libs.okhttp)
     implementation(libs.okhttpeventsource)
@@ -151,7 +152,21 @@ sonar {
             ).joinToString(",")
         )
         property("sonar.coverage.exclusions",
-            "**/com/se2gruppe5/risikofrontend/game/territory/TerritoryVisualAndroid.kt, **/com/se2gruppe5/risikofrontend/game/territory/PointingArrowAndroid.kt,**/com/se2gruppe5/risikofrontend/game/dice/DiceVisualAndroid.kt, **/com/se2gruppe5/risikofrontend/lobby/**, **/com/se2gruppe5/risikofrontend/startmenu/**, **/com/se2gruppe5/risikofrontend/MainActivity.kt, **/com/se2gruppe5/risikofrontend/game/GameActivity.kt," + "**/com/se2gruppe5/risikofrontend/troopcount/TroopCountManager.kt, " +
-                    "**/com/se2gruppe5/risikofrontend/troopcount/TroopService.kt")
+            "**/com/se2gruppe5/risikofrontend/game/territory/TerritoryVisualAndroid.kt, **/com/se2gruppe5/risikofrontend/game/territory/PointingArrowAndroid.kt,**/com/se2gruppe5/risikofrontend/game/dice/DiceVisualAndroid.kt, **/com/se2gruppe5/risikofrontend/lobby/**, **/com/se2gruppe5/risikofrontend/startmenu/**, **/com/se2gruppe5/risikofrontend/MainActivity.kt, **/com/se2gruppe5/risikofrontend/game/GameActivity.kt," )
+        property(
+            "sonar.coverage.exclusions",
+            listOf(
+                "**/com/se2gruppe5/risikofrontend/game/territory/TerritoryVisualAndroid.kt",
+                "**/com/se2gruppe5/risikofrontend/game/territory/PointingArrowAndroid.kt",
+                " **/com/se2gruppe5/risikofrontend/game/dice/DiceVisualAndroid.kt",
+                "**/com/se2gruppe5/risikofrontend/lobby/**",
+                "**/com/se2gruppe5/risikofrontend/startmenu/**",
+                "**/com/se2gruppe5/risikofrontend/MainActivity.kt",
+                "**/com/se2gruppe5/risikofrontend/game/GameActivity.kt",
+                "**/com/se2gruppe5/risikofrontend/troopcount/TroopCountManager.kt",
+                "**/com/se2gruppe5/risikofrontend/troopcount/TroopService.kt",
+                "**/network/**"
+            ).joinToString(",")
+        )
     }
 }

@@ -14,7 +14,7 @@ import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.dice.DiceVisualAndroid
-import com.se2gruppe5.risikofrontend.game.dice.dies.Dice1d6Generic
+import com.se2gruppe5.risikofrontend.game.dice.diceModels.Dice1d6Generic
 import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
@@ -35,7 +35,7 @@ class GameActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.game)
 
-        //Placeholder
+//-------------------------------------- <Placeholder>
         val diceBtn = this.findViewById<ImageButton>(R.id.diceButton)
         val diceTxt = this.findViewById<TextView>(R.id.diceText)
         val diceVisualAndroid = DiceVisualAndroid(Dice1d6Generic(), diceBtn, diceTxt)
@@ -105,7 +105,7 @@ class GameActivity : AppCompatActivity() {
                 ColorStateList.valueOf(Color.RED)
         })
 
-        //-----------------------
+//-------------------------------------- </Placeholder>
     }
 
 

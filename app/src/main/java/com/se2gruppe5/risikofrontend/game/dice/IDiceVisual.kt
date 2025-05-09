@@ -1,11 +1,11 @@
 package com.se2gruppe5.risikofrontend.game.dice
 
-import com.se2gruppe5.risikofrontend.game.dice.dies.IDice
+import com.se2gruppe5.risikofrontend.game.dice.diceModels.IDice
 
 interface IDiceVisual {
     /**
-     * Aggregated dice
-     * Chose wisely.
+     * Wrapped Dice-Model (e.g. "Fair", "Unfair" or "Cheating")
+     * //todo: could possibly be needed mutable with getter and setter in future
      */
     val dice: IDice
 

@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+
 class TerritoryManager private constructor(val me: PlayerRecord, private val pointingArrow: PointingArrowAndroid, private val context: Context, private val troopTextView: TextView, private val troopCountManager: TroopCountManager) {
     companion object {
 
@@ -34,8 +35,6 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
             singleton=null
         }
     }
-
-    val noOwnerColor: Int = 0x999999 //todo abstract away?
 
     private var isInSelectMode: Boolean = false
     private var isInAttackMode: Boolean = false
@@ -104,7 +103,7 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
             checkPlayerValid(playerRecord)
             t.changeColor(playerRecord.color)
         }else{
-            t.changeColor(noOwnerColor)
+            t.changeColor(TERRITORY_NO_OWNER_COLOR)
         }
         t.territoryRecord.owner = playerRecord
     }
