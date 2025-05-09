@@ -8,7 +8,7 @@ import org.junit.Assert.*
 class TerritoryRecordUnitTest {
     @Test
     fun inst() {
-        TerritoryRecord(1,1, Continent.POWER_SUPPLY, Pair(100f, 100f), Pair(100f, 100f))
+        TerritoryRecord(1,1, Continent.POWER_SUPPLY, Pair(100, 100), Pair(100, 100))
         //Possibly needed in the future:
         //val p = TerritoryRecord(1,1)
         //assertNotNull(p)

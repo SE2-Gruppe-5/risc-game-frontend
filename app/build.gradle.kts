@@ -155,7 +155,9 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/lobby/**",
                 "**/com/se2gruppe5/risikofrontend/startmenu/**",
                 "**/com/se2gruppe5/risikofrontend/MainActivity.kt",
-                "**/com/se2gruppe5/risikofrontend/game/GameActivity.kt"
+                "**/com/se2gruppe5/risikofrontend/game/GameActivity.kt",
+                "**/com/se2gruppe5/risikofrontend/game/board/BoardJsonClasses.kt",
+                "**/com/se2gruppe5/risikofrontend/game/board/BoardLoaderAndroid.kt"
             ).joinToString(",")
         )
     }

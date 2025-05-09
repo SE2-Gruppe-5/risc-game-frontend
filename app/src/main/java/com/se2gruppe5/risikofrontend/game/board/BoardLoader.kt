@@ -3,16 +3,23 @@ package com.se2gruppe5.risikofrontend.game.board
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import kotlinx.serialization.json.Json
 
-class BoardSerializer {
-    fun loadTerritories(json: String): List<TerritoryRecord> {
+
+class BoardLoader(jsonSrc: String) {
+    private val territories: List<TerritoryRecord> = loadTerritories(jsonSrc)
+
+    fun getTerritories(): List<TerritoryRecord> {
+        return territories
+    }
+
+    private fun loadTerritories(json: String): List<TerritoryRecord> {
         val boardData = Json.decodeFromString<BoardData>(json)
 
         val territories: HashMap<Int, TerritoryRecord> = HashMap()
         val jsonTerritories = boardData.territories
 
         for(t in jsonTerritories) {
-            val position: Pair<Float, Float> = Pair(t.position.x, t.position.y)
-            val size: Pair<Float, Float> = Pair(t.size.x, t.size.y)
+            val position: Pair<Int, Int> = Pair(t.position.x, t.position.y)
+            val size: Pair<Int, Int> = Pair(t.size.x, t.size.y)
 
             territories[t.id] = TerritoryRecord(t.id, 0, t.continent, position, size)
         }

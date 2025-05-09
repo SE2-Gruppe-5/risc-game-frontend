@@ -18,6 +18,6 @@ data class TerritoryData(
 
 @Serializable
 data class XY(
-    val x: Float,
-    val y: Float
+    val x: Int,
+    val y: Int
 )

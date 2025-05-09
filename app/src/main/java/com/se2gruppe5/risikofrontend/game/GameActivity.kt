@@ -3,14 +3,17 @@ package com.se2gruppe5.risikofrontend.game
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColorInt
 import com.se2gruppe5.risikofrontend.R
+import com.se2gruppe5.risikofrontend.game.board.BoardLoaderAndroid
 import com.se2gruppe5.risikofrontend.game.board.Continent
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
@@ -36,20 +39,8 @@ class GameActivity : AppCompatActivity() {
         val p1 = PlayerRecord(1, "Markus", Color.rgb(255, 100, 0))
         val p2 = PlayerRecord(2, "Leo", Color.rgb(0, 100, 255))
 
-        //todo This is not pretty and hardcoded. It shouldn't be. It should be done by the GameManager
-        val t1 = TerritoryRecord(1,10, Continent.CPU, Pair(100f, 100f), Pair(100f, 100f))
-        val t1_txt = this.findViewById<TextView>(R.id.territoryAtext)
-        val t1_btn = this.findViewById<ImageButton>(R.id.territoryAbtn)
-        val t1_outline = this.findViewById<View>(R.id.territoryAoutline)
-        val t1_vis: ITerritoryVisual =
-            TerritoryVisualAndroid(t1, t1_txt, t1_txt, t1_btn, t1_outline)
-
-        val t2 = TerritoryRecord(2,5, Continent.CPU, Pair(300f, 100f), Pair(100f, 100f))
-        val t2_txt = this.findViewById<TextView>(R.id.territoryBtext)
-        val t2_btn = this.findViewById<ImageButton>(R.id.territoryBbtn)
-        val t2_outline = this.findViewById<View>(R.id.territoryBoutline)
-        val t2_vis: ITerritoryVisual =
-            TerritoryVisualAndroid(t2, t2_txt, t2_txt, t2_btn, t2_outline)
+        val board = findViewById<FrameLayout>(R.id.gameBoard)
+        val territories: List<TerritoryRecord> = BoardLoaderAndroid(this).getTerritories()
 
         val pointingArrow = PointingArrowAndroid(this, "#FF0000".toColorInt(), 15f)
         pointingArrow.layoutParams = ViewGroup.LayoutParams(
@@ -60,12 +51,32 @@ class GameActivity : AppCompatActivity() {
 
         TerritoryManager.init(p1, pointingArrow)
         val territoryManager = TerritoryManager.get()
-        territoryManager.addTerritory(t1_vis)
-        territoryManager.addTerritory(t2_vis)
 
-        territoryManager.assignOwner(t1_vis, p1)
-        territoryManager.assignOwner(t2_vis, p2)
+        for(territory in territories) {
+            val territoryLayout = LayoutInflater.from(this).inflate(R.layout.territory_template, board, false)
+            territoryLayout.id = View.generateViewId()
 
+            val params = FrameLayout.LayoutParams(territory.size.first, territory.size.second)
+            params.leftMargin = territory.position.first
+            params.topMargin = territory.position.second
+            territoryLayout.layoutParams = params
+
+            val text = territoryLayout.findViewById<TextView>(R.id.territoryText)
+            val button = territoryLayout.findViewById<ImageButton>(R.id.territoryBtn)
+            val outline = territoryLayout.findViewById<View>(R.id.territoryOutline)
+            board.addView(territoryLayout)
+
+            val visual: ITerritoryVisual = TerritoryVisualAndroid(territory, text, text, button, outline)
+            territoryManager.addTerritory(visual)
+
+            // Only for testing purposes, should be replaced
+            if(territory.id == 1) {
+                territoryManager.assignOwner(visual, p1)
+            }
+            if(territory.id == 2) {
+                territoryManager.assignOwner(visual, p2)
+            }
+        }
 
         this.findViewById<ImageButton>(R.id.goattack).setOnClickListener({
             territoryManager.enterSelectMode()

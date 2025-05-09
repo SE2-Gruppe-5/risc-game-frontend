@@ -7,16 +7,16 @@ import org.junit.Before
 import java.io.File
 
 
-class BoardUnitTest {
+class BoardLoaderUnitTest {
     private lateinit var json: String
-    private lateinit var board: Board
+    private lateinit var boardLoader: BoardLoader
     private lateinit var territories: List<TerritoryRecord>
 
     @Before
     fun setup() {
         json = File("src/test/java/com/se2gruppe5/risikofrontend/game/board/testBoard.json").readText()
-        board = Board(json)
-        territories = board.getTerritories()
+        boardLoader = BoardLoader(json)
+        territories = boardLoader.getTerritories()
     }
 
     @Test
@@ -40,14 +40,14 @@ class BoardUnitTest {
         assertEquals(3, territory3.id)
 
         // Positions correct
-        assertEquals(Pair(100f, 100f), territory1.position)
-        assertEquals(Pair(200f, 100f), territory2.position)
-        assertEquals(Pair(300f, 100f), territory3.position)
+        assertEquals(Pair(100, 100), territory1.position)
+        assertEquals(Pair(200, 100), territory2.position)
+        assertEquals(Pair(300, 100), territory3.position)
 
         // Sizes correct
-        assertEquals(Pair(100f, 100f), territory1.size)
-        assertEquals(Pair(100f, 100f), territory2.size)
-        assertEquals(Pair(100f, 100f), territory3.size)
+        assertEquals(Pair(100, 100), territory1.size)
+        assertEquals(Pair(100, 100), territory2.size)
+        assertEquals(Pair(100, 100), territory3.size)
 
         // Continent assignment correct
         assertEquals(Continent.RAM, territory1.continent)

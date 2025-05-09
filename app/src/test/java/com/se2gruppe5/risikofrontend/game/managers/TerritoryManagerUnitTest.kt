@@ -35,7 +35,7 @@ class TerritoryManagerTestUnitTest {
 
         TerritoryManager.init(mePlayerRecord, pointingArrow)
         manager = TerritoryManager.get()
-        record = TerritoryRecord(1, 1, Continent.CPU, Pair(100f, 100f), Pair(100f, 100f))
+        record = TerritoryRecord(1, 1, Continent.CPU, Pair(100, 100), Pair(100, 100))
         t = mock<ITerritoryVisual> {
             on { territoryRecord } doReturn record
         }
@@ -98,7 +98,7 @@ class TerritoryManagerTestUnitTest {
     @Test(expected = IllegalArgumentException::class)
     fun addTerritoryInvalidTest() {
         TerritoryManager.init(mePlayerRecord, pointingArrow)
-        val invalidRecord = TerritoryRecord(-1,1, Continent.CPU, Pair(100f, 100f), Pair(100f, 100f))
+        val invalidRecord = TerritoryRecord(-1,1, Continent.CPU, Pair(100, 100), Pair(100, 100))
         val invalidT = mock<ITerritoryVisual> {
             on { territoryRecord } doReturn invalidRecord
         }
@@ -118,8 +118,8 @@ class TerritoryManagerTestUnitTest {
     @Test(expected = IllegalArgumentException::class)
     fun addTerritoryDuplicateIDTest() {
 
-        val record1 = TerritoryRecord(1, 5, Continent.CPU, Pair(100f, 100f), Pair(100f, 100f))
-        val record2 = TerritoryRecord(1, 10, Continent.CPU, Pair(100f, 100f), Pair(100f, 100f))
+        val record1 = TerritoryRecord(1, 5, Continent.CPU, Pair(100, 100), Pair(100, 100))
+        val record2 = TerritoryRecord(1, 10, Continent.CPU, Pair(100, 100), Pair(100, 100))
         val t1 = mock<ITerritoryVisual> {
             on { territoryRecord } doReturn record1
         }
@@ -181,8 +181,8 @@ class TerritoryManagerTestUnitTest {
     @Test
     fun attackInteractionTest() {
         //Prepare Territories (and mock dependencies)
-        val record1 = TerritoryRecord(1, 1, Continent.CPU, Pair(100f, 100f), Pair(100f, 100f))
-        val record2 = TerritoryRecord(2, 2, Continent.CPU, Pair(100f, 100f), Pair(100f, 100f))
+        val record1 = TerritoryRecord(1, 1, Continent.CPU, Pair(100, 100), Pair(100, 100))
+        val record2 = TerritoryRecord(2, 2, Continent.CPU, Pair(100, 100), Pair(100, 100))
         val t1 = mock<ITerritoryVisual> {
             on { territoryRecord } doReturn record1
             on { getCoordinatesAsFloat(true) } doReturn Pair(5f, 6f)
