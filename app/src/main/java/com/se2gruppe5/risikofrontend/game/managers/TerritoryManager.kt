@@ -75,7 +75,7 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
     }
 
     /**
-     * let player:=null semantically mean "no owner"
+     * let player:=null semantically mean "no owne r"
      */
     fun assignOwner(t: ITerritoryVisual, playerRecord: PlayerRecord?) {
         checkTerritoryValid(t)
@@ -144,6 +144,7 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
 
     private fun attackTerritory(t: ITerritoryVisual){
         t.changeColor(me.color)
+        t.territoryRecord.owner = me
         me.capturedTerritory = true
     }
 

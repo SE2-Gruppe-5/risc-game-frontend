@@ -19,6 +19,7 @@ class CardHandlerUnitTest {
 
     @Before
     fun setUp() {
+
         player.cards = mutableListOf<CardRecord>();
     }
 
