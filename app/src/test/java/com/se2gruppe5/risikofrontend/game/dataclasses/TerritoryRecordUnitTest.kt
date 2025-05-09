@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikofrontend.game.dataclasses
 
+import com.se2gruppe5.risikofrontend.game.board.Continent
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -7,7 +8,7 @@ import org.junit.Assert.*
 class TerritoryRecordUnitTest {
     @Test
     fun inst() {
-        TerritoryRecord(1,1)
+        TerritoryRecord(1,1, Continent.POWER_SUPPLY, Pair(100f, 100f), Pair(100f, 100f))
         //Possibly needed in the future:
         //val p = TerritoryRecord(1,1)
         //assertNotNull(p)

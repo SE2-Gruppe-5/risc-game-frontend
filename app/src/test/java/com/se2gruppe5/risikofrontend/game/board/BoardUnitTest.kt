@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikofrontend.game.board
 
+import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import org.junit.Test
 import org.junit.Assert.*
 import org.junit.Before
@@ -9,7 +10,7 @@ import java.io.File
 class BoardUnitTest {
     private lateinit var json: String
     private lateinit var board: Board
-    private lateinit var territories: List<Territory>
+    private lateinit var territories: List<TerritoryRecord>
 
     @Before
     fun setup() {
@@ -29,9 +30,9 @@ class BoardUnitTest {
 
     @Test
     fun territoryDetailsCorrect() {
-        val territory1: Territory = territories[0]
-        val territory2: Territory = territories[1]
-        val territory3: Territory = territories[2]
+        val territory1: TerritoryRecord = territories[0]
+        val territory2: TerritoryRecord = territories[1]
+        val territory3: TerritoryRecord = territories[2]
 
         // Ids correct
         assertEquals(1, territory1.id)
@@ -56,9 +57,9 @@ class BoardUnitTest {
 
     @Test
     fun connectionsCorrect() {
-        val territory1: Territory = territories[0]
-        val territory2: Territory = territories[1]
-        val territory3: Territory = territories[2]
+        val territory1: TerritoryRecord = territories[0]
+        val territory2: TerritoryRecord = territories[1]
+        val territory3: TerritoryRecord = territories[2]
 
         assertTrue(territory1.connections.contains(territory2))
         assertTrue(territory2.connections.contains(territory3))

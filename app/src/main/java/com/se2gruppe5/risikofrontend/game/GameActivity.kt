@@ -11,6 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColorInt
 import com.se2gruppe5.risikofrontend.R
+import com.se2gruppe5.risikofrontend.game.board.Continent
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.dice.DiceVisualAndroid
@@ -36,14 +37,14 @@ class GameActivity : AppCompatActivity() {
         val p2 = PlayerRecord(2, "Leo", Color.rgb(0, 100, 255))
 
         //todo This is not pretty and hardcoded. It shouldn't be. It should be done by the GameManager
-        val t1 = TerritoryRecord(1,10)
+        val t1 = TerritoryRecord(1,10, Continent.CPU, Pair(100f, 100f), Pair(100f, 100f))
         val t1_txt = this.findViewById<TextView>(R.id.territoryAtext)
         val t1_btn = this.findViewById<ImageButton>(R.id.territoryAbtn)
         val t1_outline = this.findViewById<View>(R.id.territoryAoutline)
         val t1_vis: ITerritoryVisual =
             TerritoryVisualAndroid(t1, t1_txt, t1_txt, t1_btn, t1_outline)
 
-        val t2 = TerritoryRecord(2,5)
+        val t2 = TerritoryRecord(2,5, Continent.CPU, Pair(300f, 100f), Pair(100f, 100f))
         val t2_txt = this.findViewById<TextView>(R.id.territoryBtext)
         val t2_btn = this.findViewById<ImageButton>(R.id.territoryBbtn)
         val t2_outline = this.findViewById<View>(R.id.territoryBoutline)
