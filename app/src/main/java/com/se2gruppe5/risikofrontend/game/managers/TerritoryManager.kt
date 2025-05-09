@@ -1,17 +1,9 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
-import android.R.bool
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.LinearLayout.VERTICAL
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import com.se2gruppe5.risikofrontend.game.Dialogs.MoveTroopDialog
-import com.se2gruppe5.risikofrontend.game.GameActivity
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
@@ -46,7 +38,7 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
     }
 
     private val territoryList: MutableList<ITerritoryVisual> = mutableListOf()
-    private var prevSelTerritory: ITerritoryVisual? = null;
+    private var prevSelTerritory: ITerritoryVisual? = null
 
 
 
@@ -112,7 +104,7 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
                 }
                 if (GameManager.phase == Phases.Reinforce) {
                     if(prevSelTerritory!!.territoryRecord.owner == me && t.territoryRecord.owner == me) {
-                        val dialog = MoveTroopDialog(
+                        MoveTroopDialog(
                             context = activity,
                             maxTroops = prevSelTerritory!!.territoryRecord.stat - 2,
                             minTroops = 2,

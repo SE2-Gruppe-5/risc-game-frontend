@@ -1,7 +1,6 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
 import android.app.Activity
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.View
 import android.view.View.GONE
@@ -87,7 +86,7 @@ class GameManager  private constructor(val players: List<PlayerRecord>, val me :
                 else -> {}
             }
 
-            return Pair(phase, currentPlayerIndex);
+            return Pair(phase, currentPlayerIndex)
         }
         return Pair(Phases.OtherPlayer,currentPlayerIndex)
     }
@@ -99,14 +98,14 @@ class GameManager  private constructor(val players: List<PlayerRecord>, val me :
      */
     fun initializeGame(activity: Activity, turnIndicators: List<TextView>){
         initializeBoard(activity)
-        setPlayerNames(activity, turnIndicators)
+        setPlayerNames(turnIndicators)
     }
 
     /**
      * Set the correct amount of Playertext
      * Change them to the correspending playernames
      */
-    private fun setPlayerNames(activity: Activity, playerNames: List<TextView>) {
+    private fun setPlayerNames(playerNames: List<TextView>) {
         var i = 0
         while(i < players.size){
             playerNames[i].text = players[i].name

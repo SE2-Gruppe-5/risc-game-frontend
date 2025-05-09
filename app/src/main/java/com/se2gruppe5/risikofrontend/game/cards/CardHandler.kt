@@ -13,9 +13,9 @@ object CardHandler :ICardHandler {
         var cavalry = 0
         var artillery = 0
         cards.forEach { card ->{
-            if (card.type == CardType.Infantry) infantry++;
-            if(card.type == CardType.Cavalry) cavalry++;
-            if(card.type == CardType.Artillery) artillery++;
+            if (card.type == CardType.Infantry) infantry++
+            if(card.type == CardType.Cavalry) cavalry++
+            if(card.type == CardType.Artillery) artillery++
         } }
 
 
