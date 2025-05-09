@@ -2,7 +2,7 @@ package com.se2gruppe5.risikofrontend.game.managers
 
 import android.content.Context
 import android.widget.TextView
-import com.se2gruppe5.risikofrontend.TroopCount.TroopCountManager
+import com.se2gruppe5.risikofrontend.troopcount.TroopCountManager
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
