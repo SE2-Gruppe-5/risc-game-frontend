@@ -21,13 +21,14 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
         debug {
+            isMinifyEnabled = false
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
             //^ necessary for getting coverage reports from Android-Tests (DEBUG ONLY !)
@@ -62,11 +63,11 @@ afterEvaluate { //afterEvaluate needed, as task is unknown in early stage
 
 dependencies {
 
-    implementation(libs.androidx.uiautomator)
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.+")
-    testImplementation("org.mockito:mockito-core:5.+")
-    androidTestImplementation("org.mockito:mockito-android:5.+")
-    implementation("com.google.code.gson:gson:2.10.1")
+    //implementation(libs.androidx.uiautomator)
+    //testImplementation(libs.mockito.kotlin)
+    //testImplementation(libs.mockito.core)
+    //androidTestImplementation(libs.mockito.android)
+    implementation(libs.gson)
     implementation(libs.kotlinxCoroutines)
     implementation(libs.okhttp)
     implementation(libs.okhttpeventsource)
@@ -75,11 +76,11 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
-    implementation(libs.core.ktx)
+    //implementation(libs.core.ktx)
     implementation(libs.dotenv.kotlin)
-    androidTestImplementation("androidx.test:core:1.5.0")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+    //androidTestImplementation(libs.androidx.test.core)
+    //androidTestImplementation(libs.androidx.test.ext.junit)
+    implementation(libs.lifecycle.livedata.ktx)
     //--------------------------------------------------------
     testImplementation(libs.junit)
     //testImplementation(libs.mockito)
@@ -148,20 +149,10 @@ sonar {
                 "${project.layout.buildDirectory.get().asFile}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
             ).joinToString(",")
         )
+        property("sonar.coverage.exclusions",
+            "**/com/se2gruppe5/risikofrontend/players/ActivePlayersViewModel.kt, " +
+                    "**/com/se2gruppe5/risikofrontend/players/ActivePlayersActivity.kt")
 
-        // === Custom Sonar Exclusions ===
 
-        // Ignore logging noise in SSE/EventHandlers
-        property("sonar.issue.ignore.multicriteria", "1,2,3")
-        property("sonar.issue.ignore.multicriteria.1.ruleKey", "java:S106") // Logging should not be used
-        property("sonar.issue.ignore.multicriteria.1.resourceKey", "**/playerEventHandler.kt")
-
-        // Ignore UI code from coverage analysis
-        property("sonar.issue.ignore.multicriteria.2.ruleKey", "kotlin:S1186") // Empty method (onCreate etc.)
-        property("sonar.issue.ignore.multicriteria.2.resourceKey", "**/ActivePlayersViewModel.kt")
-
-        // Ignore test coverage warnings for Android UI Activities
-        property("sonar.issue.ignore.multicriteria.3.ruleKey", "java:S2187") // Test classes should contain tests
-        property("sonar.issue.ignore.multicriteria.3.resourceKey", "**/ActivePlayersViewModel.kt")
     }
 }
