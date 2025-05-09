@@ -19,7 +19,7 @@ import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.dice.DiceVisualAndroid
-import com.se2gruppe5.risikofrontend.game.dice.dies.Dice1d6Generic
+import com.se2gruppe5.risikofrontend.game.dice.diceModels.Dice1d6Generic
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.managers.GameManager
 import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
