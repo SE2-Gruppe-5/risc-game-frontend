@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 
 import android.os.Bundle
+import android.os.StrictMode
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -13,19 +14,29 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.launchdarkly.eventsource.EventHandler
-import com.launchdarkly.eventsource.MessageEvent
+import com.se2gruppe5.risikofrontend.network.NetworkClient
+import com.se2gruppe5.risikofrontend.network.sse.MessageType
+import com.se2gruppe5.risikofrontend.network.sse.SseClientService
+import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
+import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import java.net.ConnectException
 
 class MainActivity : AppCompatActivity() {
-    val client = OkHttpClient()
+    val client = NetworkClient()
+    var sseService: SseClientService? = null
+    val serviceConnection = constructServiceConnection { service ->
+        // Allow network calls on main thread for testing purposes
+        // GitHub Actions Android emulator action with stricter policy fails otherwise
+        StrictMode.setThreadPolicy(
+            StrictMode.ThreadPolicy.Builder().permitAll().build()
+        )
+
+        sseService = service
+        if (service != null) {
+            setupHandlers(service)
+        }
+    }
 
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,72 +49,44 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        val textView = this.findViewById<TextView>(R.id.textView)
         val txtMessage = this.findViewById<EditText>(R.id.txtMessage)
         val button = this.findViewById<Button>(R.id.button)
         val menuButton = this.findViewById<Button>(R.id.menuButton)
 
-        run {
-            SSEClient().init(AppendingHandler(textView))
-        }
-
-        button.setOnClickListener({
+        button.setOnClickListener {
             Log.i("WEBCHAT", "Sending message: " + txtMessage.text)
             lifecycleScope.launch {
-                sendChat(txtMessage.text.toString())
+                client.sendChat(txtMessage.text.toString())
             }
             txtMessage.setText("")
-        })
-        menuButton.setOnClickListener({
+        }
+        menuButton.setOnClickListener {
             Log.i("NAVIGATION", "Going to Menu")
             val intent = Intent(this, MenuActivity::class.java)
             startActivity(intent)
-        })
-    }
-
-    private suspend fun sendChat(message: String) {
-        val request = Request.Builder()
-            .url(Constants.HOST + Constants.CHAT_SEND_URL)
-            .post(MultipartBody.Builder()
-                .addFormDataPart("message", message)
-                .build())
-            .build()
-        val call = client.newCall(request)
-        return withContext(Dispatchers.IO) {
-            Log.i("WEBCHAT", "Executing request")
-            try {
-                call.execute()
-                Log.i("WEBCHAT", "Executed request")
-            }
-            catch (e: ConnectException) {
-                Log.i("WEBCHAT", "Connecting to host failed")
-            }
-        }
-    }
-}
-
-class AppendingHandler(private val textView: TextView) : EventHandler {
-    override fun onOpen() {
-        Log.i("SSE-LIFECYCLE", "onOpen")
-    }
-
-    override fun onClosed() {
-        Log.i("SSE-LIFECYCLE", "onClosed")
-    }
-
-    override fun onMessage(event: String?, messageEvent: MessageEvent?) {
-        Log.i("SSE-LIFECYCLE", "Event: " + event + ": " + messageEvent?.data)
-        messageEvent?.let {
-            this.textView.append("\n" + it.data)
         }
     }
 
-    override fun onComment(comment: String?) {
-        Log.i("SSE-LIFECYCLE", "onComment: " + comment)
+    override fun onStart() {
+        super.onStart()
+        Intent(this, SseClientService::class.java).also {
+            bindService(it, serviceConnection, BIND_AUTO_CREATE)
+        }
     }
 
-    override fun onError(t: Throwable?) {
-        Log.e("SSE-LIFECYCLE", "onError", t)
+    override fun onStop() {
+        super.onStop()
+        if (sseService != null) {
+            unbindService(serviceConnection)
+        }
     }
 
+    private fun setupHandlers(service: SseClientService) {
+        val textView = this.findViewById<TextView>(R.id.textView)
+        service.handler(MessageType.CHAT) { it as ChatMessage
+            runOnUiThread {
+                textView.append(it.message + "\n")
+            }
+        }
+    }
 }
