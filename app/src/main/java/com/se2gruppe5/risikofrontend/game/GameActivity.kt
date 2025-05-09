@@ -19,6 +19,15 @@ import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.game.territory.TerritoryVisualAndroid
+import com.se2gruppe5.risikofrontend.troopcount.TroopCountManager
+import com.se2gruppe5.risikofrontend.troopcount.TroopService
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +67,29 @@ class GameActivity : AppCompatActivity() {
         findViewById<ViewGroup>(R.id.main).addView(pointingArrow)
 
         val troopCountText = findViewById<TextView>(R.id.troopCountGlobalText)
-        TerritoryManager.init(p1, pointingArrow, this, troopCountText)
+
+        val troopService = TroopService(
+            HttpClient(CIO) {
+                install(ContentNegotiation) {
+                    json()
+                }
+            }
+        )
+        val troopCountManager = TroopCountManager(troopService)
+
+        //Click-Handler für Territories → Truppen vom Backend laden
+        t1_btn.setOnClickListener {
+            CoroutineScope(Dispatchers.Main).launch {
+                troopCountManager.fetchAndDisplayTroops(t1.id, troopCountText)
+            }
+        }
+        t2_btn.setOnClickListener {
+            CoroutineScope(Dispatchers.Main).launch {
+                troopCountManager.fetchAndDisplayTroops(t2.id, troopCountText)
+            }
+        }
+
+        TerritoryManager.init(p1, pointingArrow, this, troopCountText, troopCountManager)
         val territoryManager = TerritoryManager.get()
         territoryManager.addTerritory(t1_vis)
         territoryManager.addTerritory(t2_vis)

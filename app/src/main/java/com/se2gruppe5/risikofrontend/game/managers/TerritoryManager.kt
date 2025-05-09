@@ -2,20 +2,23 @@ package com.se2gruppe5.risikofrontend.game.managers
 
 import android.content.Context
 import android.widget.TextView
-import com.se2gruppe5.risikofrontend.TroopCount.TroopCountManager
+import com.se2gruppe5.risikofrontend.troopcount.TroopCountManager
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class TerritoryManager private constructor(val me: PlayerRecord, private val pointingArrow: PointingArrowAndroid, private val context: Context, private val troopTextView: TextView) {
+class TerritoryManager private constructor(val me: PlayerRecord, private val pointingArrow: PointingArrowAndroid, private val context: Context, private val troopTextView: TextView, private val troopCountManager: TroopCountManager) {
     companion object {
 
         //Intentionally not using non-nullable lateInit var for unit test reset funcitonality
         private var singleton: TerritoryManager? = null
 
-        fun init(me: PlayerRecord, pointingArrow: PointingArrowAndroid, context: Context, troopTextView: TextView) {
+        fun init(me: PlayerRecord, pointingArrow: PointingArrowAndroid, context: Context, troopTextView: TextView, troopCountManager: TroopCountManager) {
             if (singleton==null) {
-                singleton = TerritoryManager(me, pointingArrow, context, troopTextView)
+                singleton = TerritoryManager(me, pointingArrow, context, troopTextView, troopCountManager)
             }
         }
 
@@ -122,7 +125,8 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
             prevSelTerritory?.let {
                 pointingArrow.setCoordinates(
                     it.getCoordinatesAsFloat(true),
-                    t.getCoordinatesAsFloat(true))
+                    t.getCoordinatesAsFloat(true)
+                )
             }
             if (isInAttackMode) {
                 attackTerritory(t)
@@ -131,7 +135,12 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
             }
             updateSelected(t)
 
-            TroopCountManager(context).fetchTroopsForTerritory(t.territoryRecord.id, troopTextView)
+            CoroutineScope(Dispatchers.Main).launch {
+                troopCountManager.fetchAndDisplayTroops(
+                    t.territoryRecord.id,
+                    troopTextView
+                )
+            }
         }
     }
 
