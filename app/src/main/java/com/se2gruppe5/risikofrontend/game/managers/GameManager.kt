@@ -1,5 +1,8 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
+import android.app.Activity
+import android.graphics.Color
+import com.se2gruppe5.risikofrontend.game.GameActivity
 import com.se2gruppe5.risikofrontend.game.cards.CardHandler
 import com.se2gruppe5.risikofrontend.game.cards.ICardHandler
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
@@ -30,6 +33,11 @@ class GameManager  private constructor(val players: List<PlayerRecord>, val me :
         fun unitTestReset(){
             singleton=null
         }
+        fun getPlayers(): List<PlayerRecord>{
+            val p1 = PlayerRecord(1, "Markus", Color.rgb(255, 100, 0))
+            val p2 = PlayerRecord(2, "Leo", Color.rgb(0, 100, 255))
+            return listOf(p1, p2)
+        }
     }
     private var phase = Phases.Reinforce
     private var currentPlayerIndex = 0;
@@ -39,35 +47,50 @@ class GameManager  private constructor(val players: List<PlayerRecord>, val me :
      * Signals backend to swap to the next Player
      * Hands out a card if the Player captured a territory
      */
-    private fun nextPlayer(): Phases{
+    private fun nextPlayer(): Pair<Phases, Int>{
         if(currentPlayer.capturedTerritory){
             CardHandler.getCard(currentPlayer);
+            currentPlayer.capturedTerritory = false
         }
-       if(currentPlayerIndex+1 == players.size){
+       if(currentPlayerIndex + 1 == players.size){
            currentPlayerIndex = 0
        }else currentPlayerIndex++
         currentPlayer = players[currentPlayerIndex]
 
 
-        return Phases.Reinforce
+        return Pair(Phases.Reinforce,currentPlayerIndex)
     }
 
     /**
      * Swaps Phase to the next one
      */
-    fun nextPhase(): Phases {
+    fun nextPhase(): Pair<Phases, Int> {
         if(currentPlayer == me) {
             when (phase) {
                 Phases.Reinforce -> phase = Phases.Attack
                 Phases.Attack -> phase = Phases.Trade
-                Phases.Trade -> phase = nextPlayer()
+                Phases.Trade -> {
+                    var temp = nextPlayer()
+                    phase = temp.first
+                    return temp
+                }
                 else -> {}
             }
-            return phase;
+
+            return Pair(phase, currentPlayerIndex);
         }
-        return Phases.OtherPlayer
+        return Pair(Phases.OtherPlayer,currentPlayerIndex)
     }
 
+    fun initializeGame(){
+
+
+    }
+
+    fun initializeBoard(activity: Activity){
+
+
+    }
 
 
 
