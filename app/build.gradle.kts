@@ -52,6 +52,9 @@ android {
     kotlinOptions {
         jvmTarget = "21"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 //Automatically generate appropriate Test Reports after performing Android-Tests

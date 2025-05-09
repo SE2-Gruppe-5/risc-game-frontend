@@ -15,7 +15,7 @@ interface ICardHandler {
      * Give player a card if they captured a Territory
      * Cards will be abstracted into only giving them 1 or 2 stars
      */
-    fun getCard(player: PlayerRecord)
+    fun getCard(player: PlayerRecord?)
 
 
 

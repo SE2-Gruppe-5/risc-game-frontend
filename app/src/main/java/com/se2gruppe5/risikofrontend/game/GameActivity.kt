@@ -1,31 +1,23 @@
 package com.se2gruppe5.risikofrontend.game
 
-import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.toColorInt
 import com.se2gruppe5.risikofrontend.R
-import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
-import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.dice.DiceVisualAndroid
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.Dice1d6Generic
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.managers.GameManager
-import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
-import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
-import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
-import com.se2gruppe5.risikofrontend.game.territory.TerritoryVisualAndroid
+
 
 class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,58 +25,11 @@ class GameActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.game)
 
-
         //Placeholder
         val diceBtn = this.findViewById<ImageButton>(R.id.diceButton)
         val diceTxt = this.findViewById<TextView>(R.id.diceText)
         val diceVisualAndroid = DiceVisualAndroid(Dice1d6Generic(), diceBtn, diceTxt)
         diceVisualAndroid.clickSubscription { it.roll() }
-
-
-
-        //todo This is not pretty and hardcoded. It shouldn't be. It should be done by the GameManager
-        val t1 = TerritoryRecord(1,10)
-        val t1_txt = this.findViewById<TextView>(R.id.territoryAtext)
-        val t1_btn = this.findViewById<ImageButton>(R.id.territoryAbtn)
-        val t1_outline = this.findViewById<View>(R.id.territoryAoutline)
-        val t1_vis: ITerritoryVisual =
-            TerritoryVisualAndroid(t1, t1_txt, t1_txt, t1_btn, t1_outline)
-
-        val t2 = TerritoryRecord(2,5)
-        val t2_txt = this.findViewById<TextView>(R.id.territoryBtext)
-        val t2_btn = this.findViewById<ImageButton>(R.id.territoryBbtn)
-        val t2_outline = this.findViewById<View>(R.id.territoryBoutline)
-        val t2_vis: ITerritoryVisual =
-            TerritoryVisualAndroid(t2, t2_txt, t2_txt, t2_btn, t2_outline)
-
-        val pointingArrow = PointingArrowAndroid(this, "#FF0000".toColorInt(), 15f)
-        pointingArrow.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
-        findViewById<ViewGroup>(R.id.main).addView(pointingArrow)
-
-        TerritoryManager.init(p1, pointingArrow)
-        val territoryManager = TerritoryManager.get()
-        territoryManager.addTerritory(t1_vis)
-        territoryManager.addTerritory(t2_vis)
-
-        territoryManager.assignOwner(t1_vis, p1)
-        territoryManager.assignOwner(t2_vis, p2)
-
-
-        this.findViewById<ImageButton>(R.id.goattack).setOnClickListener({
-            territoryManager.enterSelectMode()
-            territoryManager.enterAttackMode()
-            this.findViewById<ImageButton>(R.id.goattack).backgroundTintList =
-                ColorStateList.valueOf(Color.RED)
-        })
-
-        val nextPhaseBtn = this.findViewById<Button>(R.id.phaseBtn)
-        val reinforceIndicator = this.findViewById<TextView>(R.id.reinforceIndicator)
-        val attackIndicator = this.findViewById<TextView>(R.id.attackIndicator)
-        val tradeIndicator = this.findViewById<TextView>(R.id.tradeIndicator)
-        val phaseTxt = this.findViewById<TextView>(R.id.currentPhaseTxt)
 
         val player1TurnIndicator = this.findViewById<TextView>(R.id.player1txt)
         val player2TurnIndicator = this.findViewById<TextView>(R.id.player2txt)
@@ -92,18 +37,21 @@ class GameActivity : AppCompatActivity() {
         val player4TurnIndicator = this.findViewById<TextView>(R.id.player4txt)
         val player5TurnIndicator = this.findViewById<TextView>(R.id.player5txt)
         val player6TurnIndicator = this.findViewById<TextView>(R.id.player6txt)
-        println("player1TurnIndicator: $player1TurnIndicator")
-        println("player2TurnIndicator: $player2TurnIndicator")
-        println("player3TurnIndicator: $player3TurnIndicator")
-        println("player4TurnIndicator: $player4TurnIndicator")
-        println("player5TurnIndicator: $player5TurnIndicator")
-        println("player6TurnIndicator: $player6TurnIndicator")
-        val turnIndicators = listOf<View>( player1TurnIndicator, player2TurnIndicator, player3TurnIndicator, player4TurnIndicator, player5TurnIndicator, player6TurnIndicator)
+        val turnIndicators = listOf<TextView>( player1TurnIndicator, player2TurnIndicator, player3TurnIndicator, player4TurnIndicator, player5TurnIndicator, player6TurnIndicator)
 
 
-        GameManager.init(listOf(p1,p2), p1)
+
+        val nextPhaseBtn = this.findViewById<Button>(R.id.phaseBtn)
+        val reinforceIndicator = this.findViewById<TextView>(R.id.reinforceIndicator)
+        val attackIndicator = this.findViewById<TextView>(R.id.attackIndicator)
+        val tradeIndicator = this.findViewById<TextView>(R.id.tradeIndicator)
+        val phaseTxt = this.findViewById<TextView>(R.id.currentPhaseTxt)
+
+
+        val players = GameManager.getPlayers()
+        GameManager.init(players, players[0])
         val gameManager = GameManager.get()
-        val notYourTurnPopUp = buildNotYourTurnDialog();
+        gameManager.initializeGame(this, turnIndicators)
         nextPhaseBtn.setOnClickListener {
             var res = gameManager.nextPhase()
             var phase = res.first
@@ -122,7 +70,9 @@ class GameActivity : AppCompatActivity() {
                     nextPhaseBtn.text = "End Turn"
                 }
 
-                Phases.OtherPlayer -> {notYourTurnPopUp.show()}
+                Phases.OtherPlayer -> {
+                    Toast.makeText(this, "Wait for your turn", Toast.LENGTH_SHORT).show()
+                }
             }
 
 
@@ -148,14 +98,6 @@ class GameActivity : AppCompatActivity() {
 
     }
 
-    private fun buildNotYourTurnDialog(): AlertDialog {
-        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder
-            .setTitle("Wait for your turn")
-            .setPositiveButton("ok") {dialog, which ->{}}
-        return builder.create()
-
-    }
 
 }
 
