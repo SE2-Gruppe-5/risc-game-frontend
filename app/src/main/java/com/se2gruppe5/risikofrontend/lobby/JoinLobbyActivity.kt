@@ -2,6 +2,7 @@ package com.se2gruppe5.risikofrontend.lobby
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.StrictMode
 import android.util.Log
 import android.widget.ImageButton
 import android.widget.Button
@@ -12,11 +13,14 @@ import androidx.lifecycle.lifecycleScope
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.network.INetworkClient
 import com.se2gruppe5.risikofrontend.network.NetworkClient
+import com.se2gruppe5.risikofrontend.network.sse.SseClientService
+import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class JoinLobbyActivity :AppCompatActivity() {
+    val client = NetworkClient()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -45,9 +49,9 @@ class JoinLobbyActivity :AppCompatActivity() {
     }
 
     private fun joinLobby(code: String, name: String){
-        val networkClient : INetworkClient = NetworkClient()
-        lifecycleScope.launch {
-            networkClient.joinLobby(code, name)
+        Log.i("JoinLobby", code)
+        runBlocking {
+            client.joinLobby(code, name)
         }
 
     }

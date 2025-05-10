@@ -15,12 +15,14 @@ import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.network.INetworkClient
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import com.se2gruppe5.risikofrontend.network.sse.MessageType
+import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class CreateLobbyActivity :AppCompatActivity() {
+    val client = NetworkClient()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

@@ -51,10 +51,7 @@ class NetworkClient() : INetworkClient{
         execute(request)
     }
 
-    override suspend fun changeTerritory(
-        t1: TerritoryRecord,
-        t2: TerritoryRecord
-    ) {
+    override suspend fun changeTerritory(t1: TerritoryRecord, t2: TerritoryRecord) {
         TODO("Not yet implemented")
     }
 

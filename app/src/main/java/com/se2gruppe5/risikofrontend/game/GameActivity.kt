@@ -2,32 +2,44 @@ package com.se2gruppe5.risikofrontend.game
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.StrictMode
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.se2gruppe5.risikofrontend.Constants
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.dice.DiceVisualAndroid
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.Dice1d6Generic
-import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.managers.GameManager
+import com.se2gruppe5.risikofrontend.network.NetworkClient
 import com.se2gruppe5.risikofrontend.network.sse.MessageType
+import com.se2gruppe5.risikofrontend.network.sse.SseClientService
+import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
 import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
 
 
 class GameActivity : AppCompatActivity() {
-
+    val client = NetworkClient()
+    var sseService: SseClientService? = null
+    val serviceConnection = constructServiceConnection { service ->
+        // Allow network calls on main thread for testing purposes
+        // GitHub Actions Android emulator action with stricter policy fails otherwise
+        StrictMode.setThreadPolicy(
+            StrictMode.ThreadPolicy.Builder().permitAll().build()
+        )
+        sseService = service
+        if (service != null) {
+            setupHandlers(service)
+        }
+    }
     var gameManager: GameManager? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.game)
-        handlerCreation()
         //Placeholder
         val diceBtn = this.findViewById<ImageButton>(R.id.diceButton)
         val diceTxt = this.findViewById<TextView>(R.id.diceText)
@@ -98,13 +110,14 @@ class GameActivity : AppCompatActivity() {
 
     }
 
-    private fun handlerCreation(){
-        Constants.SSE_SERVICE?.handler(MessageType.GAME_START) { it as ChatMessage
+    private fun setupHandlers(service: SseClientService) {
+        sseService?.handler(MessageType.GAME_START) { it as ChatMessage
           //  GameManager.init(null,null)
         }
     }
 
 
 }
+
 
 

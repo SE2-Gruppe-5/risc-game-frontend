@@ -3,6 +3,7 @@ package com.se2gruppe5.risikofrontend.lobby
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.StrictMode
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
@@ -18,100 +19,71 @@ import com.se2gruppe5.risikofrontend.network.INetworkClient
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import com.se2gruppe5.risikofrontend.network.sse.MessageType
 import com.se2gruppe5.risikofrontend.network.sse.SseClientService
+import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
 import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 import kotlinx.coroutines.runBlocking
+import org.w3c.dom.Text
 import java.util.UUID
 
 class LobbyActivity :AppCompatActivity() {
+    val client = NetworkClient()
+    var sseService: SseClientService? = null
+    val serviceConnection = constructServiceConnection { service ->
+        // Allow network calls on main thread for testing purposes
+        // GitHub Actions Android emulator action with stricter policy fails otherwise
+        StrictMode.setThreadPolicy(
+            StrictMode.ThreadPolicy.Builder().permitAll().build()
+        )
+        sseService = service
+        if (service != null) {
+            setupHandlers(service)
+        }
+    }
+    var joinedPlayers: Int = 1
+    var MAX_PLAYER: Int = 6
+    var players: MutableList<PlayerRecord> = mutableListOf()
+    var playerBtn: MutableList<ImageButton>? = mutableListOf()
+    var playerTxt: MutableList<TextView>? = mutableListOf()
+    var joinCode: String = ""
+    var playerName: String = ""
 
-    var joinedPlayers : Int = 1
-    var MAX_PLAYER : Int = 6
-    var players : MutableList<PlayerRecord> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.lobby)
 
-        val playerName = intent.getStringExtra("PLAYER_NAME") ?: "Player"
+        playerName = intent.getStringExtra("PLAYER_NAME") ?: "Player"
         val ownNameTxt = findViewById<TextView>(R.id.ownNameTxt)
         ownNameTxt.text = playerName
 
-        val joinCode : String = intent.getStringExtra("LOBBY_CODE").toString()
+        joinCode = intent.getStringExtra("LOBBY_CODE").toString()
         val lobbyCodeTxt = findViewById<TextView>(R.id.lobbyCodeTxt)
         lobbyCodeTxt.text = joinCode
 
 
-        val player1Btn = this.findViewById<ImageButton>(R.id.player1Btn)
-        val player2Btn = this.findViewById<ImageButton>(R.id.player2Btn)
-        val player3Btn = this.findViewById<ImageButton>(R.id.player3Btn)
-        val player4Btn = this.findViewById<ImageButton>(R.id.player4Btn)
-        val player5Btn = this.findViewById<ImageButton>(R.id.player5Btn)
-        val player6Btn = this.findViewById<ImageButton>(R.id.player6Btn)
-        val player1Txt = this.findViewById<TextView>(R.id.namePlayer1)
-        val player2Txt = this.findViewById<TextView>(R.id.namePlayer2)
-        val player3Txt = this.findViewById<TextView>(R.id.namePlayer3)
-        val player4Txt = this.findViewById<TextView>(R.id.namePlayer4)
-        val player5Txt = this.findViewById<TextView>(R.id.namePlayer5)
-        val player6Txt = this.findViewById<TextView>(R.id.namePlayer6)
-
-        player1Txt.visibility = View.GONE
-        player2Btn.visibility = View.GONE
-        player3Btn.visibility = View.GONE
-        player4Btn.visibility = View.GONE
-        player5Btn.visibility = View.GONE
-        player6Btn.visibility = View.GONE
-
-        player1Txt.visibility = View.GONE
-        player2Txt.visibility = View.GONE
-        player3Txt.visibility = View.GONE
-        player4Txt.visibility = View.GONE
-        player5Txt.visibility = View.GONE
-        player6Txt.visibility = View.GONE
-        Log.i("lobby", "Hello from lobbyactivity ${Constants.SSE_SERVICE}")
+        playerBtn?.add(this.findViewById<ImageButton>(R.id.player1Btn))
+        playerBtn?.add(this.findViewById<ImageButton>(R.id.player2Btn))
+        playerBtn?.add(this.findViewById<ImageButton>(R.id.player3Btn))
+        playerBtn?.add(this.findViewById<ImageButton>(R.id.player4Btn))
+        playerBtn?.add(this.findViewById<ImageButton>(R.id.player5Btn))
+        playerBtn?.add(this.findViewById<ImageButton>(R.id.player6Btn))
+        playerTxt?.add(this.findViewById<TextView>(R.id.namePlayer1))
+        playerTxt?.add(this.findViewById<TextView>(R.id.namePlayer2))
+        playerTxt?.add(this.findViewById<TextView>(R.id.namePlayer3))
+        playerTxt?.add(this.findViewById<TextView>(R.id.namePlayer4))
+        playerTxt?.add(this.findViewById<TextView>(R.id.namePlayer5))
+        playerTxt?.add(this.findViewById<TextView>(R.id.namePlayer6))
 
 
-        if(joinedPlayers == 1 ){
-            joinLobby(joinCode,playerName)
+        for (i in playerTxt?.indices!!) {
+            playerBtn!![i].visibility = View.GONE
+            playerTxt!![i].visibility = View.GONE
         }
-        Constants.SSE_SERVICE?.handler(MessageType.JOIN_LOBBY) { it as ChatMessage
-            runOnUiThread {
-                Log.i("lobby", "Hello from lobbyhandler")
-                Log.i("lobby", "$it")
-                var uuid : UUID = UUID.randomUUID()
-                var name : String = "asaba"
-                when(joinedPlayers){
-                     1 -> {
-                        player1Txt.visibility = View.VISIBLE
-                         player1Btn.visibility = View.VISIBLE
-                         player1Txt.text = it.toString()
-                }
-                    2 -> {
-                        player2Txt.visibility = View.VISIBLE
-                        player2Btn.visibility = View.VISIBLE
-                    }
-                    3 -> {
-                        player3Txt.visibility = View.VISIBLE
-                        player3Btn.visibility = View.VISIBLE
-                    }
-                    4 -> {
-                        player4Txt.visibility = View.VISIBLE
-                        player4Btn.visibility = View.VISIBLE
-                    }
-                    5 -> {
-                        player5Txt.visibility = View.VISIBLE
-                        player5Btn.visibility = View.VISIBLE
-                    }
-                    6 -> {
-                        player6Txt.visibility = View.VISIBLE
-                        player6Btn.visibility = View.VISIBLE
-                    }
-                }
-
-                Log.i("Lobby", "$it")
-                players.add(PlayerRecord(uuid,name, Color.rgb((0..255).random(),(0..255).random(),(0..255).random())))
-            }
+        if (joinedPlayers == 1) {
+            joinLobby(joinCode, playerName)
         }
+
         val backBtn = this.findViewById<ImageButton>(R.id.backBtn)
         val startGameBtn = this.findViewById<Button>(R.id.startGameBtn)
 
@@ -126,16 +98,56 @@ class LobbyActivity :AppCompatActivity() {
             startActivity(intent)
         })
 
-
     }
-    private fun joinLobby(code: String, name: String){
-        val networkClient : INetworkClient = NetworkClient()
+
+    private fun joinLobby(code: String, name: String) {
+        val networkClient: INetworkClient = NetworkClient()
         runBlocking {
             networkClient.joinLobby(code, name)
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        Intent(this, SseClientService::class.java).also {
+            bindService(it, serviceConnection, BIND_AUTO_CREATE)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (sseService != null) {
+            unbindService(serviceConnection)
+        }
+    }
+
+    private fun setupHandlers(service: SseClientService) {
+        sseService?.handler(MessageType.JOIN_LOBBY) {
+            it as ChatMessage
+            runOnUiThread {
+                Log.i("lobby", "Hello from lobbyhandler")
+                Log.i("lobby", "$it")
+                var uuid: UUID = UUID.randomUUID()
+                var name: String = "asaba"
+                playerTxt?.get(joinedPlayers-1)?.visibility = View.VISIBLE
+                playerTxt?.get(joinedPlayers-1)?.text = name
+                playerBtn?.get(joinedPlayers-1)?.visibility = View.VISIBLE
+
+                joinedPlayers++
+                players.add(
+                    PlayerRecord(
+                        uuid,
+                        name,
+                        Color.rgb((0..255).random(), (0..255).random(), (0..255).random())
+                    )
+                )
+            }
+
+        }
+    }
 }
+
+
 
 
 

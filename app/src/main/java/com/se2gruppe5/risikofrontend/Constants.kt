@@ -9,7 +9,6 @@ class Constants {
         // Env directory path is different running unit tests, since Android bundles "assets" in the project root
         // The path for unit tests is configured in the Gradle build file
         private val env_path = System.getProperty("env_dir") ?: "/assets"
-        var SSE_SERVICE : SseClientService? = null
         private val dotenv = dotenv {
             directory = env_path
             filename = "env"
