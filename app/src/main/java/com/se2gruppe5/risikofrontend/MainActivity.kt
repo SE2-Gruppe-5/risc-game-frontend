@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         sseService = service
         if (service != null) {
+            Constants.SSE_SERVICE = service
             setupHandlers(service)
         }
     }
@@ -89,4 +90,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 }

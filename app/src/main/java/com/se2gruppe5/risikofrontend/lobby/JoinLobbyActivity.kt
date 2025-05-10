@@ -8,8 +8,13 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.se2gruppe5.risikofrontend.R
+import com.se2gruppe5.risikofrontend.network.INetworkClient
+import com.se2gruppe5.risikofrontend.network.NetworkClient
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class JoinLobbyActivity :AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,11 +35,20 @@ class JoinLobbyActivity :AppCompatActivity() {
         joinBtn.setOnClickListener({
             val name = nameInput.text.toString()
             val joincode = joinInput.text.toString()
+            joinLobby(joincode, name)
             Log.i("NAVIGATION", "Create lobby")
             val intent = Intent(this, LobbyActivity::class.java)
             intent.putExtra("PLAYER_NAME", name)
             intent.putExtra("JOIN_CODE", joincode)
             startActivity(intent)
         })
+    }
+
+    private fun joinLobby(code: String, name: String){
+        val networkClient : INetworkClient = NetworkClient()
+        lifecycleScope.launch {
+            networkClient.joinLobby(code, name)
+        }
+
     }
 }

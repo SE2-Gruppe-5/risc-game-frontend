@@ -10,19 +10,24 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.se2gruppe5.risikofrontend.Constants
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.dice.DiceVisualAndroid
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.Dice1d6Generic
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.managers.GameManager
+import com.se2gruppe5.risikofrontend.network.sse.MessageType
+import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
 
 
 class GameActivity : AppCompatActivity() {
+
+    var gameManager: GameManager? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.game)
-
+        handlerCreation()
         //Placeholder
         val diceBtn = this.findViewById<ImageButton>(R.id.diceButton)
         val diceTxt = this.findViewById<TextView>(R.id.diceText)
@@ -45,36 +50,33 @@ class GameActivity : AppCompatActivity() {
         val tradeIndicator = this.findViewById<TextView>(R.id.tradeIndicator)
         val phaseTxt = this.findViewById<TextView>(R.id.currentPhaseTxt)
 
-
-        val players = GameManager.getPlayers()
-        GameManager.init(players, players[0])
-        val gameManager = GameManager.get()
-        gameManager.initializeGame(this, turnIndicators)
-        nextPhaseBtn.setOnClickListener {
-            var res = gameManager.nextPhase()
-            var phase = res.first
-            when(phase){
-                Phases.Reinforce -> {changeViewColors(reinforceIndicator,attackIndicator,tradeIndicator)
-                    phaseTxt.text = "Reinforce"
-                    nextPhaseBtn.text = "Next Phase"
-                    changeHighlightedPlayer(res.second,turnIndicators)
-                }
-                Phases.Attack -> {changeViewColors(attackIndicator,reinforceIndicator,tradeIndicator)
-                    phaseTxt.text = "Attack"
-                    nextPhaseBtn.text = "Next Phase"
-                }
-                Phases.Trade -> {changeViewColors(tradeIndicator,attackIndicator,reinforceIndicator)
-                    phaseTxt.text = "Trade"
-                    nextPhaseBtn.text = "End Turn"
-                }
-
-                Phases.OtherPlayer -> {
-                    Toast.makeText(this, "Wait for your turn", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-
-        }
+//        val gameManager = GameManager.get()
+//        gameManager.initializeGame(this, turnIndicators)
+//        nextPhaseBtn.setOnClickListener {
+//            var res = gameManager.nextPhase()
+//            var phase = res.first
+//            when(phase){
+//                Phases.Reinforce -> {changeViewColors(reinforceIndicator,attackIndicator,tradeIndicator)
+//                    phaseTxt.text = "Reinforce"
+//                    nextPhaseBtn.text = "Next Phase"
+//                    changeHighlightedPlayer(res.second,turnIndicators)
+//                }
+//                Phases.Attack -> {changeViewColors(attackIndicator,reinforceIndicator,tradeIndicator)
+//                    phaseTxt.text = "Attack"
+//                    nextPhaseBtn.text = "Next Phase"
+//                }
+//                Phases.Trade -> {changeViewColors(tradeIndicator,attackIndicator,reinforceIndicator)
+//                    phaseTxt.text = "Trade"
+//                    nextPhaseBtn.text = "End Turn"
+//                }
+//
+//                Phases.OtherPlayer -> {
+//                    Toast.makeText(this, "Wait for your turn", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//
+//
+//        }
 
     }
     val highlightedColor = Color.BLACK
@@ -94,6 +96,12 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun handlerCreation(){
+        Constants.SSE_SERVICE?.handler(MessageType.GAME_START) { it as ChatMessage
+          //  GameManager.init(null,null)
+        }
     }
 
 

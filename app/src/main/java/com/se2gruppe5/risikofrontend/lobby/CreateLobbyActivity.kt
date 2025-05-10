@@ -8,8 +8,17 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.google.gson.Gson
+import com.se2gruppe5.risikofrontend.Constants
 import com.se2gruppe5.risikofrontend.R
+import com.se2gruppe5.risikofrontend.network.INetworkClient
+import com.se2gruppe5.risikofrontend.network.NetworkClient
+import com.se2gruppe5.risikofrontend.network.sse.MessageType
+import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class CreateLobbyActivity :AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,10 +38,22 @@ class CreateLobbyActivity :AppCompatActivity() {
         createBtn.setOnClickListener({
             val name = nameInput.text.toString()
             Log.i("NAVIGATION", "Create lobby")
+            var code = createLobby()
             val intent = Intent(this, LobbyActivity::class.java)
             intent.putExtra("PLAYER_NAME", name)
+            intent.putExtra("LOBBY_CODE", code)
             startActivity(intent)
         })
 
     }
+
+    private fun createLobby(): String{
+        val networkClient : INetworkClient = NetworkClient()
+        var code : String = ""
+        runBlocking {
+        code =  networkClient.createLobby().toString()
+            }
+        return code
+    }
+
 }

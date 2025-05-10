@@ -1,6 +1,9 @@
 package com.se2gruppe5.risikofrontend.network
 
 import com.se2gruppe5.risikofrontend.Constants
+import com.se2gruppe5.risikofrontend.game.dataclasses.CardRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -10,7 +13,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 
-class NetworkClient : INetworkClient{
+class NetworkClient() : INetworkClient{
     val client = OkHttpClient()
 
     override suspend fun sendChat(message: String) {
@@ -48,6 +51,33 @@ class NetworkClient : INetworkClient{
         execute(request)
     }
 
+    override suspend fun changeTerritory(
+        t1: TerritoryRecord,
+        t2: TerritoryRecord
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun changePhase() {
+      //  val request = createRequest("GET", Constants.CHANGE_PHASE_URL.replace("{id}", lobbyCode))
+     //   execute(request)
+
+    }
+
+    override suspend fun changePlayers(
+        players: List<PlayerRecord>
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun cardAction(
+        action: String,
+        player: PlayerRecord,
+        card: CardRecord
+    ) {
+        TODO("Not yet implemented")
+    }
+
     private fun createRequest(method: String, path: String, vararg params: String): Request {
         val body = if (params.isNotEmpty()) {
             MultipartBody.Builder()
@@ -70,7 +100,7 @@ class NetworkClient : INetworkClient{
     private suspend fun execute(request: Request): Response {
         val call = client.newCall(request)
         return withContext(Dispatchers.IO) {
-            return@withContext call.execute()
+           return@withContext call.execute()
         }
     }
 }

@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-
+    <!-- Remove networksecurity Config setting, only for localhost testing-->
     <application
         android:usesCleartextTraffic="false"
         android:allowBackup="true"
@@ -15,6 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Risiko"
+        android:networkSecurityConfig="@xml/network_security_config"
+
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"

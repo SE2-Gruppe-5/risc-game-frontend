@@ -1,9 +1,7 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
 import android.app.Activity
-import android.graphics.Color
 import android.view.View
-import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
@@ -17,9 +15,10 @@ import com.se2gruppe5.risikofrontend.game.territory.GameViewManager
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.game.territory.TerritoryVisualAndroid
+import java.util.UUID
 
 
-class GameManager  private constructor(val players: List<PlayerRecord>, val me : PlayerRecord){
+class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
     companion object {
 
         //Intentionally not using non-nullable lateInit var for unit test reset functionality
@@ -27,11 +26,13 @@ class GameManager  private constructor(val players: List<PlayerRecord>, val me :
         private var currentPlayerIndex = 0
         private var currentPlayer: PlayerRecord? = null
         private var phase = Phases.Reinforce
+        private val players: List<PlayerRecord>? = null
 
-        fun init(players:  List<PlayerRecord>, me : PlayerRecord) {
+
+        fun init(me : PlayerRecord, uuid: UUID) {
             if (singleton==null) {
-                singleton = GameManager(players, me)
-                currentPlayer = players[currentPlayerIndex]
+                singleton = GameManager(me, uuid)
+                currentPlayer = players?.get(currentPlayerIndex)
             }
         }
 
@@ -46,10 +47,8 @@ class GameManager  private constructor(val players: List<PlayerRecord>, val me :
         fun unitTestReset(){
             singleton=null
         }
-        fun getPlayers(): List<PlayerRecord>{
-            val p1 = PlayerRecord(1, "Markus", Color.RED)
-            val p2 = PlayerRecord(2, "Leo", Color.BLUE)
-            return listOf(p1, p2)
+        private fun getPlayers(): List<PlayerRecord>{
+            return listOf()
         }
         fun getCurrentPlayer() : PlayerRecord? {
             return currentPlayer
@@ -81,10 +80,10 @@ class GameManager  private constructor(val players: List<PlayerRecord>, val me :
             CardHandler.getCard(currentPlayer)
             currentPlayer!!.capturedTerritory = false
         }
-       if(currentPlayerIndex + 1 == players.size){
+       if(currentPlayerIndex + 1 == players?.size){
            currentPlayerIndex = 0
        }else currentPlayerIndex++
-        currentPlayer = players[currentPlayerIndex]
+        currentPlayer = players?.get(currentPlayerIndex)
 
 
         return Pair(Phases.Reinforce,currentPlayerIndex)
@@ -130,8 +129,8 @@ class GameManager  private constructor(val players: List<PlayerRecord>, val me :
     private fun initializeBoard(activity: Activity){
         //TODO Territories, correct setup for TerritoryManager
         //still the code from markus just extracted
-        val p1 = players[0]
-        val p2 = players[1]
+        val p1 = players?.get(0)
+        val p2 = players?.get(1)
         val t1 = TerritoryRecord(1,10)
         val t1_txt = activity.findViewById<TextView>(R.id.territoryAtext)
         val t1_btn = activity.findViewById<ImageButton>(R.id.territoryAbtn)

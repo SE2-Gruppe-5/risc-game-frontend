@@ -60,7 +60,7 @@ class SseClientService : Service() {
     }
 
     fun handleIncomingMessage(type: MessageType, message: IMessage) {
-        handlers.get(type)?.accept(message)
+        handlers[type]?.accept(message)
     }
 
     fun handler(type: MessageType, handler: Consumer<IMessage>) {

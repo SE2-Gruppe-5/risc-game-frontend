@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikofrontend
 
+import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import io.github.cdimascio.dotenv.dotenv
 
 
@@ -8,7 +9,7 @@ class Constants {
         // Env directory path is different running unit tests, since Android bundles "assets" in the project root
         // The path for unit tests is configured in the Gradle build file
         private val env_path = System.getProperty("env_dir") ?: "/assets"
-
+        var SSE_SERVICE : SseClientService? = null
         private val dotenv = dotenv {
             directory = env_path
             filename = "env"
@@ -21,5 +22,6 @@ class Constants {
         val LOBBY_RESOURCE_URL: String = dotenv["LOBBY_RESOURCE_URL"]
         val LOBBY_PLAYER_URL: String = dotenv["LOBBY_PLAYER_URL"]
         val LOBBY_START_GAME_URL: String = dotenv["LOBBY_START_GAME_URL"]
+        val CHANGE_PHASE_URL: String = dotenv["CHANGE_PHASE_URL"]
     }
 }

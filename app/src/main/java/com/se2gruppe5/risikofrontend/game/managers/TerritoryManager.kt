@@ -3,23 +3,25 @@ package com.se2gruppe5.risikofrontend.game.managers
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.widget.Toast
+
+import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dialogs.AttackTroopDialog
 import com.se2gruppe5.risikofrontend.game.dialogs.MoveTroopDialog
-import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 
 const val TERRITORY_NO_OWNER_COLOR: Int = 0x999999
 
-class TerritoryManager private constructor(val me: PlayerRecord, private val pointingArrow: PointingArrowAndroid, val activity: Activity) {
+class TerritoryManager private constructor(val me: PlayerRecord?, private val pointingArrow: PointingArrowAndroid, val activity: Activity) {
     companion object {
 
         //Intentionally not using non-nullable lateInit var for unit test reset funcitonality
         @SuppressLint("StaticFieldLeak")
         private var singleton: TerritoryManager? = null
 
-        fun init(me: PlayerRecord, pointingArrow: PointingArrowAndroid, activity: Activity) {
+        fun init(me: PlayerRecord?, pointingArrow: PointingArrowAndroid, activity: Activity) {
             if (singleton==null) {
                 singleton = TerritoryManager(me, pointingArrow, activity)
             }
@@ -144,7 +146,7 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
 
 
     private fun attackTerritory(t: ITerritoryVisual){
-        t.changeColor(me.color)
+        t.changeColor(me!!.color)
         t.territoryRecord.owner = me
         me.capturedTerritory = true
     }
@@ -160,9 +162,9 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
             throw IllegalArgumentException("Territory ID invalid.")
         }
     }
-
+//todo adapt to uuid
     private fun checkPlayerValid(playerRecord: PlayerRecord) {
-        if (playerRecord.id <= 0) {
+        if (true) {
             throw IllegalArgumentException("Player ID invalid.")
         }
     }
