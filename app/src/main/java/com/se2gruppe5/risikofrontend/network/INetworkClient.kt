@@ -1,5 +1,10 @@
 package com.se2gruppe5.risikofrontend.network
 
+import com.se2gruppe5.risikofrontend.game.dataclasses.CardRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
+
 interface INetworkClient {
     suspend fun sendChat(message: String)
     suspend fun createLobby(): String?
@@ -7,4 +12,8 @@ interface INetworkClient {
     suspend fun joinLobby(lobbyCode: String, playerName: String)
     suspend fun leaveLobby(lobbyCode: String)
     suspend fun startGame(lobbyCode: String)
+    suspend fun changeTerritory(t1: TerritoryRecord, t2: TerritoryRecord)
+    suspend fun changePhase()
+    suspend fun changePlayers(activePlayer: PlayerRecord, players: List<PlayerRecord>)
+    suspend fun cardAction(action: String, player: PlayerRecord, card: CardRecord)
 }
