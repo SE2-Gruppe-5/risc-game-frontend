@@ -1,5 +1,6 @@
 [versions]
 agp = "8.9.2"
+byteBuddyAgent = "1.15.11"
 dotenvKotlin = "6.5.1"
 kotlin = "1.9.24"
 kotlinxCoroutines = "1.7.3"
@@ -26,6 +27,7 @@ robolectric = "4.14.1"
 slf4jNop = "1.7.36"
 
 [libraries]
+byte-buddy-agent = { module = "net.bytebuddy:byte-buddy-agent", version.ref = "byteBuddyAgent" }
 dotenv-kotlin = { module = "io.github.cdimascio:dotenv-kotlin", version.ref = "dotenvKotlin" }
 androidx-espresso-intents = { module = "androidx.test.espresso:espresso-intents", version.ref = "espressoCore" }
 kotlinxCoroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }

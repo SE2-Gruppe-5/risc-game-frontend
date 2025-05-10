@@ -13,6 +13,7 @@ import com.se2gruppe5.risikofrontend.game.cards.CardHandler
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.enums.Phases
+import com.se2gruppe5.risikofrontend.game.territory.GameViewManager
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.game.territory.TerritoryVisualAndroid
@@ -23,9 +24,10 @@ class GameManager  private constructor(val players: List<PlayerRecord>, val me :
 
         //Intentionally not using non-nullable lateInit var for unit test reset functionality
         private var singleton: GameManager? = null
-        var currentPlayerIndex = 0
-        var currentPlayer: PlayerRecord? = null
-        var phase = Phases.Reinforce
+        private var currentPlayerIndex = 0
+        private var currentPlayer: PlayerRecord? = null
+        private var phase = Phases.Reinforce
+
         fun init(players:  List<PlayerRecord>, me : PlayerRecord) {
             if (singleton==null) {
                 singleton = GameManager(players, me)
@@ -45,10 +47,28 @@ class GameManager  private constructor(val players: List<PlayerRecord>, val me :
             singleton=null
         }
         fun getPlayers(): List<PlayerRecord>{
-            val p1 = PlayerRecord(1, "Markus", Color.rgb(255, 100, 0))
-            val p2 = PlayerRecord(2, "Leo", Color.rgb(0, 100, 255))
+            val p1 = PlayerRecord(1, "Markus", Color.RED)
+            val p2 = PlayerRecord(2, "Leo", Color.BLUE)
             return listOf(p1, p2)
         }
+        fun getCurrentPlayer() : PlayerRecord? {
+            return currentPlayer
+        }
+        fun getCurrentPlayerIndex(): Int{
+            return currentPlayerIndex
+        }
+        fun getPhase(): Phases{
+            return phase
+        }
+
+        /**
+         * Only for testing
+         */
+        fun setPhase(new: Phases){
+            phase = new
+        }
+
+
     }
     val MAX_PLAYERS: Int = 6
 
@@ -56,7 +76,7 @@ class GameManager  private constructor(val players: List<PlayerRecord>, val me :
      * Signals backend to swap to the next Player
      * Hands out a card if the Player captured a territory
      */
-    private fun nextPlayer(): Pair<Phases, Int>{
+    fun nextPlayer(): Pair<Phases, Int>{
         if(currentPlayer?.capturedTerritory == true){
             CardHandler.getCard(currentPlayer)
             currentPlayer!!.capturedTerritory = false
@@ -98,24 +118,10 @@ class GameManager  private constructor(val players: List<PlayerRecord>, val me :
      */
     fun initializeGame(activity: Activity, turnIndicators: List<TextView>){
         initializeBoard(activity)
-        setPlayerNames(turnIndicators)
+        val viewManager = GameViewManager(activity)
+        viewManager.setPlayerNames(players, turnIndicators)
     }
 
-    /**
-     * Set the correct amount of Playertext
-     * Change them to the correspending playernames
-     */
-    private fun setPlayerNames(playerNames: List<TextView>) {
-        var i = 0
-        while(i < players.size){
-            playerNames[i].text = players[i].name
-            i++
-        }
-        while (i < MAX_PLAYERS){
-            playerNames[i].visibility = GONE
-            i++
-        }
-    }
 
     /**
      * Create all Territories

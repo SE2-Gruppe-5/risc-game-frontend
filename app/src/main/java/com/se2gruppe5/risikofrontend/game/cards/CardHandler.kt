@@ -9,14 +9,14 @@ object CardHandler :ICardHandler {
 
     //TODO
     override fun tradeCards(player: PlayerRecord, cards: List<CardRecord>, starCount: Int) {
-        var infantry = 0
-        var cavalry = 0
-        var artillery = 0
-        cards.forEach { card ->{
-            if (card.type == CardType.Infantry) infantry++
-            if(card.type == CardType.Cavalry) cavalry++
-            if(card.type == CardType.Artillery) artillery++
-        } }
+//        var infantry = 0
+//        var cavalry = 0
+//        var artillery = 0
+//        cards.forEach { card ->{
+//            if (card.type == CardType.Infantry) infantry++
+//            if(card.type == CardType.Cavalry) cavalry++
+//            if(card.type == CardType.Artillery) artillery++
+//        } }
 
 
     }
@@ -33,6 +33,6 @@ object CardHandler :ICardHandler {
             } else if (rand == 3) {
                 player.cards.add(CardRecord(CardType.Artillery))
             }
-        }
+        }else throw IllegalArgumentException ("Call with valid Player")
     }
 }

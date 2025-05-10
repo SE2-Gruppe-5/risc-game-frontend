@@ -82,6 +82,7 @@ dependencies {
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.mockito.inline)
     testImplementation(libs.robolectric)
+    testImplementation(libs.byte.buddy.agent)
     //--------------------------------------------------------
     //androidTestImplementation(libs.junit)
     //androidTestImplementation(libs.mockito.android)
@@ -159,7 +160,8 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/startmenu/**",
                 "**/com/se2gruppe5/risikofrontend/MainActivity.kt",
                 "**/com/se2gruppe5/risikofrontend/game/GameActivity.kt",
-                "**/network/**"
+                "**/network/**",
+                "**/dialogs/**"
             ).joinToString(",")
         )
     }
