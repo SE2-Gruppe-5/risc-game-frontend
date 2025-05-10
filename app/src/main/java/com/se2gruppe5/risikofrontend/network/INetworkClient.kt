@@ -1,10 +1,5 @@
 package com.se2gruppe5.risikofrontend.network
 
-import com.se2gruppe5.risikofrontend.game.dataclasses.CardRecord
-import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
-import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
-import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
-
 interface INetworkClient {
     suspend fun sendChat(message: String)
     suspend fun createLobby(): String?
