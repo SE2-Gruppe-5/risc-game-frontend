@@ -12,7 +12,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.se2gruppe5.risikofrontend.popup.ContinentDialog
+import com.se2gruppe5.risikofrontend.game.popup.ContinentDialog
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.dice.DiceVisualAndroid
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.Dice1d6Generic

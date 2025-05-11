@@ -1,4 +1,4 @@
-package com.se2gruppe5.risikofrontend.popup
+package com.se2gruppe5.risikofrontend.game.popup
 
 data class ContinentInfo(
     val name: String,

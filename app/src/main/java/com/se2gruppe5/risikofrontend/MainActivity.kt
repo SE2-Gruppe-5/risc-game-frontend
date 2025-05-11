@@ -19,7 +19,7 @@ import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
 import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
 import androidx.lifecycle.lifecycleScope
-import com.se2gruppe5.risikofrontend.popup.ContinentDialog
+import com.se2gruppe5.risikofrontend.game.popup.ContinentDialog
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 import kotlinx.coroutines.launch
 

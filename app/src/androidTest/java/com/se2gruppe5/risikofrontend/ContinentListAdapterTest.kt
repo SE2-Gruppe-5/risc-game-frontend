@@ -5,8 +5,8 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.se2gruppe5.risikofrontend.popup.ContinentInfo
-import com.se2gruppe5.risikofrontend.popup.ContinentListAdapter
+import com.se2gruppe5.risikofrontend.game.popup.ContinentInfo
+import com.se2gruppe5.risikofrontend.game.popup.ContinentListAdapter
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

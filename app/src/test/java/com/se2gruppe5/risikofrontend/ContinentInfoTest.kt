@@ -1,7 +1,7 @@
 package com.se2gruppe5.risikofrontend
 
 
-import com.se2gruppe5.risikofrontend.popup.ContinentInfo
+import com.se2gruppe5.risikofrontend.game.popup.ContinentInfo
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
