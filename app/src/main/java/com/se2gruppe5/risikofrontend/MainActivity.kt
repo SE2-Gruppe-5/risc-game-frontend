@@ -56,15 +56,7 @@ class MainActivity : AppCompatActivity() {
         val txtMessage = this.findViewById<EditText>(R.id.txtMessage)
         val button = this.findViewById<Button>(R.id.button)
         val menuButton = this.findViewById<Button>(R.id.menuButton)
-
-        button.setOnClickListener {
-
-            val btnShowContinents = findViewById<Button>(R.id.btnShowContinents)
-            btnShowContinents.setOnClickListener {
-                val continentDialog = ContinentDialog()
-                continentDialog.show(supportFragmentManager, "ContinentDialog")
-                Log.d("MainActivity", "Kontinente Button clicked")
-            }
+        val btnShowContinents = findViewById<Button>(R.id.btnShowContinents)
 
             button.setOnClickListener {
                 Log.i("WEBCHAT", "Sending message: " + txtMessage.text)
@@ -73,6 +65,13 @@ class MainActivity : AppCompatActivity() {
                 }
                 txtMessage.setText("")
             }
+
+        btnShowContinents.setOnClickListener {
+            val continentDialog = ContinentDialog()
+            continentDialog.show(supportFragmentManager, "ContinentDialog")
+            Log.d("MainActivity", "Kontinente Button clicked")
+        }
+
             menuButton.setOnClickListener {
                 Log.i("NAVIGATION", "Going to Menu")
                 val intent = Intent(this, MenuActivity::class.java)
@@ -104,5 +103,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    }
     }

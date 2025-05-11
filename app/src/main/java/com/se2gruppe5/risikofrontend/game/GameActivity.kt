@@ -86,6 +86,10 @@ class GameActivity : AppCompatActivity() {
             changePhase()
 
         }
+        val showContinentButton: Button = findViewById(R.id.btn_show_continents)
+        showContinentButton.setOnClickListener {
+            showContinentDialog()
+        }
 
     }
 
@@ -108,10 +112,6 @@ class GameActivity : AppCompatActivity() {
         not1?.setBackgroundColor(notHighlightedColor)
         not2?.setBackgroundColor(notHighlightedColor)
 
-        val showContinentButton: Button = findViewById(R.id.btn_show_continents)
-        showContinentButton.setOnClickListener {
-            showContinentDialog()
-        }
     }
     fun showContinentDialog() {
         val dialog = ContinentDialog()
