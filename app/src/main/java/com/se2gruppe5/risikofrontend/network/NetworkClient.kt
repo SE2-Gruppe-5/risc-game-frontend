@@ -66,7 +66,7 @@ class NetworkClient() : INetworkClient{
     }
 
     override suspend fun changePhase(gameId: UUID) {
-        val request = createRequest("PATCH", Constants.CHANGE_PHASE_URL.replace("{id}", gameId.toString()))
+        val request = createRequest("GET", Constants.CHANGE_PHASE_URL.replace("{id}", gameId.toString()))
         execute(request)
     }
 
