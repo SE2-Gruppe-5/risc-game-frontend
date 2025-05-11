@@ -138,7 +138,7 @@ class LobbyActivity :AppCompatActivity() {
                 players.add(me!!)
             }
         }
-        sseService?.handler(MessageType.GAME_START) {
+        sseService?.handler(MessageType.START_GAME) {
             it as GameStartMessage
                 val intent = Intent(this, GameActivity::class.java)
                 GameManager.init(me!!, it.gameId, it.players)
