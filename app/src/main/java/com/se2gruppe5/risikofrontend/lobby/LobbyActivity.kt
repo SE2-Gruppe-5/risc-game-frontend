@@ -1,6 +1,7 @@
 package com.se2gruppe5.risikofrontend.lobby
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
 import android.os.StrictMode
@@ -11,22 +12,18 @@ import android.widget.TextView
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.se2gruppe5.risikofrontend.Constants
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.GameActivity
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.managers.GameManager
-import com.se2gruppe5.risikofrontend.network.INetworkClient
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import com.se2gruppe5.risikofrontend.network.sse.MessageType
 import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
-import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.JoinLobbyMessage
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 import kotlinx.coroutines.runBlocking
-import org.w3c.dom.Text
 import java.util.UUID
 
 class LobbyActivity :AppCompatActivity() {
@@ -55,6 +52,7 @@ class LobbyActivity :AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         enableEdgeToEdge()
         setContentView(R.layout.lobby)
 
@@ -140,7 +138,7 @@ class LobbyActivity :AppCompatActivity() {
                 players.add(me!!)
             }
         }
-        sseService?.handler(MessageType.GAME_START) {
+        sseService?.handler(MessageType.START_GAME) {
             it as GameStartMessage
                 val intent = Intent(this, GameActivity::class.java)
                 GameManager.init(me!!, it.gameId, it.players)

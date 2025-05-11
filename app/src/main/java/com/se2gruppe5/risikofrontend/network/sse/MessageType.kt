@@ -15,7 +15,7 @@ enum class MessageType(val messageClass: KClass<out IMessage>) {
     CHAT(ChatMessage::class),
     JOIN_LOBBY(JoinLobbyMessage::class),
     LEAVE_LOBBY(LeaveLobbyMessage::class),
-    GAME_START(GameStartMessage::class),
+    START_GAME(GameStartMessage::class),
     UPDATE_PHASE(UpdatePhaseMessage::class),
     UPDATE_PLAYERS(UpdatePlayersMessage::class),
     UPDATE_TERRITORIES(ChangeTerritoryMessage::class);
