@@ -172,14 +172,12 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/startmenu/**",
                 "**/com/se2gruppe5/risikofrontend/MainActivity.kt",
                 "**/com/se2gruppe5/risikofrontend/game/GameActivity.kt",
+                "**/com/se2gruppe5/risikofrontend/popup/ContinentDialog.kt",
                 "**/network/**",
                 "**/dialogs/**",
                 "**/com/se2gruppe5/**" //todo: remove this line in sprint 3 !!!!
             ).joinToString(",")
         )
 
-        property("sonar.coverage.exclusions",
-            "**/com/se2gruppe5/risikofrontend/popup/ContinentDialog.kt"
-        )
     }
 }

@@ -59,49 +59,50 @@ class MainActivity : AppCompatActivity() {
 
         button.setOnClickListener {
 
-        val btnShowContinents = findViewById<Button>(R.id.btnShowContinents)
-        btnShowContinents.setOnClickListener {
-            val continentDialog = ContinentDialog()
-            continentDialog.show(supportFragmentManager, "ContinentDialog")
-            Log.d("MainActivity", "Kontinente Button clicked")
-        }
-
-        button.setOnClickListener{
-            Log.i("WEBCHAT", "Sending message: " + txtMessage.text)
-            lifecycleScope.launch {
-                client.sendChat(txtMessage.text.toString())
+            val btnShowContinents = findViewById<Button>(R.id.btnShowContinents)
+            btnShowContinents.setOnClickListener {
+                val continentDialog = ContinentDialog()
+                continentDialog.show(supportFragmentManager, "ContinentDialog")
+                Log.d("MainActivity", "Kontinente Button clicked")
             }
-            txtMessage.setText("")
-        }
-        menuButton.setOnClickListener {
-            Log.i("NAVIGATION", "Going to Menu")
-            val intent = Intent(this, MenuActivity::class.java)
-            startActivity(intent)
-        }
-    }
 
-    override fun onStart() {
-        super.onStart()
-        Intent(this, SseClientService::class.java).also {
-            bindService(it, serviceConnection, BIND_AUTO_CREATE)
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        if (sseService != null) {
-            unbindService(serviceConnection)
-        }
-    }
-
-    private fun setupHandlers(service: SseClientService) {
-        val textView = this.findViewById<TextView>(R.id.textView)
-        service.handler(MessageType.CHAT) { it as ChatMessage
-            runOnUiThread {
-                textView.append(it.message + "\n")
+            button.setOnClickListener {
+                Log.i("WEBCHAT", "Sending message: " + txtMessage.text)
+                lifecycleScope.launch {
+                    client.sendChat(txtMessage.text.toString())
+                }
+                txtMessage.setText("")
+            }
+            menuButton.setOnClickListener {
+                Log.i("NAVIGATION", "Going to Menu")
+                val intent = Intent(this, MenuActivity::class.java)
+                startActivity(intent)
             }
         }
-    }
 
-}
+        override fun onStart() {
+            super.onStart()
+            Intent(this, SseClientService::class.java).also {
+                bindService(it, serviceConnection, BIND_AUTO_CREATE)
+            }
+        }
+
+        override fun onStop() {
+            super.onStop()
+            if (sseService != null) {
+                unbindService(serviceConnection)
+            }
+        }
+
+        private fun setupHandlers(service: SseClientService) {
+            val textView = this.findViewById<TextView>(R.id.textView)
+            service.handler(MessageType.CHAT) {
+                it as ChatMessage
+                runOnUiThread {
+                    textView.append(it.message + "\n")
+                }
+            }
+        }
+
+    }
     }
