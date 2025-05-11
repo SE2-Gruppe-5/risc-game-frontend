@@ -1,4 +1,4 @@
-HOST="http://10.0.2.2:8080"
+HOST="https://risiko.webbiii.cc"
 SSE_URL="/sse"
 SSE_URL_REJOIN="/sse?id={id}"
 CHAT_SEND_URL="/chat/send"
