@@ -127,7 +127,6 @@ class LobbyActivity :AppCompatActivity() {
     private fun setupHandlers(service: SseClientService) {
         sseService?.handler(MessageType.JOIN_LOBBY) {
             it as JoinLobbyMessage
-            runOnUiThread {
                 Log.i("lobby", "Hello from lobbyhandler")
                 Log.i("lobby", "$it")
                 var uuid: UUID = it.uuid
@@ -139,18 +138,14 @@ class LobbyActivity :AppCompatActivity() {
                 joinedPlayers++
                 players.add(me!!)
 
-            }
-
         }
         sseService?.handler(MessageType.GAME_START) {
             it as GameStartMessage
-            runOnUiThread {
                 val intent = Intent(this, GameActivity::class.java)
                 GameManager.init(me!!, it.gameId, it.players)
-
-                }
-
+                intent.putExtra("GAME_ID", it.gameId.toString())
                 startActivity(intent)
+
             }
 
         }

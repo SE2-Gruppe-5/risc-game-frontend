@@ -13,7 +13,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.lifecycleScope
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import com.se2gruppe5.risikofrontend.network.sse.MessageType
 import com.se2gruppe5.risikofrontend.network.sse.SseClientService
@@ -21,6 +20,7 @@ import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
 import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 import kotlinx.coroutines.launch
+import androidx.lifecycle.lifecycleScope
 
 class MainActivity : AppCompatActivity() {
     val client = NetworkClient()

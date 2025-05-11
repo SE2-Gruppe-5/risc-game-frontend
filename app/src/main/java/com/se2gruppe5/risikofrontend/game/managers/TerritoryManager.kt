@@ -5,12 +5,16 @@ import android.app.Activity
 import android.widget.Toast
 
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.dialogs.AttackTroopDialog
 import com.se2gruppe5.risikofrontend.game.dialogs.MoveTroopDialog
 
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
+import com.se2gruppe5.risikofrontend.network.INetworkClient
+import com.se2gruppe5.risikofrontend.network.NetworkClient
+import kotlinx.coroutines.runBlocking
 
 const val TERRITORY_NO_OWNER_COLOR: Int = 0x999999
 
@@ -44,6 +48,16 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
     private var prevSelTerritory: ITerritoryVisual? = null
 
 
+    fun updateTerritory(t: ITerritoryVisual){
+        for (i in territoryList){
+            if (i.getTerritoryId()== t.getTerritoryId()){
+                territoryList.remove(i)
+                territoryList.add(t)
+                return
+            }
+        }
+        addTerritory(t)
+    }
 
     fun addTerritory(t: ITerritoryVisual) {
         checkTerritoryValid(t)
@@ -140,6 +154,7 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
 
             }
             updateSelected(t)
+            changeTerritoryRequest(t.territoryRecord)
         }
     }
 
@@ -158,7 +173,7 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
     }
 
     private fun checkTerritoryValid(t: ITerritoryVisual) {
-        if (t.territoryRecord.id <= 0) {
+        if (t.territoryRecord.id != null) {
             throw IllegalArgumentException("Territory ID invalid.")
         }
     }
@@ -170,5 +185,12 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
     }
     private fun myTurn(): Boolean {
         return me == GameManager.getCurrentPlayer()
+    }
+    val client : INetworkClient = NetworkClient()
+
+    private fun changeTerritoryRequest(t: TerritoryRecord){
+        runBlocking {
+            client.changeTerritory(GameManager.get().uuid, t)
+        }
     }
 }

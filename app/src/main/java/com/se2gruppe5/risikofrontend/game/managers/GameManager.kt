@@ -15,7 +15,10 @@ import com.se2gruppe5.risikofrontend.game.territory.GameViewManager
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.game.territory.TerritoryVisualAndroid
+import com.se2gruppe5.risikofrontend.network.INetworkClient
+import com.se2gruppe5.risikofrontend.network.NetworkClient
 import java.util.UUID
+import kotlinx.coroutines.runBlocking
 
 
 class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
@@ -24,16 +27,22 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
         //Intentionally not using non-nullable lateInit var for unit test reset functionality
         private var singleton: GameManager? = null
         private var currentPlayer: PlayerRecord? = null
-        private var currentPlayerIndex: UUID? = null
+        private var currentPlayerUuid: UUID? = null
+        private var currentPlayerIndex: Int? = 0
         private var phase = Phases.Reinforce
         private var players: HashMap<UUID, PlayerRecord>? = null
-        private var uuidSet : Set<UUID>? = mutableSetOf()
+        private var uuidList : MutableList<UUID>? = mutableListOf()
 
         fun init(me : PlayerRecord, uuid: UUID, playerMap: HashMap<UUID, PlayerRecord>) {
             if (singleton==null) {
                 singleton = GameManager(me, uuid)
                 players = playerMap
-                uuidSet = players?.keys
+                var uuidSet = players?.keys
+                for(uuid in uuidSet!!){
+                    uuidList!!.add(uuid)
+                }
+
+
             }
         }
         //Throws when null [i.e. .get() before .init()]
@@ -52,12 +61,16 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
         fun getCurrentPlayer() : PlayerRecord? {
             return currentPlayer
         }
-        fun getCurrentPlayerIndex(): UUID? {
+        fun getCurrentPlayerIndex(): Int? {
             return currentPlayerIndex
         }
         fun getPhase(): Phases{
             return phase
         }
+        fun getCurrentPlayerUuidList(): MutableList<UUID>? {
+            return uuidList
+        }
+
 
         /**
          * Only for testing
@@ -68,10 +81,12 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
 
         fun updateCurrentPlayer(){
             if (players != null) {
-                for( i in uuidSet!!){
-                    if (players!!.get(i)?.isCurrentTurn == true){
-                        currentPlayer = players!!.get(i)
-                        currentPlayerIndex = i
+                currentPlayerIndex = 0
+                for( i in uuidList!!.indices){
+                    currentPlayerIndex = currentPlayerIndex!! + 1
+                    if (players!!.get(uuidList!!.get(i))?.isCurrentTurn == true){
+                        currentPlayer = players!!.get(uuidList!!.get(i))
+                        currentPlayerUuid = uuidList!!.get(i)
                         break
                     }
                 }
@@ -79,17 +94,26 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
         }
     }
     val MAX_PLAYERS: Int = 6
+    var territoryVisualList : MutableList<Triple<TextView, ImageButton, View>> = mutableListOf()
 
+
+    fun updatePlayers(playerMap: HashMap<UUID, PlayerRecord>): Int? {
+        players = playerMap
+        updateCurrentPlayer()
+        return currentPlayerIndex
+    }
     /**
      * Signals backend to swap to the next Player
      * Hands out a card if the Player captured a territory
      */
-    fun nextPlayer(): Pair<Phases, UUID?> {
+    fun nextPlayer(): Pair<Phases, Int?> {
         if(currentPlayer?.capturedTerritory == true){
             CardHandler.getCard(currentPlayer)
             currentPlayer!!.capturedTerritory = false
         }
+        updatePlayerRequest(currentPlayer!!.id,currentPlayer!!.name,currentPlayer!!.color)
        updateCurrentPlayer()
+
 
         return Pair(Phases.Reinforce,currentPlayerIndex)
     }
@@ -97,9 +121,9 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
     /**
      * Swaps Phase to the next one
      */
-    fun nextPhase(): Pair<Phases, UUID?> {
+    fun nextPhase(toPhase: Phases): Pair<Phases, Int?> {
         if(currentPlayer == me) {
-            when (phase) {
+            when (toPhase) {
                 Phases.Reinforce -> phase = Phases.Attack
                 Phases.Attack -> phase = Phases.Trade
                 Phases.Trade -> {
@@ -121,59 +145,43 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
      * Function to initialize the Gameboard
      */
     fun initializeGame(activity: Activity, turnIndicators: List<TextView>){
-        initializeBoard(activity)
-        val viewManager = GameViewManager(activity)
-        viewManager.setPlayerNames(players, turnIndicators)
-    }
-
-
-    /**
-     * Create all Territories
-     * Initialize TerritoryManager
-     */
-    private fun initializeBoard(activity: Activity){
-        //TODO Territories, correct setup for TerritoryManager
-        //still the code from markus just extracted
-        var p1 : PlayerRecord? = null
-        var p2 : PlayerRecord? = null
-        for(i in uuidSet!!){
-            if(p1 != null){
-                p1 = players!!.get(i)
-                continue
-            }
-            p2 = players!!.get(i)
-        }
-
-
-        val t1 = TerritoryRecord(1,10)
-        val t1_txt = activity.findViewById<TextView>(R.id.territoryAtext)
-        val t1_btn = activity.findViewById<ImageButton>(R.id.territoryAbtn)
-        val t1_outline = activity.findViewById<View>(R.id.territoryAoutline)
-        val t1_vis: ITerritoryVisual =
-            TerritoryVisualAndroid(t1, t1_txt, t1_txt, t1_btn, t1_outline)
-
-        val t2 = TerritoryRecord(2,5)
-        val t2_txt = activity.findViewById<TextView>(R.id.territoryBtext)
-        val t2_btn = activity.findViewById<ImageButton>(R.id.territoryBbtn)
-        val t2_outline = activity.findViewById<View>(R.id.territoryBoutline)
-        val t2_vis: ITerritoryVisual =
-            TerritoryVisualAndroid(t2, t2_txt, t2_txt, t2_btn, t2_outline)
-
+        initTerritoryViews(activity)
         val pointingArrow = PointingArrowAndroid(activity, "#FF0000".toColorInt(), 15f)
         pointingArrow.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
         activity.findViewById<ViewGroup>(R.id.main).addView(pointingArrow)
+        TerritoryManager.init(me, pointingArrow, activity)
+        val viewManager = GameViewManager(activity)
+        viewManager.setPlayerNames(players, turnIndicators)
+    }
 
-        TerritoryManager.init(p1, pointingArrow, activity)
-        val territoryManager = TerritoryManager.get()
-        territoryManager.addTerritory(t1_vis)
-        territoryManager.addTerritory(t2_vis)
-        territoryManager.assignOwner(t1_vis, p1)
-        territoryManager.assignOwner(t2_vis, p2)
+    /**
+     * Initializes all territory txt,btn and outline and puts them into a List
+     */
+    private fun initTerritoryViews(activity: Activity) {
+        territoryVisualList.add(Triple(activity.findViewById<TextView>(R.id.territoryAtext),activity.findViewById<ImageButton>(R.id.territoryAbtn), activity.findViewById<View>(R.id.territoryAoutline)))
+        territoryVisualList.add(Triple(activity.findViewById<TextView>(R.id.territoryBtext),activity.findViewById<ImageButton>(R.id.territoryBbtn), activity.findViewById<View>(R.id.territoryBoutline)))
+
+    }
 
 
+    fun updateTerritories(t: List<TerritoryRecord>){
+        for(i in t.indices){
+            val t1 = t.get(i)
+            val views = territoryVisualList.get(i)
+            val t1_vis : ITerritoryVisual= TerritoryVisualAndroid(t1,views.first,views.first,views.second,views.third)
+            t1.owner = players!!.get(uuidList!!.get(0))
+            TerritoryManager.get().updateTerritory(t1_vis)
+        }
+    }
+    val client : INetworkClient = NetworkClient()
+
+    private fun updatePlayerRequest(pUUID: UUID, name: String, color: Int){
+        runBlocking {
+            client.updatePlayer(uuid,pUUID,name,color)
+        }
     }
 
 
