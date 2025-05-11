@@ -1,3 +1,5 @@
 package com.se2gruppe5.risikofrontend.network.sse.messages
 
-data class UpdatePhaseMessage()
+import com.se2gruppe5.risikofrontend.network.sse.IMessage
+
+data class UpdatePhaseMessage(val phase: Int) : IMessage
