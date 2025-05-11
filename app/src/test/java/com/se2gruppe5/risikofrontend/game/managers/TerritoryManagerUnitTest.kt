@@ -16,7 +16,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
-
+import java.util.UUID
 
 /*
 Note:
@@ -40,7 +40,7 @@ class TerritoryManagerTestUnitTest {
     @Before
     fun setUp() {
         pointingArrow = mock()
-        mePlayerRecord = PlayerRecord(123, "TestPlayer", 0xFF00FF)
+        mePlayerRecord = PlayerRecord(UUID.randomUUID(), "TestPlayer", 0xFF00FF)
         activity = mock()
 
         TerritoryManager.unitTestReset()
@@ -72,7 +72,7 @@ class TerritoryManagerTestUnitTest {
     @Test
     fun singletonNotMutableTest() {
 
-        val newMe = PlayerRecord(999, "Test2", 0x00FF00)
+        val newMe = PlayerRecord(UUID.randomUUID(), "Test2", 0x00FF00)
         TerritoryManager.init(newMe, pointingArrow,activity) //<-- shouldn't do it
         val inst1 = TerritoryManager.get()
         assertEquals(mePlayerRecord, inst1.me)
@@ -167,7 +167,7 @@ class TerritoryManagerTestUnitTest {
     @Test
     fun assignNewOwnerTest() {
 
-        val newOwner = PlayerRecord(1, "Test", 0x123456)
+        val newOwner = PlayerRecord(UUID.randomUUID(), "Test", 0x123456)
         manager.assignOwner(t, newOwner)
         //Color change called?
         verify(t).changeColor(newOwner.color)
@@ -180,7 +180,7 @@ class TerritoryManagerTestUnitTest {
     @Test
     fun removeAssignedOwnerTest() {
 
-        val initialOwner = PlayerRecord(1, "Test", 0x123456)
+        val initialOwner = PlayerRecord(UUID.randomUUID(), "Test", 0x123456)
 
         //Assign an owner
         manager.assignOwner(t, initialOwner)
