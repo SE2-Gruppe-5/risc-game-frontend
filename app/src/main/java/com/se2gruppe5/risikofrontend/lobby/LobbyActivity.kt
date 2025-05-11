@@ -145,10 +145,8 @@ class LobbyActivity :AppCompatActivity() {
                 GameManager.init(me!!, it.gameId, it.players)
                 intent.putExtra("GAME_ID", it.gameId.toString())
                 startActivity(intent)
-
-            }
-
         }
+    }
 
     private fun startGame(code: String){
         runBlocking {
