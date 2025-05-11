@@ -30,8 +30,7 @@ class SseEventHandler(val client: SseClientService) : EventHandler {
         }
 
         val payload = Base64.getDecoder().decode(messageEvent.data).decodeToString()
-        val data = gson.fromJson(payload, JsonObject::class.java)
-        val message = type.deserialize(data)
+        val message = gson.fromJson(payload, type.messageClass.java)
 
         if (message == null) {
             Log.w("SSE_EVENT", "Couldn't deserialize $event: $payload")

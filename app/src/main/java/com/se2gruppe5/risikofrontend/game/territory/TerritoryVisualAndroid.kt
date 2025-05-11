@@ -62,4 +62,8 @@ class TerritoryVisualAndroid(
         return Pair(x, y)
     }
 
+    override fun getTerritoryId(): Int{
+        return territoryRecord.id
+    }
+
 }

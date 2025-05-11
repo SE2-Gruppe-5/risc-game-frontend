@@ -45,4 +45,6 @@ interface ITerritoryVisual {
      * Returns the Territory's local center coordinates (in respect to window not screen)
      */
     fun getCoordinatesAsFloat(center: Boolean): Pair<Float, Float>
+
+    fun getTerritoryId(): Int
 }

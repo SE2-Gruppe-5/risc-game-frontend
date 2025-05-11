@@ -1,6 +1,9 @@
 package com.se2gruppe5.risikofrontend.network
 
 import com.se2gruppe5.risikofrontend.Constants
+import com.se2gruppe5.risikofrontend.game.dataclasses.CardRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -9,8 +12,9 @@ import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import java.util.UUID
 
-class NetworkClient : INetworkClient{
+class NetworkClient() : INetworkClient{
     val client = OkHttpClient()
 
     override suspend fun sendChat(message: String) {
@@ -48,6 +52,41 @@ class NetworkClient : INetworkClient{
         execute(request)
     }
 
+    override suspend fun updatePlayer(gameId: UUID, playerId: UUID, name: String, color: Int) {
+        val request = createRequest("PATCH", Constants.UPDATE_PLAYER_URL.replace("{id}", gameId.toString()).replace("{playerId}", playerId.toString()),
+            "name", name,
+            "color", color.toString())
+        execute(request)
+    }
+
+    override suspend fun getGameInfo(gameId: UUID) {
+        val request = createRequest("GET", Constants.GET_GAME_INFO_URL.replace("{id}", gameId.toString()),
+            "uuid", SseClientService.uuid.toString())
+        execute(request)
+    }
+
+    override suspend fun changePhase(gameId: UUID) {
+        val request = createRequest("GET", Constants.CHANGE_PHASE_URL.replace("{id}", gameId.toString()))
+        execute(request)
+    }
+
+    override suspend fun changeTerritory(gameId: UUID, territory: TerritoryRecord) {
+        val request = createRequest("PATCH", Constants.CHANGE_TERRITORY_URL.replace("{id}", gameId.toString()),
+            "owner", territory.owner?.id.toString(),
+            "id", territory.id.toString(),
+            "stat", territory.stat.toString())
+        execute(request)
+    }
+
+    override suspend fun cardAction(
+        gameId: UUID,
+        action: String,
+        player: PlayerRecord,
+        card: CardRecord
+    ) {
+        TODO("Not yet implemented")
+    }
+
     private fun createRequest(method: String, path: String, vararg params: String): Request {
         val body = if (params.isNotEmpty()) {
             MultipartBody.Builder()
@@ -70,7 +109,7 @@ class NetworkClient : INetworkClient{
     private suspend fun execute(request: Request): Response {
         val call = client.newCall(request)
         return withContext(Dispatchers.IO) {
-            return@withContext call.execute()
+           return@withContext call.execute()
         }
     }
 }
