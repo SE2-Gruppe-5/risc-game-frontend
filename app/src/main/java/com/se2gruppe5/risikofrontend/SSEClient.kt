@@ -1,9 +1,3 @@
-package com.se2gruppe5.risikofrontend
-
-import com.launchdarkly.eventsource.EventHandler
-import com.launchdarkly.eventsource.EventSource
-import java.net.URI
-import java.time.Duration
 
 class SSEClient {
     private var eventHandler: EventHandler? = null

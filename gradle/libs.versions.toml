@@ -1,22 +1,21 @@
 [versions]
-agp = "8.7.3"
+agp = "8.9.2"
+byteBuddyAgent = "1.15.11"
 dotenvKotlin = "6.5.1"
 kotlin = "1.9.24"
 kotlinxCoroutines = "1.7.3"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
-gson = "2.10.1"
 lifecycleLivedataKtx = "2.6.2"
 androidxTestCore = "1.5.0"
 androidxTestExtJunit = "1.1.5"
 mockitoCore = "5.11.0"
-mockitoKotlin = "5.2.1"
-mockitoAndroid = "5.11.0"
 
-#mockito = "4.3.1"
-#mockitoKotlin = "4.0.0"
-#mockitoAndroid = "4.3.1"
+mockito = "5.14.2"
+mockitoInline = "5.2.0"
+mockitoKotlin = "4.0.0"
+mockitoAndroid = "4.3.1"
 
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
@@ -25,28 +24,33 @@ constraintlayout = "2.2.1"
 material = "1.12.0"
 okhttp = "4.12.0"
 okhttpeventsource = "2.5.0"
+coreKtxVersion = "1.6.1"
+junitKtx = "1.2.1"
+gson = "2.12.1"
+robolectric = "4.14.1"
+slf4jNop = "1.7.36"
 #coreKtxVersion = "1.6.1"
 
 #uiautomator = "2.3.0"
 
 
 [libraries]
+byte-buddy-agent = { module = "net.bytebuddy:byte-buddy-agent", version.ref = "byteBuddyAgent" }
 dotenv-kotlin = { module = "io.github.cdimascio:dotenv-kotlin", version.ref = "dotenvKotlin" }
+androidx-espresso-intents = { module = "androidx.test.espresso:espresso-intents", version.ref = "espressoCore" }
 kotlinxCoroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExtJunit" }
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockitoCore" }
-mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
-mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockitoAndroid" }
 
-#mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
-#mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
-#mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoAndroid" }
+mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
+mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoAndroid" }
 
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -55,6 +59,11 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttpeventsource = { group = "com.launchdarkly", name = "okhttp-eventsource", version.ref = "okhttpeventsource" }
+core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
+androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+slf4j-nop = { module = "org.slf4j:slf4j-nop", version.ref = "slf4jNop" }
 #core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
 
 #androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
