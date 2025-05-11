@@ -18,7 +18,13 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    sourceSets {
+        getByName("main") {
+            java.srcDirs("src/main/java")
+            res.srcDirs("src/main/res")
+            manifest.srcFile("src/main/AndroidManifest.xml")
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = true
