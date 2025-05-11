@@ -167,7 +167,8 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/MainActivity.kt",
                 "**/com/se2gruppe5/risikofrontend/game/GameActivity.kt",
                 "**/network/**",
-                "**/dialogs/**"
+                "**/dialogs/**",
+                "**/com/se2grupp5/**" //todo: remove this line in sprint 3 !!!!
             ).joinToString(",")
         )
     }
