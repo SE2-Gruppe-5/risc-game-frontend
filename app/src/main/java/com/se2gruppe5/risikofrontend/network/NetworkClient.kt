@@ -12,6 +12,7 @@ import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import java.util.UUID
 
 class NetworkClient() : INetworkClient{
     val client = OkHttpClient()
@@ -51,23 +52,33 @@ class NetworkClient() : INetworkClient{
         execute(request)
     }
 
-    override suspend fun changeTerritory(t1: TerritoryRecord, t2: TerritoryRecord) {
-        TODO("Not yet implemented")
+    override suspend fun updatePlayer(gameId: UUID, playerId: UUID, name: String, color: Int) {
+        val request = createRequest("PATCH", Constants.UPDATE_PLAYER_URL.replace("{id}", gameId.toString()).replace("{playerId}", playerId.toString()),
+            "name", name,
+            "color", color.toString())
+        execute(request)
     }
 
-    override suspend fun changePhase() {
-      //  val request = createRequest("GET", Constants.CHANGE_PHASE_URL.replace("{id}", lobbyCode))
-     //   execute(request)
-
+    override suspend fun getPlayer(gameId: UUID, playerId: UUID) {
+        val request = createRequest("GET", Constants.GET_PLAYER_URL.replace("{id}", gameId.toString()).replace("{playerId}", playerId.toString()))
+        execute(request)
     }
 
-    override suspend fun changePlayers(
-        players: List<PlayerRecord>
-    ) {
-        TODO("Not yet implemented")
+    override suspend fun changePhase(gameId: UUID) {
+        val request = createRequest("PATCH", Constants.CHANGE_PHASE_URL.replace("{id}", gameId.toString()))
+        execute(request)
+    }
+
+    override suspend fun changeTerritory(gameId: UUID, territory: TerritoryRecord) {
+        val request = createRequest("PATCH", Constants.CHANGE_TERRITORY_URL.replace("{id}", gameId.toString()),
+            "owner", territory.owner?.id.toString(),
+            "id", territory.id.toString(),
+            "stat", territory.stat.toString())
+        execute(request)
     }
 
     override suspend fun cardAction(
+        gameId: UUID,
         action: String,
         player: PlayerRecord,
         card: CardRecord
