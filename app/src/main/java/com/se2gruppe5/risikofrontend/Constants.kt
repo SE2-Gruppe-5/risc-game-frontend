@@ -21,6 +21,9 @@ class Constants {
         val LOBBY_RESOURCE_URL: String = dotenv["LOBBY_RESOURCE_URL"]
         val LOBBY_PLAYER_URL: String = dotenv["LOBBY_PLAYER_URL"]
         val LOBBY_START_GAME_URL: String = dotenv["LOBBY_START_GAME_URL"]
+        val UPDATE_PLAYER_URL: String = dotenv["UPDATE_PLAYER_URL"]
+        val GET_PLAYER_URL: String = dotenv["GET_PLAYER_URL"]
         val CHANGE_PHASE_URL: String = dotenv["CHANGE_PHASE_URL"]
+        val CHANGE_TERRITORY_URL: String = dotenv["CHANGE_TERRITORY_URL"]
     }
 }
