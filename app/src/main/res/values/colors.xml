@@ -10,4 +10,5 @@
     <color name="background">#212121</color>
     <color name="sidebar">#4A4A4A</color>
     <color name="button_color">#65558F</color>
+    <color name="gray">#808080</color>
 </resources>
