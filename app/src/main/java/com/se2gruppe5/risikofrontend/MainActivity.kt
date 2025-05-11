@@ -19,12 +19,9 @@ import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
 import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
 import androidx.lifecycle.lifecycleScope
-import com.launchdarkly.eventsource.EventHandler
-import com.launchdarkly.eventsource.MessageEvent
 import com.se2gruppe5.risikofrontend.popup.ContinentDialog
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 import kotlinx.coroutines.launch
-import androidx.lifecycle.lifecycleScope
 
 class MainActivity : AppCompatActivity() {
     val client = NetworkClient()
@@ -56,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         val txtMessage = this.findViewById<EditText>(R.id.txtMessage)
         val button = this.findViewById<Button>(R.id.button)
         val menuButton = this.findViewById<Button>(R.id.menuButton)
-        val btnShowContinents = this.findViewById<Button>(R.id.btnShowContinents)
+        val showContinentsButton = this.findViewById<Button>(R.id.btnShowContinents)
 
         button.setOnClickListener {
             Log.i("WEBCHAT", "Sending message: " + txtMessage.text)
@@ -66,10 +63,9 @@ class MainActivity : AppCompatActivity() {
             txtMessage.setText("")
         }
 
-        btnShowContinents.setOnClickListener {
+        showContinentsButton.setOnClickListener {
             val continentDialog = ContinentDialog()
             continentDialog.show(supportFragmentManager, "ContinentDialog")
-            Log.d("MainActivity", "Kontinente Button clicked")
         }
 
         menuButton.setOnClickListener {
