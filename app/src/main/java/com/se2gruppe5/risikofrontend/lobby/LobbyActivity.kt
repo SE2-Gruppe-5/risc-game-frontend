@@ -127,6 +127,7 @@ class LobbyActivity :AppCompatActivity() {
     private fun setupHandlers(service: SseClientService) {
         sseService?.handler(MessageType.JOIN_LOBBY) {
             it as JoinLobbyMessage
+            runOnUiThread {
                 Log.i("lobby", "Hello from lobbyhandler")
                 Log.i("lobby", "$it")
                 var uuid: UUID = it.uuid
@@ -137,7 +138,7 @@ class LobbyActivity :AppCompatActivity() {
                 me =PlayerRecord(uuid, name, Color.rgb((0..255).random(), (0..255).random(), (0..255).random()))
                 joinedPlayers++
                 players.add(me!!)
-
+            }
         }
         sseService?.handler(MessageType.GAME_START) {
             it as GameStartMessage
