@@ -32,7 +32,10 @@ class ContinentListAdapter(
         }
         title.setTextColor(item.colorHex.toColorInt())
 
-        Log.d("ContinentListAdapter", "Displaying: ${item.name} - ${item.regions} Gebiete, +${item.bonus} Truppen")
+        Log.d(
+            "ContinentListAdapter",
+            "Displaying: ${item.name} - ${item.regions} Gebiete, +${item.bonus} Truppen"
+        )
 
         return itemView
     }

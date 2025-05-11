@@ -10,7 +10,7 @@ import com.se2gruppe5.risikofrontend.game.dataclasses.ContinentInfoRecord
 
 
 @SuppressWarnings("unused")
-class ContinentDialog : DialogFragment(){
+class ContinentDialog : DialogFragment() {
 
     val continentList = listOf(
         ContinentInfoRecord("Power Supply", "#b5edf9", 6, 2),
@@ -24,6 +24,7 @@ class ContinentDialog : DialogFragment(){
         ContinentInfoRecord("Embedded Controller", "#9b3e3e", 7, 2),
         ContinentInfoRecord("CMOS", "#a4e5e2", 5, 2)
     )
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext())
         val inflater = requireActivity().layoutInflater
