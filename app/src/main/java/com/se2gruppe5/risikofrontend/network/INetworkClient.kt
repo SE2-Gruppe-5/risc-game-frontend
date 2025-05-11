@@ -13,7 +13,7 @@ interface INetworkClient {
     suspend fun leaveLobby(lobbyCode: String)
     suspend fun startGame(lobbyCode: String)
     suspend fun updatePlayer(gameId: UUID, playerId: UUID, name: String, color: Int)
-    suspend fun getPlayer(gameId: UUID, playerId: UUID)
+    suspend fun getGameInfo(gameId: UUID)
     suspend fun changePhase(gameId: UUID)
     suspend fun changeTerritory(gameId: UUID, territory: TerritoryRecord)
     suspend fun cardAction(gameId: UUID, action: String, player: PlayerRecord, card: CardRecord)
