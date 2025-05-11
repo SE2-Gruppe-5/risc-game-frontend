@@ -15,12 +15,15 @@ import com.se2gruppe5.risikofrontend.Constants
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.GameActivity
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.managers.GameManager
 import com.se2gruppe5.risikofrontend.network.INetworkClient
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import com.se2gruppe5.risikofrontend.network.sse.MessageType
 import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
 import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
+import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
+import com.se2gruppe5.risikofrontend.network.sse.messages.JoinLobbyMessage
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 import kotlinx.coroutines.runBlocking
 import org.w3c.dom.Text
@@ -38,6 +41,7 @@ class LobbyActivity :AppCompatActivity() {
         sseService = service
         if (service != null) {
             setupHandlers(service)
+                joinLobby(joinCode, playerName)
         }
     }
     var joinedPlayers: Int = 1
@@ -47,6 +51,7 @@ class LobbyActivity :AppCompatActivity() {
     var playerTxt: MutableList<TextView>? = mutableListOf()
     var joinCode: String = ""
     var playerName: String = ""
+    var me : PlayerRecord? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,9 +85,7 @@ class LobbyActivity :AppCompatActivity() {
             playerBtn!![i].visibility = View.GONE
             playerTxt!![i].visibility = View.GONE
         }
-        if (joinedPlayers == 1) {
-            joinLobby(joinCode, playerName)
-        }
+
 
         val backBtn = this.findViewById<ImageButton>(R.id.backBtn)
         val startGameBtn = this.findViewById<Button>(R.id.startGameBtn)
@@ -94,24 +97,24 @@ class LobbyActivity :AppCompatActivity() {
         })
         startGameBtn.setOnClickListener({
             Log.i("NAVIGATION", "Starting Game")
-            val intent = Intent(this, GameActivity::class.java)
-            startActivity(intent)
+            startGame(joinCode)
         })
 
     }
 
     private fun joinLobby(code: String, name: String) {
-        val networkClient: INetworkClient = NetworkClient()
         runBlocking {
-            networkClient.joinLobby(code, name)
+            client.joinLobby(code, name)
         }
     }
+
 
     override fun onStart() {
         super.onStart()
         Intent(this, SseClientService::class.java).also {
             bindService(it, serviceConnection, BIND_AUTO_CREATE)
         }
+
     }
 
     override fun onStop() {
@@ -123,26 +126,38 @@ class LobbyActivity :AppCompatActivity() {
 
     private fun setupHandlers(service: SseClientService) {
         sseService?.handler(MessageType.JOIN_LOBBY) {
-            it as ChatMessage
+            it as JoinLobbyMessage
             runOnUiThread {
                 Log.i("lobby", "Hello from lobbyhandler")
                 Log.i("lobby", "$it")
-                var uuid: UUID = UUID.randomUUID()
-                var name: String = "asaba"
+                var uuid: UUID = it.uuid
+                var name: String = it.playerName
                 playerTxt?.get(joinedPlayers-1)?.visibility = View.VISIBLE
                 playerTxt?.get(joinedPlayers-1)?.text = name
                 playerBtn?.get(joinedPlayers-1)?.visibility = View.VISIBLE
-
+                me =PlayerRecord(uuid, name, Color.rgb((0..255).random(), (0..255).random(), (0..255).random()))
                 joinedPlayers++
-                players.add(
-                    PlayerRecord(
-                        uuid,
-                        name,
-                        Color.rgb((0..255).random(), (0..255).random(), (0..255).random())
-                    )
-                )
+                players.add(me!!)
+
             }
 
+        }
+        sseService?.handler(MessageType.GAME_START) {
+            it as GameStartMessage
+            runOnUiThread {
+                val intent = Intent(this, GameActivity::class.java)
+                GameManager.init(me!!, it.gameId, it.players)
+
+                }
+
+                startActivity(intent)
+            }
+
+        }
+
+    private fun startGame(code: String){
+        runBlocking {
+            client.startGame(code)
         }
     }
 }

@@ -39,20 +39,13 @@ class JoinLobbyActivity :AppCompatActivity() {
         joinBtn.setOnClickListener({
             val name = nameInput.text.toString()
             val joincode = joinInput.text.toString()
-            joinLobby(joincode, name)
+
             Log.i("NAVIGATION", "Create lobby")
             val intent = Intent(this, LobbyActivity::class.java)
             intent.putExtra("PLAYER_NAME", name)
-            intent.putExtra("JOIN_CODE", joincode)
+            intent.putExtra("LOBBY_CODE", joincode)
             startActivity(intent)
         })
     }
 
-    private fun joinLobby(code: String, name: String){
-        Log.i("JoinLobby", code)
-        runBlocking {
-            client.joinLobby(code, name)
-        }
-
     }
-}

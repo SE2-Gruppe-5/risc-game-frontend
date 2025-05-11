@@ -38,7 +38,10 @@ enum class MessageType(private val deserializer: Function<JsonObject, IMessage?>
         Function { data: JsonObject ->
             GameStartMessage(UUID.fromString(data.get("gameId")?.asString))
         }
-    );
+    ),
+    UPDATE_PHASE,
+    UPDATE_PLAYERS,
+    UPDATE_TERRITORIES;
 
     fun deserialize(data: JsonObject): IMessage? {
         return deserializer.apply(data)
