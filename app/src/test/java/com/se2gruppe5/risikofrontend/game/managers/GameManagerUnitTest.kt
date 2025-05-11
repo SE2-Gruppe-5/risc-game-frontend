@@ -16,6 +16,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.mockStatic
+import java.util.UUID
 
 
 class GameManagerUnitTest {
@@ -31,10 +32,10 @@ class GameManagerUnitTest {
         activity = mock()
 
         // Create test players
-        me = PlayerRecord(1, "Markus", Color.RED)
+        me = PlayerRecord(UUID.randomUUID(), "Markus", Color.RED)
         players = listOf(
             me,
-            PlayerRecord(2, "Leo", Color.BLUE)
+            PlayerRecord(UUID.randomUUID(), "Leo", Color.BLUE)
         )
 
         // Mock turn indicators
@@ -88,11 +89,7 @@ class GameManagerUnitTest {
 
     @Test
     fun getPlayersReturnsPlayers() {
-        val expectedPlayers = listOf(
-            PlayerRecord(1, "Markus", Color.RED),
-            PlayerRecord(2, "Leo", Color.BLUE)
-        )
-        assertEquals(expectedPlayers, GameManager.getPlayers())
+        assertEquals(players, GameManager.getPlayers())
     }
 
     @Test
