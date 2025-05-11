@@ -86,7 +86,7 @@ class GameActivity : AppCompatActivity() {
             changePhase()
 
         }
-        val showContinentButton: Button = findViewById(R.id.btn_show_continents)
+        val showContinentButton: Button = this.findViewById(R.id.btn_show_continents)
         showContinentButton.setOnClickListener {
             showContinentDialog()
         }

@@ -56,9 +56,9 @@ class MainActivity : AppCompatActivity() {
         val txtMessage = this.findViewById<EditText>(R.id.txtMessage)
         val button = this.findViewById<Button>(R.id.button)
         val menuButton = this.findViewById<Button>(R.id.menuButton)
-        val btnShowContinents = findViewById<Button>(R.id.btnShowContinents)
+        val btnShowContinents = this.findViewById<Button>(R.id.btnShowContinents)
 
-            button.setOnClickListener {
+        button.setOnClickListener {
                 Log.i("WEBCHAT", "Sending message: " + txtMessage.text)
                 lifecycleScope.launch {
                     client.sendChat(txtMessage.text.toString())
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             Log.d("MainActivity", "Kontinente Button clicked")
         }
 
-            menuButton.setOnClickListener {
+        menuButton.setOnClickListener {
                 Log.i("NAVIGATION", "Going to Menu")
                 val intent = Intent(this, MenuActivity::class.java)
                 startActivity(intent)
