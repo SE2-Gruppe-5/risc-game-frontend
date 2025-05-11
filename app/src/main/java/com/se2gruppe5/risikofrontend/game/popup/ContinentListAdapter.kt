@@ -9,11 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import com.se2gruppe5.risikofrontend.game.dataclasses.ContinentInfoRecord
 
 class ContinentListAdapter(
     context: Context,
-    private val data: List<ContinentInfo>
-) : ArrayAdapter<ContinentInfo>(context, 0, data) {
+    private val data: List<ContinentInfoRecord>
+) : ArrayAdapter<ContinentInfoRecord>(context, 0, data) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val itemView = convertView ?: LayoutInflater.from(context)

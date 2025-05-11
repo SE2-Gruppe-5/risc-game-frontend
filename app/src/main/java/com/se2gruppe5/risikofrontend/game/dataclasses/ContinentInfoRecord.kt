@@ -1,6 +1,6 @@
-package com.se2gruppe5.risikofrontend.game.popup
+package com.se2gruppe5.risikofrontend.game.dataclasses
 
-data class ContinentInfo(
+data class ContinentInfoRecord(
     val name: String,
     val colorHex: String,
     val regions: Int,

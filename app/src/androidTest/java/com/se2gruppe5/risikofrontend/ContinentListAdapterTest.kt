@@ -5,7 +5,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.se2gruppe5.risikofrontend.game.popup.ContinentInfo
+import com.se2gruppe5.risikofrontend.game.dataclasses.ContinentInfoRecord
 import com.se2gruppe5.risikofrontend.game.popup.ContinentListAdapter
 import org.junit.Before
 import org.junit.Test
@@ -19,7 +19,7 @@ import org.junit.Assert.assertSame
 class ContinentListAdapterTest {
 
     private lateinit var context: Context
-    private lateinit var data: List<ContinentInfo>
+    private lateinit var data: List<ContinentInfoRecord>
     private lateinit var adapter: ContinentListAdapter
 
 
@@ -27,16 +27,16 @@ class ContinentListAdapterTest {
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
         data = listOf(
-            ContinentInfo("Power Supply", "#b5edf9", 6, 2),
-            ContinentInfo("MMC", "#e8f3a8", 2, 2),
-            ContinentInfo("RAM", "#87deb3", 10, 2),
-            ContinentInfo("DCON", "#f0a8e1", 5, 2),
-            ContinentInfo("CPU", "#e6afaf", 6, 2),
-            ContinentInfo("Essentials", "#fec466", 7, 2),
-            ContinentInfo("Southbridge", "#f5d557", 4, 2),
-            ContinentInfo("Wireless Mesh", "#9effad", 8, 2),
-            ContinentInfo("Embedded Controller", "#9b3e3e", 7, 2),
-            ContinentInfo("CMOS", "#a4e5e2", 5, 2)
+            ContinentInfoRecord("Power Supply", "#b5edf9", 6, 2),
+            ContinentInfoRecord("MMC", "#e8f3a8", 2, 2),
+            ContinentInfoRecord("RAM", "#87deb3", 10, 2),
+            ContinentInfoRecord("DCON", "#f0a8e1", 5, 2),
+            ContinentInfoRecord("CPU", "#e6afaf", 6, 2),
+            ContinentInfoRecord("Essentials", "#fec466", 7, 2),
+            ContinentInfoRecord("Southbridge", "#f5d557", 4, 2),
+            ContinentInfoRecord("Wireless Mesh", "#9effad", 8, 2),
+            ContinentInfoRecord("Embedded Controller", "#9b3e3e", 7, 2),
+            ContinentInfoRecord("CMOS", "#a4e5e2", 5, 2)
         )
         adapter = ContinentListAdapter(context, data)
     }

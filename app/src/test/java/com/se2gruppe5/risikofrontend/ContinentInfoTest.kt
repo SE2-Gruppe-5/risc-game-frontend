@@ -1,34 +1,34 @@
 package com.se2gruppe5.risikofrontend
 
 
-import com.se2gruppe5.risikofrontend.game.popup.ContinentInfo
+import com.se2gruppe5.risikofrontend.game.dataclasses.ContinentInfoRecord
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 
 class ContinentInfoTest {
 
-    private lateinit var testData: List<ContinentInfo>
+    private lateinit var testData: List<ContinentInfoRecord>
 
     @Before
     fun setUp() {
         testData = listOf(
-            ContinentInfo("Power Supply", "#b5edf9", 6, 2),
-            ContinentInfo("MMC", "#e8f3a8", 2, 2),
-            ContinentInfo("RAM", "#87deb3", 10, 2),
-            ContinentInfo("DCON", "#f0a8e1", 5, 2),
-            ContinentInfo("CPU", "#e6afaf", 6, 2),
-            ContinentInfo("Essentials", "#fec466", 7, 2),
-            ContinentInfo("Southbridge", "#f5d557", 4, 2),
-            ContinentInfo("Wireless Mesh", "#9effad", 8, 2),
-            ContinentInfo("Embedded Controller", "#9b3e3e", 7, 2),
-            ContinentInfo("CMOS", "#a4e5e2", 5, 2)
+            ContinentInfoRecord("Power Supply", "#b5edf9", 6, 2),
+            ContinentInfoRecord("MMC", "#e8f3a8", 2, 2),
+            ContinentInfoRecord("RAM", "#87deb3", 10, 2),
+            ContinentInfoRecord("DCON", "#f0a8e1", 5, 2),
+            ContinentInfoRecord("CPU", "#e6afaf", 6, 2),
+            ContinentInfoRecord("Essentials", "#fec466", 7, 2),
+            ContinentInfoRecord("Southbridge", "#f5d557", 4, 2),
+            ContinentInfoRecord("Wireless Mesh", "#9effad", 8, 2),
+            ContinentInfoRecord("Embedded Controller", "#9b3e3e", 7, 2),
+            ContinentInfoRecord("CMOS", "#a4e5e2", 5, 2)
         )
     }
 
     @Test
     fun `ContinentInfo should store correct values`() {
-        val component = ContinentInfo("CPU", "#e6afaf", 6, 2)
+        val component = ContinentInfoRecord("CPU", "#e6afaf", 6, 2)
 
         assertEquals("CPU", component.name)
         assertEquals("#e6afaf", component.colorHex)
@@ -38,15 +38,15 @@ class ContinentInfoTest {
 
     @Test
     fun `ContinentInfo instances with same data should be equal`() {
-        val a = ContinentInfo("RAM", "#87deb3", 10, 2)
-        val b = ContinentInfo("RAM", "#87deb3", 10, 2)
+        val a = ContinentInfoRecord("RAM", "#87deb3", 10, 2)
+        val b = ContinentInfoRecord("RAM", "#87deb3", 10, 2)
 
         assertEquals(a, b)
     }
 
     @Test
     fun `ContinentInfo hashCode should be consistent`() {
-        val component = ContinentInfo("Wireless Mesh", "#9effad", 8, 2)
+        val component = ContinentInfoRecord("Wireless Mesh", "#9effad", 8, 2)
         val initialHash = component.hashCode()
         val secondHash = component.hashCode()
 
