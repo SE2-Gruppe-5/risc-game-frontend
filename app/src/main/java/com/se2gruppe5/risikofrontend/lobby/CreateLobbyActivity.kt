@@ -1,6 +1,7 @@
 package com.se2gruppe5.risikofrontend.lobby
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
@@ -25,6 +26,7 @@ class CreateLobbyActivity :AppCompatActivity() {
     val client = NetworkClient()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         enableEdgeToEdge()
         setContentView(R.layout.createlobby)
 

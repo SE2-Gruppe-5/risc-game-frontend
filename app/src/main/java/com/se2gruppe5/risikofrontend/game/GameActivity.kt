@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikofrontend.game
 
+import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
 import android.os.StrictMode
@@ -56,6 +57,7 @@ class GameActivity : AppCompatActivity() {
     var gameID : UUID? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         enableEdgeToEdge()
         setContentView(R.layout.game)
         //Placeholder
