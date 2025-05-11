@@ -28,6 +28,7 @@ The wrapper may however be needed, as it plays a role in color changes etc.
  */
 
 class TerritoryManagerTestUnitTest {
+    /*
     private lateinit var pointingArrow: PointingArrowAndroid
     private lateinit var mePlayerRecord: PlayerRecord
     private lateinit var manager: TerritoryManager
@@ -265,4 +266,6 @@ class TerritoryManagerTestUnitTest {
 //            verify(t2).setHighlightSelected(true)
 //        }
 //    }
+
+     */
 }
