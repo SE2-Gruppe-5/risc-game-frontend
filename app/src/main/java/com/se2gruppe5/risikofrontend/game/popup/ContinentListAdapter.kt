@@ -1,6 +1,5 @@
 package com.se2gruppe5.risikofrontend.game.popup
 
-import android.R
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,23 +17,22 @@ class ContinentListAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val itemView = convertView ?: LayoutInflater.from(context)
-            .inflate(R.layout.simple_list_item_2, parent, false)
+            .inflate(android.R.layout.simple_list_item_2, parent, false)
 
-        val title = itemView.findViewById<TextView>(R.id.text1)
-        val subtitle = itemView.findViewById<TextView>(R.id.text2)
+        val title = itemView.findViewById<TextView>(android.R.id.text1)
+        val subtitle = itemView.findViewById<TextView>(android.R.id.text2)
 
         val item = data[position]
         title.text = item.name
         subtitle.text = buildString {
-        append(item.regions)
-        append(" Gebiete – +")
-        append(item.bonus)
-        append(" Truppen")
-    }
+            append(item.regions)
+            append(" Gebiete – +")
+            append(item.bonus)
+            append(" Truppen")
+        }
         title.setTextColor(item.colorHex.toColorInt())
 
         Log.d("ContinentListAdapter", "Displaying: ${item.name} - ${item.regions} Gebiete, +${item.bonus} Truppen")
-
 
         return itemView
     }
