@@ -23,15 +23,17 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
 
         //Intentionally not using non-nullable lateInit var for unit test reset functionality
         private var singleton: GameManager? = null
-        private var currentPlayerIndex = 0
         private var currentPlayer: PlayerRecord? = null
+        private var currentPlayerIndex: UUID? = null
         private var phase = Phases.Reinforce
         private var players: HashMap<UUID, PlayerRecord>? = null
-        
+        private var uuidSet : Set<UUID>? = mutableSetOf()
+
         fun init(me : PlayerRecord, uuid: UUID, playerMap: HashMap<UUID, PlayerRecord>) {
             if (singleton==null) {
                 singleton = GameManager(me, uuid)
                 players = playerMap
+                uuidSet = players?.keys
             }
         }
         //Throws when null [i.e. .get() before .init()]
@@ -50,7 +52,7 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
         fun getCurrentPlayer() : PlayerRecord? {
             return currentPlayer
         }
-        fun getCurrentPlayerIndex(): Int{
+        fun getCurrentPlayerIndex(): UUID? {
             return currentPlayerIndex
         }
         fun getPhase(): Phases{
@@ -63,6 +65,18 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
         fun setPhase(new: Phases){
             phase = new
         }
+
+        fun updateCurrentPlayer(){
+            if (players != null) {
+                for( i in uuidSet!!){
+                    if (players!!.get(i)?.isCurrentTurn == true){
+                        currentPlayer = players!!.get(i)
+                        currentPlayerIndex = i
+                        break
+                    }
+                }
+            }
+        }
     }
     val MAX_PLAYERS: Int = 6
 
@@ -70,16 +84,12 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
      * Signals backend to swap to the next Player
      * Hands out a card if the Player captured a territory
      */
-    fun nextPlayer(): Pair<Phases, Int>{
+    fun nextPlayer(): Pair<Phases, UUID?> {
         if(currentPlayer?.capturedTerritory == true){
             CardHandler.getCard(currentPlayer)
             currentPlayer!!.capturedTerritory = false
         }
-       if(currentPlayerIndex + 1 == players?.size){
-           currentPlayerIndex = 0
-       }else currentPlayerIndex++
-        currentPlayer = players?.get(currentPlayerIndex)
-
+       updateCurrentPlayer()
 
         return Pair(Phases.Reinforce,currentPlayerIndex)
     }
@@ -87,7 +97,7 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
     /**
      * Swaps Phase to the next one
      */
-    fun nextPhase(): Pair<Phases, Int> {
+    fun nextPhase(): Pair<Phases, UUID?> {
         if(currentPlayer == me) {
             when (phase) {
                 Phases.Reinforce -> phase = Phases.Attack
@@ -124,8 +134,17 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
     private fun initializeBoard(activity: Activity){
         //TODO Territories, correct setup for TerritoryManager
         //still the code from markus just extracted
-        val p1 = players?.get(0)
-        val p2 = players?.get(1)
+        var p1 : PlayerRecord? = null
+        var p2 : PlayerRecord? = null
+        for(i in uuidSet!!){
+            if(p1 != null){
+                p1 = players!!.get(i)
+                continue
+            }
+            p2 = players!!.get(i)
+        }
+
+
         val t1 = TerritoryRecord(1,10)
         val t1_txt = activity.findViewById<TextView>(R.id.territoryAtext)
         val t1_btn = activity.findViewById<ImageButton>(R.id.territoryAbtn)

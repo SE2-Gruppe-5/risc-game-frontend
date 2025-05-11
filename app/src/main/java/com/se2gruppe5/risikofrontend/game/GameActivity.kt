@@ -22,9 +22,12 @@ import com.se2gruppe5.risikofrontend.network.NetworkClient
 import com.se2gruppe5.risikofrontend.network.sse.MessageType
 import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
+import com.se2gruppe5.risikofrontend.network.sse.messages.ChangeTerritoryMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.JoinLobbyMessage
+import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePhaseMessage
+import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePlayersMessage
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
 
@@ -40,8 +43,11 @@ class GameActivity : AppCompatActivity() {
         )
         sseService = service
         if (service != null) {
+            gameManager = GameManager.get()
             setupHandlers(service)
         }
+
+
     }
     var gameManager: GameManager? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,10 +124,25 @@ class GameActivity : AppCompatActivity() {
 
 
     private fun setupHandlers(service: SseClientService) {
-            sseService?.handler(MessageType.) {
-                it as JoinLobbyMessage
+            sseService?.handler(MessageType.UPDATE_PHASE) {
+                it as UpdatePhaseMessage
+
+
 
             }
+        sseService?.handler(MessageType.UPDATE_PLAYERS) {
+            it as UpdatePlayersMessage
+
+
+
+        }
+        sseService?.handler(MessageType.UPDATE_TERRITORIES) {
+            it as ChangeTerritoryMessage
+
+
+
+        }
+
 
 
     }
