@@ -50,12 +50,12 @@ class CreateLobbyActivity :AppCompatActivity() {
     }
 
     private fun createLobby(): String{
-        val networkClient : INetworkClient = NetworkClient()
         var code : String = ""
         runBlocking {
-        code =  networkClient.createLobby().toString()
+        code =  client.createLobby().toString()
             }
         return code
     }
+
 
 }

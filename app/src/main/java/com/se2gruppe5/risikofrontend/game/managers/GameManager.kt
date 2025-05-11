@@ -26,21 +26,18 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
         private var currentPlayerIndex = 0
         private var currentPlayer: PlayerRecord? = null
         private var phase = Phases.Reinforce
-        private val players: List<PlayerRecord>? = null
-
-
-        fun init(me : PlayerRecord, uuid: UUID) {
+        private var players: HashMap<UUID, PlayerRecord>? = null
+        
+        fun init(me : PlayerRecord, uuid: UUID, playerMap: HashMap<UUID, PlayerRecord>) {
             if (singleton==null) {
                 singleton = GameManager(me, uuid)
-                currentPlayer = players?.get(currentPlayerIndex)
+                players = playerMap
             }
         }
-
         //Throws when null [i.e. .get() before .init()]
         fun get(): GameManager {
             return checkNotNull(singleton) { "GameManager must be .init() first!" }
         }
-
         /**
          * Do not call this. It is for unit tests only.
          */
@@ -66,8 +63,6 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
         fun setPhase(new: Phases){
             phase = new
         }
-
-
     }
     val MAX_PLAYERS: Int = 6
 
