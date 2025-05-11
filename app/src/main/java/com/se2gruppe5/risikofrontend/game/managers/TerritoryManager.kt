@@ -179,9 +179,7 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
     }
 //todo adapt to uuid
     private fun checkPlayerValid(playerRecord: PlayerRecord) {
-        if (true) {
-            throw IllegalArgumentException("Player ID invalid.")
-        }
+        throw IllegalArgumentException("Player ID invalid.")
     }
     private fun myTurn(): Boolean {
         return me == GameManager.getCurrentPlayer()
