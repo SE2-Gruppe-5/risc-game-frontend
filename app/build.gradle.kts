@@ -90,7 +90,7 @@ dependencies {
     implementation(libs.dotenv.kotlin)
     //androidTestImplementation(libs.androidx.test.core)
     //androidTestImplementation(libs.androidx.test.ext.junit)
-    implementation(libs.lifecycle.livedata.ktx)
+    //implementation(libs.lifecycle.livedata.ktx)
     //--------------------------------------------------------
     testImplementation(libs.junit)
     testImplementation(libs.mockito)
@@ -175,15 +175,13 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/startmenu/**",
                 "**/com/se2gruppe5/risikofrontend/MainActivity.kt",
                 "**/com/se2gruppe5/risikofrontend/game/GameActivity.kt",
+                "**/com/se2gruppe5/risikofrontend/players/ActivePlayersViewModel.kt",
+                "**/com/se2gruppe5/risikofrontend/players/ActivePlayersActivity.kt",
                 "**/network/**",
                 "**/dialogs/**",
                 "**/com/se2gruppe5/**" //todo: remove this line in sprint 3 !!!!
             ).joinToString(",")
         )
-
-            "**/com/se2gruppe5/risikofrontend/players/ActivePlayersViewModel.kt, " +
-                    "**/com/se2gruppe5/risikofrontend/players/ActivePlayersActivity.kt")
-
 
     }
 }
