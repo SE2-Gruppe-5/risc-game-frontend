@@ -36,6 +36,8 @@
             android:exported="false" />
         <activity android:name=".game.GameActivity"
             android:exported="false" />
+        <activity android:name=".game.ReinforcementActivity"
+            android:exported="false" />
 
         <!-- Services -->
         <service android:name=".network.sse.SseClientService"
