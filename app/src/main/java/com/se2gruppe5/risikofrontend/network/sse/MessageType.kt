@@ -8,6 +8,7 @@ import com.se2gruppe5.risikofrontend.network.sse.messages.LeaveLobbyMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.SetUuidMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePhaseMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePlayersMessage
+import com.se2gruppe5.risikofrontend.players.ActivePlayersMessage
 import kotlin.reflect.KClass
 
 enum class MessageType(val messageClass: KClass<out IMessage>) {
@@ -18,7 +19,8 @@ enum class MessageType(val messageClass: KClass<out IMessage>) {
     START_GAME(GameStartMessage::class),
     UPDATE_PHASE(UpdatePhaseMessage::class),
     UPDATE_PLAYERS(UpdatePlayersMessage::class),
-    UPDATE_TERRITORIES(ChangeTerritoryMessage::class);
+    UPDATE_TERRITORIES(ChangeTerritoryMessage::class),
+    ACTIVE_PLAYERS(ActivePlayersMessage::class);
 }
 
 fun getMessageType(type: String): MessageType? {

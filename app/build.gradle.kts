@@ -72,6 +72,12 @@ afterEvaluate { //afterEvaluate needed, as task is unknown in early stage
 
 dependencies {
     implementation(libs.gson)
+
+    //implementation(libs.androidx.uiautomator)
+    //testImplementation(libs.mockito.kotlin)
+    //testImplementation(libs.mockito.core)
+    //androidTestImplementation(libs.mockito.android)
+    implementation(libs.gson)
     implementation(libs.kotlinxCoroutines)
     implementation(libs.okhttp)
     implementation(libs.okhttpeventsource)
@@ -80,8 +86,11 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
-    implementation(libs.core.ktx)
+    //implementation(libs.core.ktx)
     implementation(libs.dotenv.kotlin)
+    //androidTestImplementation(libs.androidx.test.core)
+    //androidTestImplementation(libs.androidx.test.ext.junit)
+    //implementation(libs.lifecycle.livedata.ktx)
     //--------------------------------------------------------
     testImplementation(libs.junit)
     testImplementation(libs.mockito)
@@ -166,10 +175,13 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/startmenu/**",
                 "**/com/se2gruppe5/risikofrontend/MainActivity.kt",
                 "**/com/se2gruppe5/risikofrontend/game/GameActivity.kt",
+                "**/com/se2gruppe5/risikofrontend/players/ActivePlayersViewModel.kt",
+                "**/com/se2gruppe5/risikofrontend/players/ActivePlayersActivity.kt",
                 "**/network/**",
                 "**/dialogs/**",
                 "**/com/se2gruppe5/**" //todo: remove this line in sprint 3 !!!!
             ).joinToString(",")
         )
+
     }
 }
