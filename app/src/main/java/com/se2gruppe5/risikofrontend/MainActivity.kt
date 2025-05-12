@@ -18,9 +18,10 @@ import com.se2gruppe5.risikofrontend.network.sse.MessageType
 import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
 import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
+import androidx.lifecycle.lifecycleScope
+import com.se2gruppe5.risikofrontend.game.popup.ContinentDialog
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 import kotlinx.coroutines.launch
-import androidx.lifecycle.lifecycleScope
 
 class MainActivity : AppCompatActivity() {
     val client = NetworkClient()
@@ -52,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         val txtMessage = this.findViewById<EditText>(R.id.txtMessage)
         val button = this.findViewById<Button>(R.id.button)
         val menuButton = this.findViewById<Button>(R.id.menuButton)
+        val showContinentsButton = this.findViewById<Button>(R.id.btnShowContinents)
 
         button.setOnClickListener {
             Log.i("WEBCHAT", "Sending message: " + txtMessage.text)
@@ -60,6 +62,12 @@ class MainActivity : AppCompatActivity() {
             }
             txtMessage.setText("")
         }
+
+        showContinentsButton.setOnClickListener {
+            val continentDialog = ContinentDialog()
+            continentDialog.show(supportFragmentManager, "ContinentDialog")
+        }
+
         menuButton.setOnClickListener {
             Log.i("NAVIGATION", "Going to Menu")
             val intent = Intent(this, MenuActivity::class.java)
@@ -83,7 +91,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupHandlers(service: SseClientService) {
         val textView = this.findViewById<TextView>(R.id.textView)
-        service.handler(MessageType.CHAT) { it as ChatMessage
+        service.handler(MessageType.CHAT) {
+            it as ChatMessage
             runOnUiThread {
                 textView.append(it.message + "\n")
             }
