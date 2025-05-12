@@ -47,8 +47,19 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
     private val territoryList: MutableList<ITerritoryVisual> = mutableListOf()
     private var prevSelTerritory: ITerritoryVisual? = null
 
+    fun updateTerritory(t: ITerritoryVisual) {
+        if(t.territoryRecord.owner != null) {
+            t.changeColor(t.territoryRecord.owner!!.color)
+        }
+        else {
+            t.changeColor(TERRITORY_NO_OWNER_COLOR)
+        }
 
-    fun updateTerritory(t: ITerritoryVisual){
+        t.changeStat(t.territoryRecord.stat)
+    }
+
+    //Should never be needed, legacy
+    fun swapTerritory(t: ITerritoryVisual){
         for (i in territoryList){
             if (i.getTerritoryId()== t.getTerritoryId()){
                 territoryList.remove(i)
@@ -97,11 +108,9 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
         checkTerritoryValid(t)
         if (playerRecord != null) {
             checkPlayerValid(playerRecord)
-            t.changeColor(playerRecord.color)
-        }else{
-            t.changeColor(TERRITORY_NO_OWNER_COLOR)
         }
         t.territoryRecord.owner = playerRecord
+        updateTerritory(t)
     }
 
 

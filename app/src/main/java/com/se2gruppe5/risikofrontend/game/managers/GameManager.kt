@@ -1,12 +1,15 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
 import android.app.Activity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.graphics.toColorInt
 import com.se2gruppe5.risikofrontend.R
+import com.se2gruppe5.risikofrontend.game.board.BoardLoaderAndroid
 import com.se2gruppe5.risikofrontend.game.cards.CardHandler
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
@@ -94,7 +97,7 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
         }
     }
     val MAX_PLAYERS: Int = 6
-    var territoryVisualList : MutableList<Triple<TextView, ImageButton, View>> = mutableListOf()
+    var territoryVisualMap : HashMap<Int, ITerritoryVisual> = HashMap()
 
 
     fun updatePlayers(playerMap: HashMap<UUID, PlayerRecord>): Int? {
@@ -161,19 +164,41 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
      * Initializes all territory txt,btn and outline and puts them into a List
      */
     private fun initTerritoryViews(activity: Activity) {
-        territoryVisualList.add(Triple(activity.findViewById<TextView>(R.id.territoryAtext),activity.findViewById<ImageButton>(R.id.territoryAbtn), activity.findViewById<View>(R.id.territoryAoutline)))
-        territoryVisualList.add(Triple(activity.findViewById<TextView>(R.id.territoryBtext),activity.findViewById<ImageButton>(R.id.territoryBbtn), activity.findViewById<View>(R.id.territoryBoutline)))
+        val board = activity.findViewById<FrameLayout>(R.id.gameBoard)
+        val territories: List<TerritoryRecord> = BoardLoaderAndroid(activity).getTerritories()
 
+        val territoryManager = TerritoryManager.get()
+
+        for(territory in territories) {
+            val territoryLayout =
+                LayoutInflater.from(activity).inflate(R.layout.territory_template, board, false)
+            territoryLayout.id = View.generateViewId()
+
+            val params = FrameLayout.LayoutParams(territory.size.first, territory.size.second)
+            params.leftMargin = territory.position.first
+            params.topMargin = territory.position.second
+            territoryLayout.layoutParams = params
+
+            val text = territoryLayout.findViewById<TextView>(R.id.territoryText)
+            val button = territoryLayout.findViewById<ImageButton>(R.id.territoryBtn)
+            val outline = territoryLayout.findViewById<View>(R.id.territoryOutline)
+            board.addView(territoryLayout)
+
+            val visual: ITerritoryVisual =
+                TerritoryVisualAndroid(territory, text, text, button, outline)
+            territoryManager.addTerritory(visual)
+            territoryVisualMap[territory.id] = visual
+        }
     }
 
 
     fun updateTerritories(t: List<TerritoryRecord>){
-        for(i in t.indices){
-            val t1 = t.get(i)
-            val views = territoryVisualList.get(i)
-            val t1_vis : ITerritoryVisual= TerritoryVisualAndroid(t1,views.first,views.first,views.second,views.third)
-            t1.owner = players!!.get(uuidList!!.get(0))
-            TerritoryManager.get().updateTerritory(t1_vis)
+        for(territory in t){
+            val targetTerritory = territoryVisualMap[territory.id]!!
+            targetTerritory.territoryRecord.owner = territory.owner
+            targetTerritory.territoryRecord.stat = territory.stat
+            targetTerritory.territoryRecord.owner = players!!.get(uuidList!!.get(0))
+            TerritoryManager.get().updateTerritory(targetTerritory)
         }
     }
     val client : INetworkClient = NetworkClient()
