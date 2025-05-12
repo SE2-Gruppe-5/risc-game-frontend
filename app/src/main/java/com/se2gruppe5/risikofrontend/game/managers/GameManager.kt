@@ -157,9 +157,35 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
         )
         activity.findViewById<ViewGroup>(R.id.main).addView(pointingArrow)
         TerritoryManager.init(me, pointingArrow, activity)
+
+        runBlocking {
+            assignTerritories(GameManager.get().uuid) // Aufruf der Methode, um Territorien zuzuweisen
+            distributeTroopsAutomatically() // Automatische Verteilung der Truppen
+        }
+
         val viewManager = GameViewManager(activity)
         viewManager.setPlayerNames(players, turnIndicators)
     }
+    suspend fun assignTerritories(gameId: UUID) {
+        val client: INetworkClient = NetworkClient()  // Sicherstellen, dass die Client-Instanz verwendet wird
+        client.assignTerritories(gameId)  // Aufruf der Methode mit dem gameId
+    }
+    fun distributeTroopsAutomatically() {
+        // Beispiel für eine automatische Verteilung: Jeder Spieler erhält 5 Truppen
+        val defaultTroops = 5
+        for (player in players?.values ?: emptyList()) {
+            runBlocking {
+                distributeTroops(GameManager.get().uuid, defaultTroops)  // Verteile Truppen
+            }
+        }
+    }
+
+    suspend fun distributeTroops(gameId: UUID, troops: Int) {
+        val client: INetworkClient = NetworkClient()  // Verwenden der NetworkClient-Instanz
+        client.distributeTroops(gameId, troops)  // Aufruf der Methode mit dem gameId und den Truppen
+    }
+
+
 
     /**
      * Initializes all territory txt,btn and outline and puts them into a List
