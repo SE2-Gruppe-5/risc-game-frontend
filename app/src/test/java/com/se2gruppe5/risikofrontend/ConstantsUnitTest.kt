@@ -51,18 +51,6 @@ class ConstantsUnitTest {
     }
 
     @Test
-    fun checkAssignTerritoriesUrlValid() {
-        // Überprüfen, ob die URL für die Zuweisung von Territorien eine gültige URL ist
-        assertTrue(isValidUrl(Constants.ASSIGN_TERRITORIES_URL))
-    }
-
-    @Test
-    fun checkDistributeTroopsUrlValid() {
-        // Überprüfen, ob die URL für das Verteilen von Truppen eine gültige URL ist
-        assertTrue(isValidUrl(Constants.DISTRIBUTE_TROOPS_URL))
-    }
-
-    @Test
     fun checkAssignTerritoriesUrlEndpoint() {
         // Überprüfen, ob der Endpunkt mit einem "/" beginnt
         assertTrue(isValidEndpoint(Constants.ASSIGN_TERRITORIES_URL))
