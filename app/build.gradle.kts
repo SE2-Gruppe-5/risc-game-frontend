@@ -170,9 +170,10 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/game/GameActivity.kt",
                 "**/com/se2gruppe5/risikofrontend/game/board/BoardJsonClasses.kt",
                 "**/com/se2gruppe5/risikofrontend/game/board/BoardLoaderAndroid.kt",
+                "**/com/se2gruppe5/risikofrontend/game/managers/GameManager.kt", // TODO
+                "**/com/se2gruppe5/risikofrontend/game/managers/TerritoryManager.kt", // TODO
                 "**/network/**",
                 "**/dialogs/**",
-                "**/com/se2gruppe5/**" //todo: remove this line in sprint 3 !!!!
             ).joinToString(",")
         )
     }

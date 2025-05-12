@@ -3,8 +3,8 @@ package com.se2gruppe5.risikofrontend.game
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
-import android.view.View
 import android.os.StrictMode
+import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
