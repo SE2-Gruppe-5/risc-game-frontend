@@ -26,6 +26,8 @@ class SseClientService : Service() {
     private val handlers: HashMap<MessageType, Consumer<IMessage>> = HashMap()
 
     override fun onBind(p0: Intent?): IBinder? {
+        handlers.clear()
+        setupDefaultHandlers()
         return binder
     }
 
