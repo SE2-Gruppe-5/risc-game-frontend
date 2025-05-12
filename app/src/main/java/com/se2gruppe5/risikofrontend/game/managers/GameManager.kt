@@ -208,11 +208,13 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
 
     fun updateTerritories(t: List<TerritoryRecord>){
         for(territory in t){
-            val targetTerritory = territoryVisualMap[territory.id]!!
-            targetTerritory.territoryRecord.owner = territory.owner
-            targetTerritory.territoryRecord.stat = territory.stat
-            targetTerritory.territoryRecord.owner = players!!.get(uuidList!!.get(0))
-            TerritoryManager.get().updateTerritory(targetTerritory)
+            val targetTerritory = territoryVisualMap[territory.id]
+            targetTerritory?.let {
+                it.territoryRecord.owner = territory.owner
+                it.territoryRecord.stat = territory.stat
+                it.territoryRecord.owner = players!!.get(uuidList!!.get(0))
+                TerritoryManager.get().updateTerritory(it)
+            }
         }
     }
     val client : INetworkClient = NetworkClient()
