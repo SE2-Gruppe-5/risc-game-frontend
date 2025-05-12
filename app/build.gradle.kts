@@ -163,6 +163,7 @@ sonar {
             listOf(
                 "**/com/se2gruppe5/risikofrontend/game/territory/TerritoryVisualAndroid.kt",
                 "**/com/se2gruppe5/risikofrontend/game/territory/PointingArrowAndroid.kt",
+                "**/com/se2gruppe5/risikofrontend/game/territory/LineAndroid.kt",
                 " **/com/se2gruppe5/risikofrontend/game/dice/DiceVisualAndroid.kt",
                 "**/com/se2gruppe5/risikofrontend/lobby/**",
                 "**/com/se2gruppe5/risikofrontend/startmenu/**",
