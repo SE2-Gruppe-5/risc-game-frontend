@@ -113,7 +113,7 @@ class NetworkClient() : INetworkClient{
         }
     }
     override suspend fun assignTerritories(gameId: UUID) {
-        val request = createRequest("PATCH", Constants.ASSIGN_TERRITORIES_URL.replace("{id}", gameId.toString()))
+        val request = createRequest("GET", Constants.ASSIGN_TERRITORIES_URL.replace("{id}", gameId.toString()))
         execute(request)
     }
 
