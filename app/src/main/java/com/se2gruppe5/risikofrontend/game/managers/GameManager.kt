@@ -16,6 +16,7 @@ import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.territory.GameViewManager
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
+import com.se2gruppe5.risikofrontend.game.territory.LineAndroid
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.game.territory.TerritoryVisualAndroid
 import com.se2gruppe5.risikofrontend.network.INetworkClient
@@ -188,6 +189,19 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
                 TerritoryVisualAndroid(territory, text, text, button, outline)
             territoryManager.addTerritory(visual)
             territoryVisualMap[territory.id] = visual
+
+            for(connected in territory.connections) {
+                val line = LineAndroid(activity, "#000000".toColorInt(), 5f)
+                val startCoordinates = intPairToFloatPair(territory.position)
+                val endCoordinates = intPairToFloatPair(connected.position)
+                line.z = 0f
+                line.setCoordinates(startCoordinates, endCoordinates)
+                line.layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+                activity.findViewById<ViewGroup>(R.id.gameBoard).addView(line)
+            }
         }
     }
 
@@ -207,6 +221,10 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
         runBlocking {
             client.updatePlayer(uuid,pUUID,name,color)
         }
+    }
+
+    private fun intPairToFloatPair(pair: Pair<Int, Int>): Pair<Float, Float> {
+        return Pair(pair.first.toFloat(), pair.second.toFloat())
     }
 
 
