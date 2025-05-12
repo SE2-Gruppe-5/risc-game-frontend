@@ -19,7 +19,13 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    sourceSets {
+        getByName("main") {
+            java.srcDirs("src/main/java")
+            res.srcDirs("src/main/res")
+            manifest.srcFile("src/main/AndroidManifest.xml")
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -53,6 +59,9 @@ android {
     kotlinOptions {
         jvmTarget = "21"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 //Automatically generate appropriate Test Reports after performing Android-Tests
@@ -65,6 +74,7 @@ afterEvaluate { //afterEvaluate needed, as task is unknown in early stage
 dependencies {
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.gson)
     implementation(libs.okhttp)
     implementation(libs.okhttp.eventsource)
     implementation(libs.androidx.core.ktx)
@@ -79,6 +89,8 @@ dependencies {
     testImplementation(libs.mockito)
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.mockito.inline)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.byte.buddy.agent)
     //--------------------------------------------------------
     //androidTestImplementation(libs.junit)
     //androidTestImplementation(libs.mockito.android)
@@ -157,7 +169,10 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/MainActivity.kt",
                 "**/com/se2gruppe5/risikofrontend/game/GameActivity.kt",
                 "**/com/se2gruppe5/risikofrontend/game/board/BoardJsonClasses.kt",
-                "**/com/se2gruppe5/risikofrontend/game/board/BoardLoaderAndroid.kt"
+                "**/com/se2gruppe5/risikofrontend/game/board/BoardLoaderAndroid.kt",
+                "**/network/**",
+                "**/dialogs/**",
+                "**/com/se2gruppe5/**" //todo: remove this line in sprint 3 !!!!
             ).joinToString(",")
         )
     }

@@ -2,6 +2,7 @@ package com.se2gruppe5.risikofrontend.startmenu
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -15,6 +16,7 @@ class MenuActivity : AppCompatActivity() {
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         setContentView(R.layout.start_menu)
 
         val createLobbyBtn = this.findViewById<Button>(R.id.createLobbyBtn)

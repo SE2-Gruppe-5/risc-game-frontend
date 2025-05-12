@@ -1,7 +1,10 @@
 package com.se2gruppe5.risikofrontend.lobby
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.graphics.Color
 import android.os.Bundle
+import android.os.StrictMode
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
@@ -11,50 +14,76 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.GameActivity
+import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.managers.GameManager
+import com.se2gruppe5.risikofrontend.network.NetworkClient
+import com.se2gruppe5.risikofrontend.network.sse.MessageType
+import com.se2gruppe5.risikofrontend.network.sse.SseClientService
+import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
+import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
+import com.se2gruppe5.risikofrontend.network.sse.messages.JoinLobbyMessage
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
+import kotlinx.coroutines.runBlocking
+import java.util.UUID
 
 class LobbyActivity :AppCompatActivity() {
+    val client = NetworkClient()
+    var sseService: SseClientService? = null
+    val serviceConnection = constructServiceConnection { service ->
+        // Allow network calls on main thread for testing purposes
+        // GitHub Actions Android emulator action with stricter policy fails otherwise
+        StrictMode.setThreadPolicy(
+            StrictMode.ThreadPolicy.Builder().permitAll().build()
+        )
+        sseService = service
+        if (service != null) {
+            setupHandlers(service)
+                joinLobby(joinCode, playerName)
+        }
+    }
+    var joinedPlayers: Int = 1
+    var MAX_PLAYER: Int = 6
+    var players: MutableList<PlayerRecord> = mutableListOf()
+    var playerBtn: MutableList<ImageButton>? = mutableListOf()
+    var playerTxt: MutableList<TextView>? = mutableListOf()
+    var joinCode: String = ""
+    var playerName: String = ""
+    var me : PlayerRecord? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         enableEdgeToEdge()
         setContentView(R.layout.lobby)
 
-        val playerName = intent.getStringExtra("PLAYER_NAME") ?: "Player"
+        playerName = intent.getStringExtra("PLAYER_NAME") ?: "Player"
         val ownNameTxt = findViewById<TextView>(R.id.ownNameTxt)
         ownNameTxt.text = playerName
-        val namePlayer1 = findViewById<TextView>(R.id.namePlayer1)
-        namePlayer1.text = playerName
 
-        val joinCode = generateJoinCode()
+        joinCode = intent.getStringExtra("LOBBY_CODE").toString()
         val lobbyCodeTxt = findViewById<TextView>(R.id.lobbyCodeTxt)
         lobbyCodeTxt.text = joinCode
 
 
-        val player1Btn = this.findViewById<ImageButton>(R.id.player1Btn)
-        val player2Btn = this.findViewById<ImageButton>(R.id.player2Btn)
-        val player3Btn = this.findViewById<ImageButton>(R.id.player3Btn)
-        val player4Btn = this.findViewById<ImageButton>(R.id.player4Btn)
-        val player5Btn = this.findViewById<ImageButton>(R.id.player5Btn)
-        val player6Btn = this.findViewById<ImageButton>(R.id.player6Btn)
-        val player1Txt = this.findViewById<TextView>(R.id.namePlayer1)
-        val player2Txt = this.findViewById<TextView>(R.id.namePlayer2)
-        val player3Txt = this.findViewById<TextView>(R.id.namePlayer3)
-        val player4Txt = this.findViewById<TextView>(R.id.namePlayer4)
-        val player5Txt = this.findViewById<TextView>(R.id.namePlayer5)
-        val player6Txt = this.findViewById<TextView>(R.id.namePlayer6)
+        playerBtn?.add(this.findViewById<ImageButton>(R.id.player1Btn))
+        playerBtn?.add(this.findViewById<ImageButton>(R.id.player2Btn))
+        playerBtn?.add(this.findViewById<ImageButton>(R.id.player3Btn))
+        playerBtn?.add(this.findViewById<ImageButton>(R.id.player4Btn))
+        playerBtn?.add(this.findViewById<ImageButton>(R.id.player5Btn))
+        playerBtn?.add(this.findViewById<ImageButton>(R.id.player6Btn))
+        playerTxt?.add(this.findViewById<TextView>(R.id.namePlayer1))
+        playerTxt?.add(this.findViewById<TextView>(R.id.namePlayer2))
+        playerTxt?.add(this.findViewById<TextView>(R.id.namePlayer3))
+        playerTxt?.add(this.findViewById<TextView>(R.id.namePlayer4))
+        playerTxt?.add(this.findViewById<TextView>(R.id.namePlayer5))
+        playerTxt?.add(this.findViewById<TextView>(R.id.namePlayer6))
 
-        player2Btn.visibility = View.GONE
-        player3Btn.visibility = View.GONE
-        player4Btn.visibility = View.GONE
-        player5Btn.visibility = View.GONE
-        player6Btn.visibility = View.GONE
 
-        player2Txt.visibility = View.GONE
-        player3Txt.visibility = View.GONE
-        player4Txt.visibility = View.GONE
-        player5Txt.visibility = View.GONE
-        player6Txt.visibility = View.GONE
+        for (i in playerTxt?.indices!!) {
+            playerBtn!![i].visibility = View.GONE
+            playerTxt!![i].visibility = View.GONE
+        }
+
 
         val backBtn = this.findViewById<ImageButton>(R.id.backBtn)
         val startGameBtn = this.findViewById<Button>(R.id.startGameBtn)
@@ -66,18 +95,66 @@ class LobbyActivity :AppCompatActivity() {
         })
         startGameBtn.setOnClickListener({
             Log.i("NAVIGATION", "Starting Game")
-            val intent = Intent(this, GameActivity::class.java)
-            startActivity(intent)
+            startGame(joinCode)
         })
-
 
     }
 
+    private fun joinLobby(code: String, name: String) {
+        runBlocking {
+            client.joinLobby(code, name)
+        }
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        Intent(this, SseClientService::class.java).also {
+            bindService(it, serviceConnection, BIND_AUTO_CREATE)
+        }
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (sseService != null) {
+            unbindService(serviceConnection)
+        }
+    }
+
+    private fun setupHandlers(service: SseClientService) {
+        sseService?.handler(MessageType.JOIN_LOBBY) {
+            it as JoinLobbyMessage
+            runOnUiThread {
+                Log.i("lobby", "Hello from lobbyhandler")
+                Log.i("lobby", "$it")
+                var uuid: UUID = it.uuid
+                var name: String = it.playerName
+                playerTxt?.get(joinedPlayers-1)?.visibility = View.VISIBLE
+                playerTxt?.get(joinedPlayers-1)?.text = name
+                playerBtn?.get(joinedPlayers-1)?.visibility = View.VISIBLE
+                me =PlayerRecord(uuid, name, Color.rgb((0..255).random(), (0..255).random(), (0..255).random()))
+                joinedPlayers++
+                players.add(me!!)
+            }
+        }
+        sseService?.handler(MessageType.START_GAME) {
+            it as GameStartMessage
+                val intent = Intent(this, GameActivity::class.java)
+                GameManager.init(me!!, it.gameId, it.players)
+                intent.putExtra("GAME_ID", it.gameId.toString())
+                startActivity(intent)
+        }
+    }
+
+    private fun startGame(code: String){
+        runBlocking {
+            client.startGame(code)
+        }
+    }
 }
 
-fun generateJoinCode(length: Int = 4): String {
-    val chars = ('A'..'Z') + ('0'..'9')
-    return (1..length)
-        .map { chars.random() }
-        .joinToString("")
-}
+
+
+
+

@@ -1,20 +1,33 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.widget.Toast
+
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dialogs.AttackTroopDialog
+import com.se2gruppe5.risikofrontend.game.dialogs.MoveTroopDialog
+
+import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
+import com.se2gruppe5.risikofrontend.network.INetworkClient
+import com.se2gruppe5.risikofrontend.network.NetworkClient
+import kotlinx.coroutines.runBlocking
 
 const val TERRITORY_NO_OWNER_COLOR: Int = 0x999999
 
-class TerritoryManager private constructor(val me: PlayerRecord, private val pointingArrow: PointingArrowAndroid) {
+class TerritoryManager private constructor(val me: PlayerRecord?, private val pointingArrow: PointingArrowAndroid, val activity: Activity) {
     companion object {
 
         //Intentionally not using non-nullable lateInit var for unit test reset funcitonality
+        @SuppressLint("StaticFieldLeak")
         private var singleton: TerritoryManager? = null
 
-        fun init(me: PlayerRecord, pointingArrow: PointingArrowAndroid) {
+        fun init(me: PlayerRecord?, pointingArrow: PointingArrowAndroid, activity: Activity) {
             if (singleton==null) {
-                singleton = TerritoryManager(me, pointingArrow)
+                singleton = TerritoryManager(me, pointingArrow, activity)
             }
         }
 
@@ -31,32 +44,20 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
         }
     }
 
-    private var isInSelectMode: Boolean = false
-    private var isInAttackMode: Boolean = false
     private val territoryList: MutableList<ITerritoryVisual> = mutableListOf()
-    private var prevSelTerritory: ITerritoryVisual? = null;
+    private var prevSelTerritory: ITerritoryVisual? = null
 
 
-    fun enterAttackMode() {
-        isInAttackMode = true
+    fun updateTerritory(t: ITerritoryVisual){
+        for (i in territoryList){
+            if (i.getTerritoryId()== t.getTerritoryId()){
+                territoryList.remove(i)
+                territoryList.add(t)
+                return
+            }
+        }
+        addTerritory(t)
     }
-
-    fun exitAttackMode() {
-        isInAttackMode = false
-    }
-
-    fun enterSelectMode() {
-        isInSelectMode = true
-    }
-
-    fun exitSelectMode() {
-        isInSelectMode = false
-    }
-
-    fun clearSelection(){
-        prevSelTerritory = null;
-    }
-
 
     fun addTerritory(t: ITerritoryVisual) {
         checkTerritoryValid(t)
@@ -90,7 +91,7 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
     }
 
     /**
-     * let player:=null semantically mean "no owner"
+     * let player:=null semantically mean "no owne r"
      */
     fun assignOwner(t: ITerritoryVisual, playerRecord: PlayerRecord?) {
         checkTerritoryValid(t)
@@ -111,33 +112,58 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
     }
 
     private fun hasBeenClicked(t: ITerritoryVisual) {
-        //todo: this is a very basic implementation,
-        // as soon as we settled on a GameManager (or something similar that imposes the
-        // games core gameplay loop 'phases'); this needs to be overhauled!
-        // (also don't allow clicking on self!)
-        if (isInSelectMode) {
-            prevSelTerritory?.let {
-                pointingArrow.setCoordinates(
-                    it.getCoordinatesAsFloat(true),
-                    t.getCoordinatesAsFloat(true))
-            }
-            if (isInAttackMode) {
+        val phase = GameManager.getPhase()
+        if(myTurn()) {
+            if (prevSelTerritory != t && prevSelTerritory != null) {
                 prevSelTerritory?.let {
-                    if(it.territoryRecord.connections.contains(t.territoryRecord)
-                        && it.territoryRecord.owner == me) {
-                        attackTerritory(t)
-                        t.changeStat(22)
-                        prevSelTerritory?.changeStat(11)
-                    }
+                    pointingArrow.setCoordinates(
+                        it.getCoordinatesAsFloat(true),
+                        t.getCoordinatesAsFloat(true))
                 }
+                if (phase == Phases.Reinforce) {
+                    if(prevSelTerritory!!.territoryRecord.owner == me && t.territoryRecord.owner == me) {
+                        MoveTroopDialog(
+                            context = activity,
+                            maxTroops = prevSelTerritory!!.territoryRecord.stat - 1,
+                            minTroops = 2,
+                            fromTerritory = prevSelTerritory!!,
+                            toTerritory = t
+                        ).show()
+                    }else{
+                        Toast.makeText(activity, "You can only move between your own territories",
+                            Toast.LENGTH_SHORT).show()
+                    }
+                }else if(phase == Phases.Attack){
+                    if(prevSelTerritory!!.territoryRecord.owner == me && t.territoryRecord.owner != me) {
+                        AttackTroopDialog(
+                            context = activity,
+                            maxTroops = prevSelTerritory!!.territoryRecord.stat - 1,
+                            minTroops = 1,
+                            fromTerritory = prevSelTerritory!!,
+                            toTerritory = t)
+                        { troops ->
+                            attackTerritory(t)
+                        }.show()
+                    }else{
+                        Toast.makeText(activity, "You cannot attack your own territories",
+                            Toast.LENGTH_SHORT).show()
+                    }
+
+
+                }
+
             }
             updateSelected(t)
+            changeTerritoryRequest(t.territoryRecord)
         }
     }
 
+
+
     private fun attackTerritory(t: ITerritoryVisual){
+        t.changeColor(me!!.color)
         t.territoryRecord.owner = me
-        t.changeColor(me.color)
+        me.capturedTerritory = true
     }
 
     private fun updateSelected(t: ITerritoryVisual){
@@ -147,14 +173,22 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
     }
 
     private fun checkTerritoryValid(t: ITerritoryVisual) {
-        if (t.territoryRecord.id <= 0) {
+        if (t.territoryRecord.id != null) {
             throw IllegalArgumentException("Territory ID invalid.")
         }
     }
-
+//todo adapt to uuid
     private fun checkPlayerValid(playerRecord: PlayerRecord) {
-        if (playerRecord.id <= 0) {
-            throw IllegalArgumentException("Player ID invalid.")
+        throw IllegalArgumentException("Player ID invalid.")
+    }
+    private fun myTurn(): Boolean {
+        return me == GameManager.getCurrentPlayer()
+    }
+    val client : INetworkClient = NetworkClient()
+
+    private fun changeTerritoryRequest(t: TerritoryRecord){
+        runBlocking {
+            client.changeTerritory(GameManager.get().uuid, t)
         }
     }
 }
