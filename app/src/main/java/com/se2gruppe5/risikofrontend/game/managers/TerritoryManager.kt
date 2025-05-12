@@ -122,15 +122,21 @@ class TerritoryManager private constructor(val me: PlayerRecord, private val poi
                     t.getCoordinatesAsFloat(true))
             }
             if (isInAttackMode) {
-                attackTerritory(t)
-                t.changeStat(22)
-                prevSelTerritory?.changeStat(11)
+                prevSelTerritory?.let {
+                    if(it.territoryRecord.connections.contains(t.territoryRecord)
+                        && it.territoryRecord.owner == me) {
+                        attackTerritory(t)
+                        t.changeStat(22)
+                        prevSelTerritory?.changeStat(11)
+                    }
+                }
             }
             updateSelected(t)
         }
     }
 
     private fun attackTerritory(t: ITerritoryVisual){
+        t.territoryRecord.owner = me
         t.changeColor(me.color)
     }
 
