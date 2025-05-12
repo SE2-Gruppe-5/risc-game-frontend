@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Territory A button -->
+    <FrameLayout
+        android:id="@+id/territoryA"
+        android:layout_width="124dp"
+        android:layout_height="105dp"
+        android:contentDescription="Territory A"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/territoryAbtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="Press to select Territory"
+            app:srcCompat="@android:drawable/btn_star"
+            android:clickable="true"
+            android:focusable="true"/>
+    </FrameLayout>
+
+    <!-- Troop selector bar (hidden until shown in code) -->
+    <RelativeLayout
+        android:id="@+id/troopSelector"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bar_grey"
+        app:layout_constraintTop_toBottomOf="@id/territoryA"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Left (decline) circle -->
+        <ImageView
+            android:id="@+id/btnDecline"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/circle_red"/>
+        <!-- Number carousel -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTroopNumbers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/btnDecline"
+            android:layout_toStartOf="@id/btnAccept"
+            android:overScrollMode="never"
+            android:clipToPadding="false"
+            android:paddingStart="80dp"
+            android:paddingEnd="10dp"/>
+        <!-- Right (accept) circle -->
+        <ImageView
+            android:id="@+id/btnAccept"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/circle_green"/>
+    </RelativeLayout>
+    <!-- ...Troop count... -->
+    <TextView
+        android:id="@+id/Troop_Count"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/circle_count"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:text="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+    <!-- ...Card count... -->
+    <TextView
+        android:id="@+id/Card_Count"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/circle_count"
+        android:gravity="center"
+        android:text="0"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+    <!-- ...Card container... -->
+    <HorizontalScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="800dp"
+        android:layout_height="250dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/cardContainer"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"/>
+
+    </HorizontalScrollView>
+    <Button
+        android:id="@+id/btnTradeIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Trade In"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

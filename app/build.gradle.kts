@@ -141,6 +141,7 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     )
     sourceDirectories.setFrom(files(srcDirs))
     classDirectories.setFrom(files(classDirs))
+
     executionData.setFrom(files(execData))
 }
 
@@ -173,9 +174,11 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/game/board/BoardLoaderAndroid.kt",
                 "**/com/se2gruppe5/risikofrontend/game/managers/GameManager.kt", // TODO
                 "**/com/se2gruppe5/risikofrontend/game/managers/TerritoryManager.kt", // TODO
+                "**/com/se2gruppe5/risikofrontend/popup/ContinentDialog.kt",
                 "**/network/**",
                 "**/dialogs/**",
             ).joinToString(",")
         )
+
     }
 }

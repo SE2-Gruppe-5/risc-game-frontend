@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.se2gruppe5.risikofrontend.game.popup.ContinentDialog
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.dice.DiceVisualAndroid
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.Dice1d6Generic
@@ -46,15 +47,15 @@ class GameActivity : AppCompatActivity() {
 
 
     }
-    var nextPhaseBtn : Button?= null
-    var reinforceIndicator : TextView?= null
-    var attackIndicator : TextView?= null
-    var tradeIndicator : TextView?= null
-    var phaseTxt : TextView?= null
+    var nextPhaseBtn: Button? = null
+    var reinforceIndicator: TextView? = null
+    var attackIndicator: TextView? = null
+    var tradeIndicator: TextView? = null
+    var phaseTxt: TextView? = null
 
-    var turnIndicators : MutableList<TextView> = mutableListOf()
+    var turnIndicators: MutableList<TextView> = mutableListOf()
     var gameManager: GameManager? = null
-    var gameID : UUID? = null
+    var gameID: UUID? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
@@ -73,17 +74,21 @@ class GameActivity : AppCompatActivity() {
         turnIndicators.add(this.findViewById<TextView>(R.id.player5txt))
         turnIndicators.add(this.findViewById<TextView>(R.id.player6txt))
 
-        nextPhaseBtn=   this.findViewById<Button>(R.id.phaseBtn)
-         reinforceIndicator=  this.findViewById<TextView>(R.id.reinforceIndicator)
-        attackIndicator=   this.findViewById<TextView>(R.id.attackIndicator)
-         tradeIndicator=  this.findViewById<TextView>(R.id.tradeIndicator)
-        phaseTxt=   this.findViewById<TextView>(R.id.currentPhaseTxt)
+        nextPhaseBtn = this.findViewById<Button>(R.id.phaseBtn)
+        reinforceIndicator = this.findViewById<TextView>(R.id.reinforceIndicator)
+        attackIndicator = this.findViewById<TextView>(R.id.attackIndicator)
+        tradeIndicator = this.findViewById<TextView>(R.id.tradeIndicator)
+        phaseTxt = this.findViewById<TextView>(R.id.currentPhaseTxt)
 
         val gameManager = GameManager.get()
         gameManager.initializeGame(this, turnIndicators)
         nextPhaseBtn?.setOnClickListener {
             changePhase()
 
+        }
+        val showContinentButton: Button = this.findViewById(R.id.btn_show_continents)
+        showContinentButton.setOnClickListener {
+            showContinentDialog()
         }
 
     }
@@ -93,7 +98,8 @@ class GameActivity : AppCompatActivity() {
             client.changePhase(gameID!!)
         }
     }
-    private fun getGameInfo(){
+
+    private fun getGameInfo() {
         runBlocking {
             client.getGameInfo(gameID!!)
         }
@@ -102,17 +108,26 @@ class GameActivity : AppCompatActivity() {
     val highlightedColor = Color.BLACK
     val notHighlightedColor = Color.GRAY
 
-    private fun changeViewColors(highlighted: TextView?, not1: TextView?, not2: TextView?){
+    private fun changeViewColors(highlighted: TextView?, not1: TextView?, not2: TextView?) {
         highlighted?.setBackgroundColor(highlightedColor)
         not1?.setBackgroundColor(notHighlightedColor)
         not2?.setBackgroundColor(notHighlightedColor)
+
     }
-    private fun changeHighlightedPlayer(number: Int?, indicators: List<View>){
-        for(i in indicators.indices){
-            if(i == number){
-                indicators[i].background = ContextCompat.getDrawable(this, R.drawable.higlightedbackground)
-            }else{
-                indicators[i].background = ContextCompat.getDrawable(this, R.drawable.nothiglightedbackground)
+
+    fun showContinentDialog() {
+        val dialog = ContinentDialog()
+        dialog.show(supportFragmentManager, "ContinentDialog")
+    }
+
+    private fun changeHighlightedPlayer(number: Int?, indicators: List<View>) {
+        for (i in indicators.indices) {
+            if (i == number) {
+                indicators[i].background =
+                    ContextCompat.getDrawable(this, R.drawable.higlightedbackground)
+            } else {
+                indicators[i].background =
+                    ContextCompat.getDrawable(this, R.drawable.nothiglightedbackground)
             }
         }
 
@@ -120,37 +135,42 @@ class GameActivity : AppCompatActivity() {
 
 
     private fun setupHandlers(service: SseClientService) {
-            sseService?.handler(MessageType.UPDATE_PHASE) {
-                it as UpdatePhaseMessage
-                var phase : Phases = Phases.Reinforce
-                when(it.phase){
-                    0-> phase = Phases.Reinforce
-                    1-> phase = Phases.Attack
-                    2-> phase = Phases.Trade
-                }
-               val res = gameManager?.nextPhase(phase)
-                when(phase){
-                    Phases.Reinforce -> {changeViewColors(reinforceIndicator,attackIndicator,tradeIndicator)
-                        phaseTxt?.text = "Reinforce"
-                        nextPhaseBtn?.text = "Next Phase"
-                        changeHighlightedPlayer(res?.second,turnIndicators)
-                    }
-                    Phases.Attack -> {changeViewColors(attackIndicator,reinforceIndicator,tradeIndicator)
-                        phaseTxt?.text = "Attack"
-                        nextPhaseBtn?.text = "Next Phase"
-                    }
-                    Phases.Trade -> {changeViewColors(tradeIndicator,attackIndicator,reinforceIndicator)
-                        phaseTxt?.text = "Trade"
-                        nextPhaseBtn?.text = "End Turn"
-                    }
-
-                    Phases.OtherPlayer -> {
-                        Toast.makeText(this, "Wait for your turn", Toast.LENGTH_SHORT).show()
-                    }
-                }
-
-
+        sseService?.handler(MessageType.UPDATE_PHASE) {
+            it as UpdatePhaseMessage
+            var phase: Phases = Phases.Reinforce
+            when (it.phase) {
+                0 -> phase = Phases.Reinforce
+                1 -> phase = Phases.Attack
+                2 -> phase = Phases.Trade
             }
+            val res = gameManager?.nextPhase(phase)
+            when (phase) {
+                Phases.Reinforce -> {
+                    changeViewColors(reinforceIndicator, attackIndicator, tradeIndicator)
+                    phaseTxt?.text = "Reinforce"
+                    nextPhaseBtn?.text = "Next Phase"
+                    changeHighlightedPlayer(res?.second, turnIndicators)
+                }
+
+                Phases.Attack -> {
+                    changeViewColors(attackIndicator, reinforceIndicator, tradeIndicator)
+                    phaseTxt?.text = "Attack"
+                    nextPhaseBtn?.text = "Next Phase"
+                }
+
+                Phases.Trade -> {
+                    changeViewColors(tradeIndicator, attackIndicator, reinforceIndicator)
+                    phaseTxt?.text = "Trade"
+                    nextPhaseBtn?.text = "End Turn"
+                }
+
+                Phases.OtherPlayer -> {
+                    Toast.makeText(this, "Wait for your turn", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+
+        }
         sseService?.handler(MessageType.UPDATE_PLAYERS) {
             it as UpdatePlayersMessage
             var higlightedPlayer = gameManager?.updatePlayers(it.players)
@@ -164,8 +184,6 @@ class GameActivity : AppCompatActivity() {
         }
 
     }
-
-
 
 
 }
