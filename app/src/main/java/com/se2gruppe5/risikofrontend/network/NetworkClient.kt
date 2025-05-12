@@ -112,4 +112,14 @@ class NetworkClient() : INetworkClient{
            return@withContext call.execute()
         }
     }
+    override suspend fun assignTerritories(gameId: UUID) {
+        val request = createRequest("PATCH", Constants.ASSIGN_TERRITORIES_URL.replace("{id}", gameId.toString()))
+        execute(request)
+    }
+
+    override suspend fun distributeTroops(gameId: UUID, troops: Int) {
+        val request = createRequest("PATCH", Constants.DISTRIBUTE_TROOPS_URL.replace("{id}", gameId.toString()),
+            "troops", troops.toString())
+        execute(request)
+    }
 }
