@@ -41,7 +41,7 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
             if (singleton==null) {
                 singleton = GameManager(me, uuid)
                 players = playerMap
-                var uuidSet = players?.keys
+                val uuidSet = players?.keys
                 for(uuid in uuidSet!!){
                     uuidList!!.add(uuid)
                 }
@@ -131,7 +131,7 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
                 Phases.Reinforce -> phase = Phases.Attack
                 Phases.Attack -> phase = Phases.Trade
                 Phases.Trade -> {
-                    var temp = nextPlayer()
+                    val temp = nextPlayer()
                     phase = temp.first
                     return temp
                 }
@@ -212,7 +212,7 @@ class GameManager  private constructor(val me : PlayerRecord, val uuid : UUID){
             targetTerritory?.let {
                 it.territoryRecord.owner = territory.owner
                 it.territoryRecord.stat = territory.stat
-                it.territoryRecord.owner = players!!.get(uuidList!!.get(0))
+                it.territoryRecord.owner = players!![uuidList!![0]]
                 TerritoryManager.get().updateTerritory(it)
             }
         }

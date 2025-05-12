@@ -5,11 +5,7 @@ import kotlinx.serialization.json.Json
 
 
 class BoardLoader(jsonSrc: String) {
-    private val territories: List<TerritoryRecord> = loadTerritories(jsonSrc)
-
-    fun getTerritories(): List<TerritoryRecord> {
-        return territories
-    }
+    val territories: List<TerritoryRecord> = loadTerritories(jsonSrc)
 
     private fun loadTerritories(json: String): List<TerritoryRecord> {
         val boardData = Json.decodeFromString<BoardData>(json)

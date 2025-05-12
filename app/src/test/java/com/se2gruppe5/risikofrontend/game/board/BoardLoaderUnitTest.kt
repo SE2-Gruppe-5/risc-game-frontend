@@ -16,7 +16,7 @@ class BoardLoaderUnitTest {
     fun setup() {
         json = File("src/test/java/com/se2gruppe5/risikofrontend/game/board/testBoard.json").readText()
         boardLoader = BoardLoader(json)
-        territories = boardLoader.getTerritories()
+        territories = boardLoader.territories
     }
 
     @Test

@@ -6,10 +6,10 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 class BoardLoaderAndroid(context: Context, assetPath: String = "board.json") {
-    val boardLoader: BoardLoader = BoardLoader(readFile(assetPath, context))
+    private val boardLoader: BoardLoader = BoardLoader(readFile(assetPath, context))
 
     fun getTerritories(): List<TerritoryRecord> {
-        return boardLoader.getTerritories()
+        return boardLoader.territories
     }
 
     private fun readFile(assetPath: String, context: Context): String {

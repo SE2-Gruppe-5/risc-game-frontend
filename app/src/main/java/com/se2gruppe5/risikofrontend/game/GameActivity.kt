@@ -3,10 +3,7 @@ package com.se2gruppe5.risikofrontend.game
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.os.StrictMode
 import android.widget.Button
 import android.widget.ImageButton
@@ -16,10 +13,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.se2gruppe5.risikofrontend.R
-import com.se2gruppe5.risikofrontend.game.board.BoardLoaderAndroid
-import com.se2gruppe5.risikofrontend.game.board.Continent
-import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
-import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.dice.DiceVisualAndroid
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.Dice1d6Generic
 import com.se2gruppe5.risikofrontend.game.enums.Phases
