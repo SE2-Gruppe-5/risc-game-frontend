@@ -26,13 +26,14 @@ class BoardLoader(jsonSrc: String) {
 
         val jsonConnections = boardData.connections
         for(conn in jsonConnections) {
-            val territoryOrigin = territories[conn[0]]!!
+            val territoryOrigin = territories[conn[0]]
 
             for(i in 1 until conn.size) {
                 val territoryTarget = territories[conn[i]]
 
                 // Don't add duplicate connections
-                if(!territoryOrigin.connections.contains(territoryTarget) && territoryTarget != null) {
+                if(territoryTarget != null && territoryOrigin != null
+                    && !territoryOrigin.connections.contains(territoryTarget)) {
                     territoryOrigin.connections.add(territoryTarget)
                     territoryTarget.connections.add(territoryOrigin)
                 }
