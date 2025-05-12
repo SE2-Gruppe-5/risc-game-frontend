@@ -6,26 +6,26 @@ import android.widget.Toast
 
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
-import com.se2gruppe5.risikofrontend.game.dialogs.AttackTroopDialog
-import com.se2gruppe5.risikofrontend.game.dialogs.MoveTroopDialog
+import com.se2gruppe5.risikofrontend.game.dialogues.AttackTroopDialog
+import com.se2gruppe5.risikofrontend.game.dialogues.MoveTroopDialog
 
 import com.se2gruppe5.risikofrontend.game.enums.Phases
+import com.se2gruppe5.risikofrontend.game.territory.IPointingArrowUI
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
-import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.network.INetworkClient
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import kotlinx.coroutines.runBlocking
 
 const val TERRITORY_NO_OWNER_COLOR: Int = 0x999999
 
-class TerritoryManager private constructor(val me: PlayerRecord?, private val pointingArrow: PointingArrowAndroid, val activity: Activity) {
+class TerritoryManager private constructor(val me: PlayerRecord?, private val pointingArrow: IPointingArrowUI, val activity: Activity) {
     companion object {
 
         //Intentionally not using non-nullable lateInit var for unit test reset funcitonality
         @SuppressLint("StaticFieldLeak")
         private var singleton: TerritoryManager? = null
 
-        fun init(me: PlayerRecord?, pointingArrow: PointingArrowAndroid, activity: Activity) {
+        fun init(me: PlayerRecord?, pointingArrow: IPointingArrowUI, activity: Activity) {
             if (singleton==null) {
                 singleton = TerritoryManager(me, pointingArrow, activity)
             }
@@ -121,7 +121,6 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
     fun assignOwner(t: ITerritoryVisual, playerRecord: PlayerRecord?) {
         territoriesSanityCheck(t)
         if (playerRecord != null) {
-            checkPlayerValid(playerRecord)
             t.changeColor(playerRecord.color)
         }else{
             t.changeColor(TERRITORY_NO_OWNER_COLOR)
@@ -197,10 +196,6 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
         t.setHighlightSelected(true)
     }
 
-
-    private fun checkPlayerValid(playerRecord: PlayerRecord) {
-        throw IllegalArgumentException("Player ID invalid.")
-    }
     private fun myTurn(): Boolean {
         return me == GameManager.get().getCurrentPlayer()
     }

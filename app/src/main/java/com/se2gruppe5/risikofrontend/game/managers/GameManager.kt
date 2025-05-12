@@ -191,6 +191,9 @@ class GameManager private constructor(
         return territoryManager
     }
 
+    fun whoAmI(): PlayerRecord{
+        return me
+    }
 
 
 }
