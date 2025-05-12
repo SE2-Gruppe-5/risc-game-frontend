@@ -16,6 +16,8 @@ import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.GameActivity
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.managers.GameManager
+import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
+import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import com.se2gruppe5.risikofrontend.network.sse.MessageType
 import com.se2gruppe5.risikofrontend.network.sse.SseClientService
@@ -25,6 +27,7 @@ import com.se2gruppe5.risikofrontend.network.sse.messages.JoinLobbyMessage
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
+
 
 class LobbyActivity :AppCompatActivity() {
     val client = NetworkClient()
@@ -42,8 +45,7 @@ class LobbyActivity :AppCompatActivity() {
         }
     }
     var joinedPlayers: Int = 1
-    var MAX_PLAYER: Int = 6
-    var players: MutableList<PlayerRecord> = mutableListOf()
+    var players: HashMap<UUID, PlayerRecord> = HashMap()
     var playerBtn: MutableList<ImageButton>? = mutableListOf()
     var playerTxt: MutableList<TextView>? = mutableListOf()
     var joinCode: String = ""
@@ -135,13 +137,14 @@ class LobbyActivity :AppCompatActivity() {
                 playerBtn?.get(joinedPlayers-1)?.visibility = View.VISIBLE
                 me =PlayerRecord(uuid, name, Color.rgb((0..255).random(), (0..255).random(), (0..255).random()))
                 joinedPlayers++
-                players.add(me!!)
+                players.put(me!!.id,me!!)
             }
         }
         sseService?.handler(MessageType.START_GAME) {
             it as GameStartMessage
                 val intent = Intent(this, GameActivity::class.java)
-                GameManager.init(me!!, it.gameId, it.players)
+                TerritoryManager.init(me!!, PointingArrowAndroid(applicationContext), this)
+                GameManager.init(me!!, it.gameId, TerritoryManager.get(), NetworkClient(), it.players)
                 intent.putExtra("GAME_ID", it.gameId.toString())
                 startActivity(intent)
         }

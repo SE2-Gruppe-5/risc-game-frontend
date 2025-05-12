@@ -4,19 +4,22 @@ import android.app.Activity
 import android.view.View
 import android.widget.TextView
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
-import com.se2gruppe5.risikofrontend.game.managers.GameManager
 import java.util.UUID
 
 class GameViewManager(private val activity: Activity) {
-    /**
-     * Set the correct amount of Playertext
-     * Change them to the correspending playernames
-     */
+
     fun setPlayerNames(players: HashMap<UUID, PlayerRecord>?, textViews: List<TextView>) {
-        var uuidList = GameManager.getCurrentPlayerUuidList()
+        if (players == null) {
+            textViews.forEach { it.visibility = View.GONE }
+            return
+        }
+
+        val playerList = players.values.toList()
+
         textViews.forEachIndexed { index, textView ->
-            if (index < players!!.size) {
-                textView.text = players.get(uuidList!!.get(index))?.name
+            if (index < playerList.size) {
+                textView.text = playerList[index].name
+                textView.visibility = View.VISIBLE
             } else {
                 textView.visibility = View.GONE
             }

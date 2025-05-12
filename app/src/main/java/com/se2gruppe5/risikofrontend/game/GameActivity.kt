@@ -135,6 +135,7 @@ class GameActivity : AppCompatActivity() {
 
 
     private fun setupHandlers(service: SseClientService) {
+
         sseService?.handler(MessageType.UPDATE_PHASE) {
             it as UpdatePhaseMessage
             var phase: Phases = Phases.Reinforce
@@ -143,6 +144,7 @@ class GameActivity : AppCompatActivity() {
                 1 -> phase = Phases.Attack
                 2 -> phase = Phases.Trade
             }
+            /* //todo reimplement
             val res = gameManager?.nextPhase(phase)
             when (phase) {
                 Phases.Reinforce -> {
@@ -167,19 +169,23 @@ class GameActivity : AppCompatActivity() {
                 Phases.OtherPlayer -> {
                     Toast.makeText(this, "Wait for your turn", Toast.LENGTH_SHORT).show()
                 }
+
+
             }
+
+             */
 
 
         }
         sseService?.handler(MessageType.UPDATE_PLAYERS) {
             it as UpdatePlayersMessage
-            var higlightedPlayer = gameManager?.updatePlayers(it.players)
-            changeHighlightedPlayer(higlightedPlayer, turnIndicators)
+            GameManager.get().receivePlayerListUpdate(it.players)
+            //todo change highlighted player
 
         }
         sseService?.handler(MessageType.UPDATE_TERRITORIES) {
             it as ChangeTerritoryMessage
-            gameManager!!.updateTerritories(it.territories)
+            GameManager.get().getTerritoryManager().updateTerritories(it.territories)
 
         }
 

@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 
 /**
@@ -42,6 +43,10 @@ class TerritoryVisualAndroid(
         }
         territoryRecord.stat = stat
         textContent.text = stat.toString()
+    }
+
+    override fun changeOwner(newOwner: PlayerRecord?) {
+        territoryRecord.owner = newOwner
     }
 
     override fun clickSubscription(lambda: (ITerritoryVisual) -> Unit) {

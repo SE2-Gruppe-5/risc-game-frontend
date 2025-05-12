@@ -47,20 +47,45 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
     private val territoryList: MutableList<ITerritoryVisual> = mutableListOf()
     private var prevSelTerritory: ITerritoryVisual? = null
 
+    private fun territoriesSanityCheck(t: ITerritoryVisual){
+        //todo
+        return
+    }
+    private fun territoriesSanityCheck(t: TerritoryRecord){
+        //todo
+        return
+    }
+    private fun territoriesSanityCheck(tList: List<TerritoryRecord>){
+        //todo
+        for(t in tList){
+            territoriesSanityCheck(t)
+        }
+    }
 
-    fun updateTerritory(t: ITerritoryVisual){
+    fun updateTerritories(tList: List<TerritoryRecord>){
+        territoriesSanityCheck(tList)
+        for(t in tList){
+            updateTerritory(t)
+        }
+    }
+
+    fun updateTerritory(t: TerritoryRecord){
         for (i in territoryList){
-            if (i.getTerritoryId()== t.getTerritoryId()){
-                territoryList.remove(i)
-                territoryList.add(t)
-                return
+            if (i.getTerritoryId() == t.id){
+                i.changeStat(t.stat)
+                i.changeOwner(t.owner)
+                if (t.owner != null) {
+                    i.changeColor(t.owner!!.color)
+                } else {
+                    i.changeColor(TERRITORY_NO_OWNER_COLOR)
+                }
+                break
             }
         }
-        addTerritory(t)
     }
 
     fun addTerritory(t: ITerritoryVisual) {
-        checkTerritoryValid(t)
+        territoriesSanityCheck(t)
         if (territoryList.contains(t)) {
             throw IllegalArgumentException("Territory (object) already in list.")
 
@@ -76,7 +101,7 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
 
     //This should never be needed
     fun removeTerritory(t: ITerritoryVisual) {
-        checkTerritoryValid(t)
+        territoriesSanityCheck(t)
         if (!territoryList.contains(t)) {
             throw IllegalArgumentException("Territory not in list.")
         }
@@ -86,7 +111,7 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
     //fun removeTerritoryById(id: Int){} //todo if needed (but this being needed would indicate a smell
 
     fun containsTerritory(t: ITerritoryVisual): Boolean {
-        checkTerritoryValid(t)
+        territoriesSanityCheck(t)
         return (territoryList.contains(t))
     }
 
@@ -94,7 +119,7 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
      * let player:=null semantically mean "no owne r"
      */
     fun assignOwner(t: ITerritoryVisual, playerRecord: PlayerRecord?) {
-        checkTerritoryValid(t)
+        territoriesSanityCheck(t)
         if (playerRecord != null) {
             checkPlayerValid(playerRecord)
             t.changeColor(playerRecord.color)
@@ -107,12 +132,12 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
 
 
     private fun addLambdaSubscriptions(t: ITerritoryVisual) {
-        checkTerritoryValid(t)
+        territoriesSanityCheck(t)
         t.clickSubscription(::hasBeenClicked) //Observer design pattern
     }
 
     private fun hasBeenClicked(t: ITerritoryVisual) {
-        val phase = GameManager.getPhase()
+        val phase = GameManager.get().getCurrentPhase()
         if(myTurn()) {
             if (prevSelTerritory != t && prevSelTerritory != null) {
                 prevSelTerritory?.let {
@@ -172,23 +197,18 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
         t.setHighlightSelected(true)
     }
 
-    private fun checkTerritoryValid(t: ITerritoryVisual) {
-        if (t.territoryRecord.id != null) {
-            throw IllegalArgumentException("Territory ID invalid.")
-        }
-    }
-//todo adapt to uuid
+
     private fun checkPlayerValid(playerRecord: PlayerRecord) {
         throw IllegalArgumentException("Player ID invalid.")
     }
     private fun myTurn(): Boolean {
-        return me == GameManager.getCurrentPlayer()
+        return me == GameManager.get().getCurrentPlayer()
     }
     val client : INetworkClient = NetworkClient()
 
     private fun changeTerritoryRequest(t: TerritoryRecord){
         runBlocking {
-            client.changeTerritory(GameManager.get().uuid, t)
+            client.changeTerritory(GameManager.get().getUUID(), t)
         }
     }
 }

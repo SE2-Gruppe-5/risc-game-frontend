@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikofrontend.game.territory
 
+import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 
 /**
@@ -28,6 +29,12 @@ interface ITerritoryVisual {
      * (for now only "stats" meaning # of troops)
      */
     fun changeStat(stat: Int)
+
+    /**
+     * Change Territory owner
+     * null is to represent unoccupied
+     */
+    fun changeOwner(newOwner: PlayerRecord?)
 
     /**
      * Observer-Pattern like system
