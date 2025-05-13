@@ -197,7 +197,7 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
     }
 
     private fun myTurn(): Boolean {
-        return me == GameManager.get().getCurrentPlayer()
+        return GameManager.get().isMyTurn()
     }
     val client : INetworkClient = NetworkClient()
 
