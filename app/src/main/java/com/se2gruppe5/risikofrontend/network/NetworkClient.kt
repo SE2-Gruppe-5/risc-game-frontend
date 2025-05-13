@@ -60,7 +60,7 @@ class NetworkClient() : INetworkClient{
     }
 
     override suspend fun getGameInfo(gameId: UUID) {
-        val request = createRequest("GET", Constants.GET_GAME_INFO_URL.replace("{id}", gameId.toString()),
+        val request = createRequest("POST", Constants.GET_GAME_INFO_URL.replace("{id}", gameId.toString()),
             "uuid", SseClientService.uuid.toString())
         execute(request)
     }
