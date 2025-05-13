@@ -135,11 +135,18 @@ class GameManager private constructor(
     /**
      * Swaps Phase to the next one
      */
-    suspend fun nextPhase() {
-        val currentPlayer = players[currentPlayerUUID]
-        if (currentPlayer == me) { //this single line right here prevents all hell from breaking lose
+    suspend fun nextPhase(): Boolean {
+        if (isMyTurn()) {
             networkClient.changePhase(gameManagerUUID)
+            return true
         }
+        return false
+    }
+
+    //this single method right here prevents all hell from breaking lose
+    fun isMyTurn(): Boolean {
+        val currentPlayer = players[currentPlayerUUID]
+        return currentPlayer?.equals(me) == true
     }
 
 

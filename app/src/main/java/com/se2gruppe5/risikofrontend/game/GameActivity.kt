@@ -110,7 +110,9 @@ class GameActivity : AppCompatActivity() {
 
     private fun changePhase() {
         runBlocking {
-            client.changePhase(gameID!!)
+            if (!GameManager.get().nextPhase()) {
+                Toast.makeText(this@GameActivity, "It's not your turn", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
