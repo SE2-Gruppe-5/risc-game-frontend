@@ -33,8 +33,7 @@ class CreateLobbyActivity :AppCompatActivity() {
         val backBtn = this.findViewById<ImageButton>(R.id.backBtn)
         backBtn.setOnClickListener({
             Log.i("NAVIGATION", "Quit lobby")
-            val intent = Intent(this, MenuActivity::class.java)
-            startActivity(intent)
+            finish()
         })
 
         val createBtn = this.findViewById<Button>(R.id.createLobbyBtn)

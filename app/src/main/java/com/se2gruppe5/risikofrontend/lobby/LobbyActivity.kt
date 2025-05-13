@@ -92,8 +92,7 @@ class LobbyActivity :AppCompatActivity() {
 
         backBtn.setOnClickListener({
             Log.i("NAVIGATION", "Quit lobby")
-            val intent = Intent(this, MenuActivity::class.java)
-            startActivity(intent)
+            finish()
         })
         startGameBtn.setOnClickListener({
             Log.i("NAVIGATION", "Starting Game")
@@ -142,9 +141,10 @@ class LobbyActivity :AppCompatActivity() {
         }
         sseService?.handler(MessageType.START_GAME) {
             it as GameStartMessage
-                val intent = Intent(this, GameActivity::class.java)
                 TerritoryManager.init(me!!, PointingArrowAndroid(applicationContext), this)
                 GameManager.init(me!!, it.gameId, TerritoryManager.get(), NetworkClient(), it.players)
+
+                val intent = Intent(this, GameActivity::class.java)
                 intent.putExtra("GAME_ID", it.gameId.toString())
                 startActivity(intent)
         }
