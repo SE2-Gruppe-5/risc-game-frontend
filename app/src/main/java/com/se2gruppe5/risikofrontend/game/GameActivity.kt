@@ -123,11 +123,14 @@ class GameActivity : AppCompatActivity() {
     val highlightedColor = Color.BLACK
     val notHighlightedColor = Color.GRAY
 
-    private fun changeViewColors(highlighted: TextView?, not1: TextView?, not2: TextView?) {
-        highlighted?.setBackgroundColor(highlightedColor)
-        not1?.setBackgroundColor(notHighlightedColor)
-        not2?.setBackgroundColor(notHighlightedColor)
+    private fun changeViewColor(view: TextView?, highlightPhase: Phases, currentPhase: Phases) {
+        view?.setBackgroundColor(if (currentPhase == highlightPhase) highlightedColor else notHighlightedColor)
+    }
 
+    private fun changeViewColors(phase: Phases) {
+        changeViewColor(reinforceIndicator, Phases.Reinforce, phase)
+        changeViewColor(attackIndicator, Phases.Attack, phase)
+        changeViewColor(tradeIndicator, Phases.Trade, phase)
     }
 
     fun showContinentDialog() {
@@ -150,14 +153,14 @@ class GameActivity : AppCompatActivity() {
 
 
     private fun setupHandlers(service: SseClientService) {
-
         sseService?.handler(MessageType.UPDATE_PHASE) {
             it as UpdatePhaseMessage
-            var phase: Phases = Phases.Reinforce
-            when (it.phase) {
-                0 -> phase = Phases.Reinforce
-                1 -> phase = Phases.Attack
-                2 -> phase = Phases.Trade
+            var phase: Phases = Phases.entries[it.phase];
+            changeViewColors(phase)
+            phaseTxt?.text = phase.toString()
+            nextPhaseBtn?.text = when (phase) {
+                Phases.Trade -> "End Turn"
+                else -> "Next Phase"
             }
             /* //todo reimplement
             val res = gameManager?.nextPhase(phase)
