@@ -162,44 +162,13 @@ class GameActivity : AppCompatActivity() {
                 Phases.Trade -> "End Turn"
                 else -> "Next Phase"
             }
-            /* //todo reimplement
-            val res = gameManager?.nextPhase(phase)
-            when (phase) {
-                Phases.Reinforce -> {
-                    changeViewColors(reinforceIndicator, attackIndicator, tradeIndicator)
-                    phaseTxt?.text = "Reinforce"
-                    nextPhaseBtn?.text = "Next Phase"
-                    changeHighlightedPlayer(res?.second, turnIndicators)
-                }
-
-                Phases.Attack -> {
-                    changeViewColors(attackIndicator, reinforceIndicator, tradeIndicator)
-                    phaseTxt?.text = "Attack"
-                    nextPhaseBtn?.text = "Next Phase"
-                }
-
-                Phases.Trade -> {
-                    changeViewColors(tradeIndicator, attackIndicator, reinforceIndicator)
-                    phaseTxt?.text = "Trade"
-                    nextPhaseBtn?.text = "End Turn"
-                }
-
-                Phases.OtherPlayer -> {
-                    Toast.makeText(this, "Wait for your turn", Toast.LENGTH_SHORT).show()
-                }
-
-
-            }
-
-             */
-
-
         }
         sseService?.handler(MessageType.UPDATE_PLAYERS) {
             it as UpdatePlayersMessage
             GameManager.get().receivePlayerListUpdate(it.players)
-            //todo change highlighted player
 
+            val currentPlayerIndex = it.players.values.indexOfFirst { it.isCurrentTurn }
+            changeHighlightedPlayer(currentPlayerIndex, turnIndicators)
         }
         sseService?.handler(MessageType.UPDATE_TERRITORIES) {
             it as ChangeTerritoryMessage
