@@ -7,10 +7,11 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.graphics.toColorInt
 import com.se2gruppe5.risikofrontend.R
+import com.se2gruppe5.risikofrontend.game.GameActivity
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.enums.Phases
-import com.se2gruppe5.risikofrontend.game.territory.GameViewManager
+import com.se2gruppe5.risikofrontend.game.managers.GameViewManager
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.network.INetworkClient
 import java.util.UUID
@@ -134,7 +135,7 @@ class GameManager private constructor(
     /**
      * Swaps Phase to the next one
      */
-    suspend fun nextPhase(toPhase: Phases) {
+    suspend fun nextPhase() {
         val currentPlayer = players[currentPlayerUUID]
         if (currentPlayer == me) { //this single line right here prevents all hell from breaking lose
             networkClient.changePhase(gameManagerUUID)
@@ -146,38 +147,13 @@ class GameManager private constructor(
      * Function to initialize the Gameboard
      */
     fun initializeGame(activity: Activity, turnIndicators: List<TextView>) {
-        initTerritoryViews(activity)
-        val pointingArrow = PointingArrowAndroid(activity, "#FF0000".toColorInt(), 15f)
-        pointingArrow.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
-        activity.findViewById<ViewGroup>(R.id.main).addView(pointingArrow)
-        TerritoryManager.init(me, pointingArrow, activity)
         val viewManager = GameViewManager(activity)
+        territoryVisualList = viewManager.initTerritoryViews()
+        TerritoryManager.init(me, viewManager.initArrow(), activity)
         viewManager.setPlayerNames(players, turnIndicators)
     }
 
-    /**
-     * Initializes all territory txt,btn and outline and puts them into a List
-     */
-    private fun initTerritoryViews(activity: Activity) {
-        territoryVisualList.add(
-            Triple(
-                activity.findViewById<TextView>(R.id.territoryAtext),
-                activity.findViewById<ImageButton>(R.id.territoryAbtn),
-                activity.findViewById<View>(R.id.territoryAoutline)
-            )
-        )
-        territoryVisualList.add(
-            Triple(
-                activity.findViewById<TextView>(R.id.territoryBtext),
-                activity.findViewById<ImageButton>(R.id.territoryBbtn),
-                activity.findViewById<View>(R.id.territoryBoutline)
-            )
-        )
 
-    }
 
     fun getCurrentPhase(): Phases{
         return currentPhase

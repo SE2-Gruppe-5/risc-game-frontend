@@ -27,6 +27,7 @@ class GameManagerUnitTest {
     private lateinit var turnIndicators: List<TextView>
     private lateinit var gameManager: GameManager
     private lateinit var territoryManagerMock: TerritoryManager
+    private lateinit var gameUUID: UUID
 
     @Before
     fun setUp() {
@@ -52,7 +53,8 @@ class GameManagerUnitTest {
 
         //Initialize singletons
         territoryManagerMock = mock()
-        GameManager.init(me, UUID.randomUUID(),territoryManagerMock, networkClient, players)
+        gameUUID = UUID.randomUUID()
+        GameManager.init(me, gameUUID,territoryManagerMock, networkClient, players)
         gameManager = GameManager.get()
     }
 
@@ -125,7 +127,7 @@ class GameManagerUnitTest {
 
     @Test
     fun nextPhaseInvokesNetworkClientWhenCurrentIsMe() = runBlocking {
-        gameManager.nextPhase(Phases.Reinforce)
+        gameManager.nextPhase()
         verify(networkClient, times(1)).changePhase(gameManager.getUUID())
     }
 
@@ -139,7 +141,7 @@ class GameManagerUnitTest {
         }
         gameManager.receivePlayerListUpdate(updated)
 
-        gameManager.nextPhase(Phases.Reinforce)
+        gameManager.nextPhase()
         verify(networkClient, times(0)).changePhase(gameManager.getUUID())
     }
 
@@ -149,4 +151,19 @@ class GameManagerUnitTest {
         assertSame(territoryManagerMock, gameManager.getTerritoryManager())
         assertEquals(me, gameManager.whoAmI())
     }
+
+    @Test
+    fun whoAmIreturnsMe(){
+        assertEquals(me, gameManager.whoAmI())
+    }
+    @Test
+    fun getUUIDReturnsCorrectUUID(){
+        assertEquals(gameUUID, gameManager.getUUID())
+    }
+    @Test
+    fun getTerritoryManagerReturnsTerritoryManager(){
+        assertEquals(territoryManagerMock,gameManager.getTerritoryManager())
+    }
+
+
 }

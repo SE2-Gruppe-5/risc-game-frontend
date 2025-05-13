@@ -172,7 +172,8 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/popup/ContinentDialog.kt",
                 "**/com/se2gruppe5/risikofrontend/dialogues/**",
                 "**/com/se2gruppe5/risikofrontend/popup/**",
-                "**/com/se2gruppe5/risikofrontend/enums/**"
+                "**/com/se2gruppe5/risikofrontend/enums/**",
+                "**/com/se2gruppe5/risikofrontend/game/managers/GameViewManager.kt",
             ).joinToString(",")
         )
 
