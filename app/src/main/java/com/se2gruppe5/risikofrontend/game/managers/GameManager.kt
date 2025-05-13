@@ -78,7 +78,7 @@ class GameManager private constructor(
     //todo sprint 3 refactoring possibility: PlayerManager
     private fun playerUUIDSanityCheck(players: HashMap<UUID, PlayerRecord>) {
         var c: Int = 0
-        for (player in this.players) {
+        for (player in players) {
             if (player.value.id != player.key) {
                 throw IllegalStateException("UUID mismatch in Player Hashmap (this is very very bad)")
             }
