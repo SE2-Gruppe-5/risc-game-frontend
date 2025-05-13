@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikofrontend.game
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
@@ -91,6 +92,20 @@ class GameActivity : AppCompatActivity() {
             showContinentDialog()
         }
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Intent(this, SseClientService::class.java).also {
+            bindService(it, serviceConnection, BIND_AUTO_CREATE)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (sseService != null) {
+            unbindService(serviceConnection)
+        }
     }
 
     private fun changePhase() {
