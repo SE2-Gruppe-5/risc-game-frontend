@@ -6,15 +6,12 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Binder
 import android.os.IBinder
-import android.util.Log
 import com.launchdarkly.eventsource.EventSource
 import com.se2gruppe5.risikofrontend.Constants
 import com.se2gruppe5.risikofrontend.network.sse.messages.SetUuidMessage
 import java.net.URI
 import java.time.Duration
-import java.util.Comparator
 import java.util.UUID
-import java.util.concurrent.locks.ReentrantLock
 import java.util.function.Consumer
 
 class SseClientService : Service() {
@@ -26,13 +23,10 @@ class SseClientService : Service() {
     private val eventHandler = SseEventHandler(this)
     private var eventSource: EventSource? = null
 
-    private var lock: ReentrantLock = ReentrantLock(true)
-    private var replay: HashMap<Long, ReplayMessage> = HashMap()
-    private var replaying = true
-
     private val handlers: HashMap<MessageType, Consumer<IMessage>> = HashMap()
 
     override fun onBind(p0: Intent?): IBinder? {
+        handlers.clear()
         setupDefaultHandlers()
         return binder
     }
@@ -49,15 +43,8 @@ class SseClientService : Service() {
     }
 
     private fun setupDefaultHandlers() {
-        lock.lock()
-        try {
-            replaying = true
-            handlers.clear()
-            handler(MessageType.SET_UUID) { it as SetUuidMessage
-                uuid = it.uuid
-            }
-        } finally {
-            lock.unlock()
+        handler(MessageType.SET_UUID) { it as SetUuidMessage
+            uuid = it.uuid
         }
     }
 
@@ -74,35 +61,8 @@ class SseClientService : Service() {
         eventSource!!.start()
     }
 
-    fun replayMessages() {
-        lock.lock()
-        try {
-            Log.d("SSE_REPLAY", "Replaying ${replay.size} messages")
-            replay.entries.stream()
-                .sorted(Comparator.comparing { it.key })
-                .forEachOrdered {
-                    val message = it.value
-                    handlers[message.type]?.accept(message.message)
-                }
-            replay.clear()
-            replaying = false
-        } finally {
-            lock.unlock()
-        }
-    }
-
     fun handleIncomingMessage(type: MessageType, message: IMessage) {
-        lock.lock()
-        try {
-            if (replaying) {
-                Log.d("SSE_REPLAY", "Message type $type not handled, saving to replay")
-                replay.put(System.nanoTime(), ReplayMessage(type, message))
-            } else {
-                handlers[type]?.accept(message)
-            }
-        } finally {
-            lock.unlock()
-        }
+        handlers[type]?.accept(message)
     }
 
     fun handler(type: MessageType, handler: Consumer<IMessage>) {
@@ -114,17 +74,13 @@ class SseClientService : Service() {
             return this@SseClientService
         }
     }
-
-    private data class ReplayMessage(val type: MessageType, val message: IMessage)
 }
 
 fun constructServiceConnection(setService: Consumer<SseClientService?>): ServiceConnection {
     return object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as SseClientService.LocalBinder
-            val service = binder.getService()
-            setService.accept(service)
-            service.replayMessages()
+            setService.accept(binder.getService())
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
