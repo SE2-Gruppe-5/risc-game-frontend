@@ -12,6 +12,7 @@ import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import java.util.Optional
 import java.util.UUID
 
 class NetworkClient() : INetworkClient{
@@ -72,7 +73,7 @@ class NetworkClient() : INetworkClient{
 
     override suspend fun changeTerritory(gameId: UUID, territory: TerritoryRecord) {
         val request = createRequest("PATCH", Constants.CHANGE_TERRITORY_URL.replace("{id}", gameId.toString()),
-            "owner", territory.owner?.id.toString(),
+            "owner", Optional.ofNullable(territory.owner).map { it.id.toString() }.orElse(null),
             "id", territory.id.toString(),
             "stat", territory.stat.toString())
         execute(request)
