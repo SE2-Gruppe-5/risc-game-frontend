@@ -155,7 +155,7 @@ class GameManager private constructor(
         TerritoryManager.init(me, viewManager.initArrow(), activity)
         territoryVisualList.forEachIndexed { index, tri ->
             val territory = TerritoryVisualAndroid(
-                TerritoryRecord(index, 5),
+                TerritoryRecord(index + 1, 5),
                 tri.first,
                 tri.first,
                 tri.second,
