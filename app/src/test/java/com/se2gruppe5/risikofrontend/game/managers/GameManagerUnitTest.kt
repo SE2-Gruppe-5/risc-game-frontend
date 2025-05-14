@@ -71,6 +71,24 @@ class GameManagerUnitTest {
         assertEquals(Phases.Reinforce, gameManager.getPhase())
     }
 
+    @Test
+    fun testInitSingletonTwiceDoesntWork(){
+        assertNotNull(gameManager)
+        val other = PlayerRecord(UUID.randomUUID(), "a", 0xFFFFFF)
+        GameManager.init(other, gameUUID,territoryManagerMock, networkClient, players)
+        assertEquals(me, gameManager.whoAmI())
+
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun testGetCurrentPlayerReturnsError(){
+        GameManager.unitTestReset()
+        val newPlayers: HashMap<UUID, PlayerRecord> = mutableMapOf<UUID, PlayerRecord>() as HashMap<UUID, PlayerRecord>
+        GameManager.init(me, gameUUID,territoryManagerMock, networkClient, newPlayers)
+        GameManager.get().getCurrentPlayer()
+
+    }
+
     @Test(expected = IllegalStateException::class)
     fun testThrowsOnGetBeforeInit() {
         GameManager.unitTestReset()
