@@ -31,7 +31,10 @@ import kotlinx.coroutines.runBlocking
 import java.util.UUID
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
+import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
+import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
 
 
 class GameActivity : AppCompatActivity() {
@@ -67,12 +70,20 @@ class GameActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         enableEdgeToEdge()
         setContentView(R.layout.game)
+
+        val gameStart = intent.getSerializableExtra("GAME_DATA", GameStartMessage::class.java)!!
+        val me = intent.getSerializableExtra("LOCAL_PLAYER", PlayerRecord::class.java)!!
+
+        gameID = gameStart.gameId
+
+        TerritoryManager.init(me, PointingArrowAndroid(this), this)
+        GameManager.init(me, gameID!!, TerritoryManager.get(), client, gameStart.players)
+
         //Placeholder
         val diceBtn = this.findViewById<ImageButton>(R.id.diceButton)
         val diceTxt = this.findViewById<TextView>(R.id.diceText)
         val diceVisualAndroid = DiceVisualAndroid(Dice1d6Generic(), diceBtn, diceTxt)
         diceVisualAndroid.clickSubscription { it.roll() }
-        gameID = intent.getSerializableExtra("GAME_ID", UUID::class.java)
         turnIndicators.add(this.findViewById<TextView>(R.id.player1txt))
         turnIndicators.add(this.findViewById<TextView>(R.id.player2txt))
         turnIndicators.add(this.findViewById<TextView>(R.id.player3txt))

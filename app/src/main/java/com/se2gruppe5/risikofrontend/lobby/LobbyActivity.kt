@@ -149,10 +149,9 @@ class LobbyActivity :AppCompatActivity() {
         }
         sseService?.handler(MessageType.START_GAME) {
             it as GameStartMessage
-                TerritoryManager.init(me!!, PointingArrowAndroid(applicationContext), this)
-                GameManager.init(me!!, it.gameId, TerritoryManager.get(), NetworkClient(), it.players)
                 val intent = Intent(this, GameActivity::class.java)
-                intent.putExtra("GAME_ID", it.gameId)
+                intent.putExtra("GAME_DATA", it)
+                intent.putExtra("LOCAL_PLAYER", me)
                 startActivity(intent)
         }
     }
