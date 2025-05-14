@@ -26,7 +26,7 @@ class NetworkClient() : INetworkClient{
     override suspend fun createLobby(): String? {
         val request = createRequest("GET", Constants.LOBBY_CREATE_URL)
         val response = execute(request)
-        return response.body?.string()
+        return if (response.isSuccessful) response.body?.string() else null
     }
 
     override suspend fun deleteLobby(lobbyCode: String) {

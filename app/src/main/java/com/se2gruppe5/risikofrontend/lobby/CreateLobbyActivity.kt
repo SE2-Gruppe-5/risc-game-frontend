@@ -7,19 +7,11 @@ import android.util.Log
 import android.widget.ImageButton
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.google.gson.Gson
-import com.se2gruppe5.risikofrontend.Constants
 import com.se2gruppe5.risikofrontend.R
-import com.se2gruppe5.risikofrontend.network.INetworkClient
 import com.se2gruppe5.risikofrontend.network.NetworkClient
-import com.se2gruppe5.risikofrontend.network.sse.MessageType
-import com.se2gruppe5.risikofrontend.network.sse.SseClientService
-import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
-import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class CreateLobbyActivity :AppCompatActivity() {
@@ -42,6 +34,11 @@ class CreateLobbyActivity :AppCompatActivity() {
             val name = nameInput.text.toString()
             Log.i("NAVIGATION", "Create lobby")
             var code = createLobby()
+            if (code == null) {
+                Log.e("NAVIGATION", "Error creating lobby")
+                Toast.makeText(this, "Error creating lobby", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             val intent = Intent(this, LobbyActivity::class.java)
             intent.putExtra("PLAYER_NAME", name)
             intent.putExtra("LOBBY_CODE", code)
@@ -50,13 +47,9 @@ class CreateLobbyActivity :AppCompatActivity() {
 
     }
 
-    private fun createLobby(): String{
-        var code : String = ""
-        runBlocking {
-        code =  client.createLobby().toString()
-            }
-        return code
+    private fun createLobby(): String? {
+        return runBlocking {
+            return@runBlocking client.createLobby().toString()
+        }
     }
-
-
 }
