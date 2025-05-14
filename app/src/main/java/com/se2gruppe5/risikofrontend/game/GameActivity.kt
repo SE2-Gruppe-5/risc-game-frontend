@@ -31,6 +31,7 @@ import kotlinx.coroutines.runBlocking
 import java.util.UUID
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 
 
 class GameActivity : AppCompatActivity() {
@@ -107,6 +108,8 @@ class GameActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+        GameManager.reset()
+        TerritoryManager.reset()
         if (sseService != null) {
             unbindService(serviceConnection)
         }

@@ -21,7 +21,6 @@ const val TERRITORY_NO_OWNER_COLOR: Int = 0x999999
 class TerritoryManager private constructor(val me: PlayerRecord?, private val pointingArrow: IPointingArrowUI, val activity: Activity) {
     companion object {
 
-        //Intentionally not using non-nullable lateInit var for unit test reset funcitonality
         @SuppressLint("StaticFieldLeak")
         private var singleton: TerritoryManager? = null
 
@@ -36,11 +35,8 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
             return checkNotNull(singleton) { "TerritoryManager must be .init() first!" }
         }
 
-        /**
-         * Do not call this. It is for unit tests only.
-         */
-        fun unitTestReset(){
-            singleton=null
+        fun reset(){
+            singleton = null
         }
     }
 

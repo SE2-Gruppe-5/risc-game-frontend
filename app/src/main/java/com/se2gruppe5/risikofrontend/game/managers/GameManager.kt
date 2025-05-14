@@ -24,7 +24,6 @@ class GameManager private constructor(
 ) {
     companion object {
 
-        //Intentionally not using non-nullable lateInit var for unit test reset functionality
         private var singleton: GameManager? = null
 
         fun init(
@@ -52,10 +51,7 @@ class GameManager private constructor(
             return checkNotNull(singleton) { "GameManager must be .init() first!" }
         }
 
-        /**
-         * Do not call this. It is for unit tests only.
-         */
-        fun unitTestReset() {
+        fun reset() {
             singleton = null
         }
     }
