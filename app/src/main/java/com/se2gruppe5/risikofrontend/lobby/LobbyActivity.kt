@@ -131,31 +131,20 @@ class LobbyActivity :AppCompatActivity() {
                 Log.i("lobby", "$it")
                 var uuid: UUID = it.uuid
                 var name: String = it.playerName
-                if(me == null) {
-                    playerTxt?.get(joinedPlayers - 1)?.visibility = View.VISIBLE
-                    playerTxt?.get(joinedPlayers - 1)?.text = name
-                    playerBtn?.get(joinedPlayers - 1)?.visibility = View.VISIBLE
-                    me = PlayerRecord(
-                        uuid,
-                        name,
-                        Color.rgb((0..255).random(), (0..255).random(), (0..255).random())
-                    )
-                    joinedPlayers++
-                    players.put(me!!.id, me!!)
-                }else{
-                    playerTxt?.get(joinedPlayers - 1)?.visibility = View.VISIBLE
-                    playerTxt?.get(joinedPlayers - 1)?.text = name
-                    playerBtn?.get(joinedPlayers - 1)?.visibility = View.VISIBLE
-                    val other = PlayerRecord(
-                        uuid,
-                        name,
-                        Color.rgb((0..255).random(), (0..255).random(), (0..255).random())
-                    )
-                    joinedPlayers++
-                    players.put(other.id, other)
-
+                playerTxt?.get(joinedPlayers - 1)?.visibility = View.VISIBLE
+                playerTxt?.get(joinedPlayers - 1)?.text = name
+                playerBtn?.get(joinedPlayers - 1)?.visibility = View.VISIBLE
+                joinedPlayers++
+                val player = PlayerRecord(
+                    uuid,
+                    name,
+                    Color.rgb((0..255).random(), (0..255).random(), (0..255).random())
+                )
+                if (me == null && SseClientService.uuid == uuid) {
+                    me = player
                 }
-                Log.i("LobbyJoin", me.toString())
+                players.put(player.id, player)
+                Log.i("LobbyJoin", player.toString())
             }
         }
         sseService?.handler(MessageType.START_GAME) {
