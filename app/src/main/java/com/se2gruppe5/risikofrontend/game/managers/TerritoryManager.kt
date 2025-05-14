@@ -15,6 +15,7 @@ import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.network.INetworkClient
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import kotlinx.coroutines.runBlocking
+import java.util.UUID
 
 const val TERRITORY_NO_OWNER_COLOR: Int = 0x999999
 
@@ -71,7 +72,7 @@ class TerritoryManager private constructor(val me: PlayerRecord?, val pointingAr
                 i.changeStat(t.stat)
                 i.changeOwner(t.owner)
                 if (t.owner != null) {
-                    i.changeColor(t.owner!!.color)
+                    i.changeColor(GameManager.get().getPlayer(t.owner!!)?.color ?: TERRITORY_NO_OWNER_COLOR)
                 } else {
                     i.changeColor(TERRITORY_NO_OWNER_COLOR)
                 }
@@ -121,10 +122,8 @@ class TerritoryManager private constructor(val me: PlayerRecord?, val pointingAr
         }else{
             t.changeColor(TERRITORY_NO_OWNER_COLOR)
         }
-        t.territoryRecord.owner = playerRecord
+        t.territoryRecord.owner = playerRecord?.id
     }
-
-
 
     private fun addLambdaSubscriptions(t: ITerritoryVisual) {
         territoriesSanityCheck(t)
@@ -141,7 +140,7 @@ class TerritoryManager private constructor(val me: PlayerRecord?, val pointingAr
                         t.getCoordinatesAsFloat(true))
                 }
                 if (phase == Phases.Reinforce) {
-                    if(prevSelTerritory!!.territoryRecord.owner == me && t.territoryRecord.owner == me) {
+                    if (isMe(prevSelTerritory!!.territoryRecord.owner) && isMe(t.territoryRecord.owner)) {
                         MoveTroopDialog(
                             context = activity,
                             maxTroops = prevSelTerritory!!.territoryRecord.stat - 1,
@@ -154,7 +153,7 @@ class TerritoryManager private constructor(val me: PlayerRecord?, val pointingAr
                             Toast.LENGTH_SHORT).show()
                     }
                 }else if(phase == Phases.Attack){
-                    if(prevSelTerritory!!.territoryRecord.owner == me && t.territoryRecord.owner != me) {
+                    if (isMe(prevSelTerritory!!.territoryRecord.owner) && !isMe(t.territoryRecord.owner)) {
                         AttackTroopDialog(
                             context = activity,
                             maxTroops = prevSelTerritory!!.territoryRecord.stat - 1,
@@ -181,9 +180,13 @@ class TerritoryManager private constructor(val me: PlayerRecord?, val pointingAr
 
 
     private fun attackTerritory(t: ITerritoryVisual){
-        t.changeColor(me!!.color)
-        t.territoryRecord.owner = me
-        me.capturedTerritory = true
+        me!!.capturedTerritory = true
+
+        //TODO we should roll dice here instead of just taking over the territory
+        t.territoryRecord.owner = me.id
+        runBlocking {
+            client.changeTerritory(GameManager.get().getUUID(), t.territoryRecord)
+        }
     }
 
     private fun updateSelected(t: ITerritoryVisual){
@@ -195,6 +198,11 @@ class TerritoryManager private constructor(val me: PlayerRecord?, val pointingAr
     private fun myTurn(): Boolean {
         return GameManager.get().isMyTurn()
     }
+
+    private fun isMe(uuid: UUID?): Boolean {
+        return me?.id?.equals(uuid) == true
+    }
+
     val client : INetworkClient = NetworkClient()
 
     private fun changeTerritoryRequest(t: TerritoryRecord){

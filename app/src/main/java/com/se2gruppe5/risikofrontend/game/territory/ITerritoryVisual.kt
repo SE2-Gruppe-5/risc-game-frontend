@@ -1,7 +1,7 @@
 package com.se2gruppe5.risikofrontend.game.territory
 
-import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import java.util.UUID
 
 /**
  * Wrapper for Territory providing functionality pertaining to it's visualization
@@ -34,7 +34,7 @@ interface ITerritoryVisual {
      * Change Territory owner
      * null is to represent unoccupied
      */
-    fun changeOwner(newOwner: PlayerRecord?)
+    fun changeOwner(newOwner: UUID?)
 
     /**
      * Observer-Pattern like system

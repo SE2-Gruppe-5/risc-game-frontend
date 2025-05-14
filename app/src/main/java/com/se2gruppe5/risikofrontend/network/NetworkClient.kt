@@ -73,7 +73,7 @@ class NetworkClient() : INetworkClient{
 
     override suspend fun changeTerritory(gameId: UUID, territory: TerritoryRecord) {
         val request = createRequest("PATCH", Constants.CHANGE_TERRITORY_URL.replace("{id}", gameId.toString()),
-            "owner", Optional.ofNullable(territory.owner).map { it.id.toString() }.orElse(null),
+            "owner", territory.owner?.toString(),
             "id", territory.id.toString(),
             "stat", territory.stat.toString())
         execute(request)

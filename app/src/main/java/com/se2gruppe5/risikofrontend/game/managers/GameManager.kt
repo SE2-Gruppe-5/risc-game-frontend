@@ -56,6 +56,9 @@ class GameManager private constructor(
         }
     }
 
+    fun getPlayer(id: UUID): PlayerRecord? {
+        return this.players[id]
+    }
 
     fun getPlayers(): HashMap<UUID, PlayerRecord>? {
         return this.players
