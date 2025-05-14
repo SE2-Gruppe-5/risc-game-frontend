@@ -22,7 +22,7 @@ class TerritoryVisualAndroid(
         setHighlightSelected(false)
     }
     val backgroundHighlightColor: Int = Color.argb(255, 255, 255, 0)
-    val backgroundNoHighlightColor: Int = Color.argb(0, 255, 255, 0)
+    val backgroundNoHighlightColor: Int = territoryRecord.continent.color
 
     override fun setHighlightSelected(b: Boolean) {
         if (b) {
