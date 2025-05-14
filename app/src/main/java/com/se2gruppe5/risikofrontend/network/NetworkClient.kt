@@ -87,12 +87,15 @@ class NetworkClient() : INetworkClient{
         TODO("Not yet implemented")
     }
 
-    private fun createRequest(method: String, path: String, vararg params: String): Request {
+    private fun createRequest(method: String, path: String, vararg params: String?): Request {
         val body = if (params.isNotEmpty()) {
             MultipartBody.Builder()
                 .apply {
                     for (i in params.indices step 2) {
-                        addFormDataPart(params[i], params[i + 1])
+                        if (params[i] == null || params[i + 1] == null) {
+                            continue
+                        }
+                        addFormDataPart(params[i]!!, params[i + 1]!!)
                     }
                 }
                 .build()
