@@ -2,6 +2,7 @@ package com.se2gruppe5.risikofrontend.game.territory
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
@@ -10,7 +11,7 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
-const val POINTING_ARROW_STROKE_COLOR: Int = 0xFF0000
+const val POINTING_ARROW_STROKE_COLOR: Int = Color.RED
 const val POINTING_ARROW_STROKE_WIDTH: Float = 10f
 const val POINTING_ARROW_ARROWHEAD_LENGTH: Float = 50f
 const val POINTING_ARROW_ARROWHEAD_ANGLE: Float = 35f
