@@ -141,11 +141,8 @@ class GameManager private constructor(
 
     //this single method right here prevents all hell from breaking lose
     fun isMyTurn(): Boolean {
-        val cp = players[currentPlayerUUID]
-
-        Log.i("GameManger", "Current $cp, UUID: $currentPlayerUUID" )
-        Log.i("GameManger", "me $me" )
-        return currentPlayerUUID === me.id
+        val currentPlayer = players[currentPlayerUUID]
+        return currentPlayer?.equals(me) == true
     }
 
 
