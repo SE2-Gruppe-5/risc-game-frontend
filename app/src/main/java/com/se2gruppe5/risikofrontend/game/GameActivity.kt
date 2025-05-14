@@ -166,6 +166,7 @@ class GameActivity : AppCompatActivity() {
         sseService?.handler(MessageType.UPDATE_PHASE) {
             it as UpdatePhaseMessage
             var phase: Phases = Phases.entries[it.phase];
+            GameManager.get().receivePhaseUpdate(phase)
             changeViewColors(phase)
             phaseTxt?.text = phase.toString()
             nextPhaseBtn?.text = when (phase) {
