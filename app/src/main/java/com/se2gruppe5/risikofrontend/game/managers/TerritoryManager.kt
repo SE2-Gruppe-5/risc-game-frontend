@@ -18,7 +18,7 @@ import kotlinx.coroutines.runBlocking
 
 const val TERRITORY_NO_OWNER_COLOR: Int = 0x999999
 
-class TerritoryManager private constructor(val me: PlayerRecord?, private val pointingArrow: IPointingArrowUI, val activity: Activity) {
+class TerritoryManager private constructor(val me: PlayerRecord?, val pointingArrow: IPointingArrowUI, val activity: Activity) {
     companion object {
 
         @SuppressLint("StaticFieldLeak")

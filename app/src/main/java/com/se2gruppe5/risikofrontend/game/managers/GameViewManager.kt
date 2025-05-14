@@ -59,7 +59,7 @@ class GameViewManager(private val activity: Activity) {
      * initializes the Pointing arrow
      */
     fun initArrow(): IPointingArrowUI {
-        val pointingArrow = PointingArrowAndroid(activity, "#FF0000".toColorInt(), 15f)
+        val pointingArrow = TerritoryManager.get().pointingArrow as PointingArrowAndroid
         pointingArrow.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT

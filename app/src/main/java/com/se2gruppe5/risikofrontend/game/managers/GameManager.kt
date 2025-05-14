@@ -148,7 +148,7 @@ class GameManager private constructor(
     fun initializeGame(activity: Activity, turnIndicators: List<TextView>) {
         val viewManager = GameViewManager(activity)
         territoryVisualList = viewManager.initTerritoryViews()
-        TerritoryManager.init(me, viewManager.initArrow(), activity)
+        viewManager.initArrow()
         territoryVisualList.forEachIndexed { index, tri ->
             val territory = TerritoryVisualAndroid(
                 TerritoryRecord(index + 1, 5),
