@@ -131,21 +131,39 @@ class LobbyActivity :AppCompatActivity() {
                 Log.i("lobby", "$it")
                 var uuid: UUID = it.uuid
                 var name: String = it.playerName
-                playerTxt?.get(joinedPlayers-1)?.visibility = View.VISIBLE
-                playerTxt?.get(joinedPlayers-1)?.text = name
-                playerBtn?.get(joinedPlayers-1)?.visibility = View.VISIBLE
-                me =PlayerRecord(uuid, name, Color.rgb((0..255).random(), (0..255).random(), (0..255).random()))
-                joinedPlayers++
-                players.put(me!!.id,me!!)
+                if(me == null) {
+                    playerTxt?.get(joinedPlayers - 1)?.visibility = View.VISIBLE
+                    playerTxt?.get(joinedPlayers - 1)?.text = name
+                    playerBtn?.get(joinedPlayers - 1)?.visibility = View.VISIBLE
+                    me = PlayerRecord(
+                        uuid,
+                        name,
+                        Color.rgb((0..255).random(), (0..255).random(), (0..255).random())
+                    )
+                    joinedPlayers++
+                    players.put(me!!.id, me!!)
+                }else{
+                    playerTxt?.get(joinedPlayers - 1)?.visibility = View.VISIBLE
+                    playerTxt?.get(joinedPlayers - 1)?.text = name
+                    playerBtn?.get(joinedPlayers - 1)?.visibility = View.VISIBLE
+                    val other = PlayerRecord(
+                        uuid,
+                        name,
+                        Color.rgb((0..255).random(), (0..255).random(), (0..255).random())
+                    )
+                    joinedPlayers++
+                    players.put(other.id, other)
+
+                }
+                Log.i("LobbyJoin", me.toString())
             }
         }
         sseService?.handler(MessageType.START_GAME) {
             it as GameStartMessage
                 TerritoryManager.init(me!!, PointingArrowAndroid(applicationContext), this)
                 GameManager.init(me!!, it.gameId, TerritoryManager.get(), NetworkClient(), it.players)
-
                 val intent = Intent(this, GameActivity::class.java)
-                intent.putExtra("GAME_ID", it.gameId.toString())
+                intent.putExtra("GAME_ID", it.gameId)
                 startActivity(intent)
         }
     }

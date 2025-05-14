@@ -1,6 +1,7 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
 import android.app.Activity
+import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
@@ -140,8 +141,11 @@ class GameManager private constructor(
 
     //this single method right here prevents all hell from breaking lose
     fun isMyTurn(): Boolean {
-        val currentPlayer = players[currentPlayerUUID]
-        return currentPlayer?.equals(me) == true
+        val cp = players[currentPlayerUUID]
+
+        Log.i("GameManger", "Current $cp, UUID: $currentPlayerUUID" )
+        Log.i("GameManger", "me $me" )
+        return currentPlayerUUID === me.id
     }
 
 

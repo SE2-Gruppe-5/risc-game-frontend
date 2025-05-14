@@ -3,6 +3,7 @@ package com.se2gruppe5.risikofrontend.game
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
 import android.view.View
@@ -28,6 +29,8 @@ import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePhaseMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePlayersMessage
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
+import android.util.Log
+import androidx.annotation.RequiresApi
 
 
 class GameActivity : AppCompatActivity() {
@@ -57,6 +60,7 @@ class GameActivity : AppCompatActivity() {
     var turnIndicators: MutableList<TextView> = mutableListOf()
     var gameManager: GameManager? = null
     var gameID: UUID? = null
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
@@ -67,7 +71,7 @@ class GameActivity : AppCompatActivity() {
         val diceTxt = this.findViewById<TextView>(R.id.diceText)
         val diceVisualAndroid = DiceVisualAndroid(Dice1d6Generic(), diceBtn, diceTxt)
         diceVisualAndroid.clickSubscription { it.roll() }
-        gameID = UUID.fromString(intent.getStringExtra("GAME_ID"))
+        gameID = intent.getSerializableExtra("GAME_ID", UUID::class.java)
         turnIndicators.add(this.findViewById<TextView>(R.id.player1txt))
         turnIndicators.add(this.findViewById<TextView>(R.id.player2txt))
         turnIndicators.add(this.findViewById<TextView>(R.id.player3txt))
@@ -85,7 +89,7 @@ class GameActivity : AppCompatActivity() {
         gameManager.initializeGame(this, turnIndicators)
         nextPhaseBtn?.setOnClickListener {
             changePhase()
-
+            Log.i("GameManger", gameID.toString())
         }
         val showContinentButton: Button = this.findViewById(R.id.btn_show_continents)
         showContinentButton.setOnClickListener {
@@ -117,6 +121,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun getGameInfo() {
+        Log.i("GameManager", gameID.toString())
         runBlocking {
             client.getGameInfo(gameID!!)
         }
@@ -168,7 +173,9 @@ class GameActivity : AppCompatActivity() {
         sseService?.handler(MessageType.UPDATE_PLAYERS) {
             it as UpdatePlayersMessage
             GameManager.get().receivePlayerListUpdate(it.players)
-
+            for(player in it.players){
+                Log.i("GameManger", "${player.value.id} ${player.key} ${player.value.isCurrentTurn}")
+            }
             val currentPlayerIndex = it.players.values.indexOfFirst { it.isCurrentTurn }
             changeHighlightedPlayer(currentPlayerIndex, turnIndicators)
         }
