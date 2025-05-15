@@ -173,12 +173,14 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/game/GameActivity.kt",
                 "**/com/se2gruppe5/risikofrontend/game/board/BoardJsonClasses.kt",
                 "**/com/se2gruppe5/risikofrontend/game/board/BoardLoaderAndroid.kt",
+                "**/com/se2gruppe5/risikofrontend/game/board/BoardVisualGeneratorAndroid.kt",
                 "**/com/se2gruppe5/risikofrontend/Constants.kt",
                 "**/com/se2gruppe5/risikofrontend/game/dialogues/**",
                 "**/com/se2gruppe5/risikofrontend/popup/**",
                 "**/com/se2gruppe5/risikofrontend/enums/**",
                 "**/com/se2gruppe5/risikofrontend/game/managers/GameViewManager.kt",
-                "**/com/se2gruppe5/risikofrontend/game/managers/ToastUtils.kt"
+                "**/com/se2gruppe5/risikofrontend/game/managers/ToastUtils.kt",
+                "**/com/se2gruppe5/risikofrontend/devtools/**"
             ).joinToString(",")
         )
 

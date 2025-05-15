@@ -17,6 +17,7 @@ class TerritoryVisualAndroid(
     val bgColorRibbon: TextView,
     val textContent: TextView,
     val imgBTN: ImageButton,
+    val bg: View,
     val outline: View,
 ) : ITerritoryVisual {
 
@@ -41,6 +42,7 @@ class TerritoryVisualAndroid(
 
     override fun changeBgColor(color: Int) {
         imgBTN.setBackgroundColor(color);
+        bg.setBackgroundColor(color);
     }
 
     override fun changeStat(stat: Int) {

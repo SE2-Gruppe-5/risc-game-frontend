@@ -38,6 +38,8 @@
             android:exported="false" />
         <activity android:name=".game.ReinforcementActivity"
             android:exported="false" />
+        <activity android:name=".devtools.MapPreviewActivity"
+            android:exported="true" />
 
         <!-- Services -->
         <service android:name=".network.sse.SseClientService"

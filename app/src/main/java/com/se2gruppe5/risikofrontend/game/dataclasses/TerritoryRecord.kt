@@ -12,4 +12,8 @@ data class TerritoryRecord (
 ) {
     val connections: MutableList<TerritoryRecord> = ArrayList()
     var owner: UUID? = null
+
+    fun getCenter(): Pair<Int, Int> {
+        return Pair(position.first + size.first/2, position.second + size.second/2)
+    }
 }

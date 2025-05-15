@@ -43,6 +43,9 @@ class TerritoryVisualAndroidUnitTest(
     private lateinit var imgBTNMock: ImageButton
 
     @Mock
+    private lateinit var bgMock: View
+
+    @Mock
     private lateinit var outlineMock: View
 
     private lateinit var colorStaticMock: MockedStatic<Color>
@@ -72,6 +75,7 @@ class TerritoryVisualAndroidUnitTest(
             bgColorRibbonMock,
             textContentMock,
             imgBTNMock,
+            bgMock,
             outlineMock
         )
 
