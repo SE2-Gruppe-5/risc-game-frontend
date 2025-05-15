@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class JoinLobbyActivity :AppCompatActivity() {
-    val client = NetworkClient()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
@@ -31,8 +30,7 @@ class JoinLobbyActivity :AppCompatActivity() {
         val backBtn = this.findViewById<ImageButton>(R.id.backBtn)
         backBtn.setOnClickListener({
             Log.i("NAVIGATION", "Quit lobby")
-            val intent = Intent(this, MenuActivity::class.java)
-            startActivity(intent)
+            finish()
         })
 
         val joinBtn = this.findViewById<Button>(R.id.joinLobbyBtn)
@@ -49,5 +47,4 @@ class JoinLobbyActivity :AppCompatActivity() {
             startActivity(intent)
         })
     }
-
-    }
+}

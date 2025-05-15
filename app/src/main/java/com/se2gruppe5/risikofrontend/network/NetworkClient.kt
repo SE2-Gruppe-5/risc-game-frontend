@@ -12,6 +12,7 @@ import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import java.util.Optional
 import java.util.UUID
 
 class NetworkClient() : INetworkClient{
@@ -26,7 +27,7 @@ class NetworkClient() : INetworkClient{
     override suspend fun createLobby(): String? {
         val request = createRequest("GET", Constants.LOBBY_CREATE_URL)
         val response = execute(request)
-        return response.body?.string()
+        return if (response.isSuccessful) response.body?.string() else null
     }
 
     override suspend fun deleteLobby(lobbyCode: String) {
@@ -60,7 +61,7 @@ class NetworkClient() : INetworkClient{
     }
 
     override suspend fun getGameInfo(gameId: UUID) {
-        val request = createRequest("GET", Constants.GET_GAME_INFO_URL.replace("{id}", gameId.toString()),
+        val request = createRequest("POST", Constants.GET_GAME_INFO_URL.replace("{id}", gameId.toString()),
             "uuid", SseClientService.uuid.toString())
         execute(request)
     }
@@ -72,7 +73,7 @@ class NetworkClient() : INetworkClient{
 
     override suspend fun changeTerritory(gameId: UUID, territory: TerritoryRecord) {
         val request = createRequest("PATCH", Constants.CHANGE_TERRITORY_URL.replace("{id}", gameId.toString()),
-            "owner", territory.owner?.id.toString(),
+            "owner", territory.owner?.toString(),
             "id", territory.id.toString(),
             "stat", territory.stat.toString())
         execute(request)
@@ -87,12 +88,15 @@ class NetworkClient() : INetworkClient{
         TODO("Not yet implemented")
     }
 
-    private fun createRequest(method: String, path: String, vararg params: String): Request {
+    private fun createRequest(method: String, path: String, vararg params: String?): Request {
         val body = if (params.isNotEmpty()) {
             MultipartBody.Builder()
                 .apply {
                     for (i in params.indices step 2) {
-                        addFormDataPart(params[i], params[i + 1])
+                        if (params[i] == null || params[i + 1] == null) {
+                            continue
+                        }
+                        addFormDataPart(params[i]!!, params[i + 1]!!)
                     }
                 }
                 .build()
@@ -111,15 +115,5 @@ class NetworkClient() : INetworkClient{
         return withContext(Dispatchers.IO) {
            return@withContext call.execute()
         }
-    }
-    override suspend fun assignTerritories(gameId: UUID) {
-        val request = createRequest("GET", Constants.ASSIGN_TERRITORIES_URL.replace("{id}", gameId.toString()))
-        execute(request)
-    }
-
-    override suspend fun distributeTroops(gameId: UUID, troops: Int) {
-        val request = createRequest("PATCH", Constants.DISTRIBUTE_TROOPS_URL.replace("{id}", gameId.toString()),
-            "troops", troops.toString())
-        execute(request)
     }
 }

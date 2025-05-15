@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import java.util.UUID
 
 /**
  * Concrete Implementation of Territory Visualization for Android
@@ -42,6 +43,10 @@ class TerritoryVisualAndroid(
         }
         territoryRecord.stat = stat
         textContent.text = stat.toString()
+    }
+
+    override fun changeOwner(newOwner: UUID?) {
+        territoryRecord.owner = newOwner
     }
 
     override fun clickSubscription(lambda: (ITerritoryVisual) -> Unit) {

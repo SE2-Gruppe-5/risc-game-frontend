@@ -25,7 +25,7 @@ class Constants {
         val GET_GAME_INFO_URL: String = dotenv["GET_GAME_INFO_URL"]
         val CHANGE_PHASE_URL: String = dotenv["CHANGE_PHASE_URL"]
         val CHANGE_TERRITORY_URL: String = dotenv["CHANGE_TERRITORY_URL"]
-        val ASSIGN_TERRITORIES_URL: String = dotenv["ASSIGN_TERRITORIES_URL"]
-        val DISTRIBUTE_TROOPS_URL: String = dotenv["DISTRIBUTE_TROOPS_URL"]
+        val GAME_MANAGER_MAX_PLAYERS: Int = Integer.valueOf(dotenv["MAX_PLAYERS"])
+
     }
 }

@@ -162,15 +162,18 @@ sonar {
             listOf(
                 "**/com/se2gruppe5/risikofrontend/game/territory/TerritoryVisualAndroid.kt",
                 "**/com/se2gruppe5/risikofrontend/game/territory/PointingArrowAndroid.kt",
-                " **/com/se2gruppe5/risikofrontend/game/dice/DiceVisualAndroid.kt",
+                "**/com/se2gruppe5/risikofrontend/game/dice/DiceVisualAndroid.kt",
                 "**/com/se2gruppe5/risikofrontend/lobby/**",
+                "**/com/se2gruppe5/risikofrontend/network/**",
                 "**/com/se2gruppe5/risikofrontend/startmenu/**",
                 "**/com/se2gruppe5/risikofrontend/MainActivity.kt",
                 "**/com/se2gruppe5/risikofrontend/game/GameActivity.kt",
-                "**/com/se2gruppe5/risikofrontend/popup/ContinentDialog.kt",
-                "**/network/**",
-                "**/dialogs/**",
-                "**/com/se2gruppe5/**" //todo: remove this line in sprint 3 !!!!
+                "**/com/se2gruppe5/risikofrontend/Constants.kt",
+                "**/com/se2gruppe5/risikofrontend/game/dialogues/**",
+                "**/com/se2gruppe5/risikofrontend/popup/**",
+                "**/com/se2gruppe5/risikofrontend/enums/**",
+                "**/com/se2gruppe5/risikofrontend/game/managers/GameViewManager.kt",
+                "**/com/se2gruppe5/risikofrontend/game/managers/ToastUtils.kt"
             ).joinToString(",")
         )
 

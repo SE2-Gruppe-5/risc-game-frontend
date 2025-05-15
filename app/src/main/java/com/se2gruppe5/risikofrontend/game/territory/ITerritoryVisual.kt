@@ -1,6 +1,7 @@
 package com.se2gruppe5.risikofrontend.game.territory
 
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import java.util.UUID
 
 /**
  * Wrapper for Territory providing functionality pertaining to it's visualization
@@ -28,6 +29,12 @@ interface ITerritoryVisual {
      * (for now only "stats" meaning # of troops)
      */
     fun changeStat(stat: Int)
+
+    /**
+     * Change Territory owner
+     * null is to represent unoccupied
+     */
+    fun changeOwner(newOwner: UUID?)
 
     /**
      * Observer-Pattern like system
