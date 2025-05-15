@@ -16,4 +16,8 @@ data class TerritoryRecord (
     fun getCenter(): Pair<Int, Int> {
         return Pair(position.first + size.first/2, position.second + size.second/2)
     }
+
+    fun isConnected(t: TerritoryRecord): Boolean {
+        return connections.contains(t) 
+    }
 }

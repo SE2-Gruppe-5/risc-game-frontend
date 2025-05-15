@@ -144,7 +144,8 @@ class TerritoryManager private constructor(
     private fun hasBeenClicked(t: ITerritoryVisual) {
         val phase = GameManager.get().getCurrentPhase()
         if (myTurn()) {
-            if (prevSelTerritory != t && prevSelTerritory != null) {
+            if (prevSelTerritory != t && prevSelTerritory != null
+                && t.territoryRecord.isConnected(prevSelTerritory!!.territoryRecord)) {
                 prevSelTerritory?.let {
                     pointingArrow.setCoordinates(
                         it.getCoordinatesAsFloat(true), t.getCoordinatesAsFloat(true)

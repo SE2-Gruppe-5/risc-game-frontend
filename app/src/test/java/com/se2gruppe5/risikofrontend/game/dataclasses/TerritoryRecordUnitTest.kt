@@ -21,7 +21,30 @@ class TerritoryRecordUnitTest {
         val t1 = TerritoryRecord(1, 1, Continent.CPU, Pair(100, 100), Pair(200, 300))
         assertEquals(Pair(200, 250), t1.getCenter())
 
-        val t2 = TerritoryRecord(1, 1, Continent.RAM, Pair(30, 70), Pair(50, 220))
+        val t2 = TerritoryRecord(2, 1, Continent.RAM, Pair(30, 70), Pair(50, 220))
         assertEquals(Pair(55, 180), t2.getCenter())
+    }
+
+    @Test
+    fun checkConnectedTerritories() {
+        val t1 = TerritoryRecord(1, 1, Continent.CPU, Pair(100, 100), Pair(100, 100))
+        val t2 = TerritoryRecord(2, 1, Continent.RAM, Pair(100, 100), Pair(100, 100))
+
+        t1.connections.add(t2)
+        t2.connections.add(t1)
+
+        assertTrue(t1.isConnected(t2))
+    }
+
+    @Test
+    fun checkDisconnectedTerritories() {
+        val t1 = TerritoryRecord(1, 1, Continent.CPU, Pair(100, 100), Pair(100, 100))
+        val t2 = TerritoryRecord(2, 1, Continent.RAM, Pair(100, 100), Pair(100, 100))
+        val t3 = TerritoryRecord(3, 1, Continent.MMC, Pair(100, 100), Pair(100, 100))
+
+        t1.connections.add(t3)
+        t2.connections.add(t3)
+
+        assertFalse(t1.isConnected(t2))
     }
 }
