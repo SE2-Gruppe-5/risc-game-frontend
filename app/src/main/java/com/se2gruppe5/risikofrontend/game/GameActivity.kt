@@ -32,6 +32,7 @@ import java.util.UUID
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.managers.GameViewManager
 import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
@@ -97,8 +98,9 @@ class GameActivity : AppCompatActivity() {
         tradeIndicator = this.findViewById<TextView>(R.id.tradeIndicator)
         phaseTxt = this.findViewById<TextView>(R.id.currentPhaseTxt)
 
-        val gameManager = GameManager.get()
-        gameManager.initializeGame(this, turnIndicators)
+        val viewManager = GameViewManager(this)
+        viewManager.initializeGame(this, turnIndicators)
+
         nextPhaseBtn?.setOnClickListener {
             changePhase()
             Log.i("GameManger", gameID.toString())

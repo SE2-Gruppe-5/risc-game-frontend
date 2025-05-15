@@ -1,14 +1,11 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
-import android.app.Activity
-import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.enums.Phases
-import com.se2gruppe5.risikofrontend.game.territory.TerritoryVisualAndroid
 import com.se2gruppe5.risikofrontend.network.INetworkClient
 import java.util.UUID
 
@@ -143,29 +140,6 @@ class GameManager private constructor(
         val currentPlayer = players[currentPlayerUUID]
         return currentPlayer?.equals(me) == true
     }
-
-
-    /**
-     * Function to initialize the Gameboard
-     */
-    fun initializeGame(activity: Activity, turnIndicators: List<TextView>) {
-        val viewManager = GameViewManager(activity)
-        territoryVisualList = viewManager.initTerritoryViews()
-        viewManager.initArrow()
-        territoryVisualList.forEachIndexed { index, tri ->
-            val territory = TerritoryVisualAndroid(
-                TerritoryRecord(index + 1, 5),
-                tri.first,
-                tri.first,
-                tri.second,
-                tri.third
-            )
-            TerritoryManager.get().addTerritory(territory)
-        }
-        viewManager.setPlayerNames(players, turnIndicators)
-    }
-
-
 
     fun getCurrentPhase(): Phases{
         return currentPhase

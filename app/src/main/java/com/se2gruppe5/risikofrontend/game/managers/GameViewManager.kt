@@ -5,11 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.core.graphics.toColorInt
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.territory.IPointingArrowUI
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
+import com.se2gruppe5.risikofrontend.game.territory.TerritoryVisualAndroid
 import java.util.UUID
 
 class GameViewManager(private val activity: Activity) {
@@ -66,5 +67,26 @@ class GameViewManager(private val activity: Activity) {
         )
         activity.findViewById<ViewGroup>(R.id.main).addView(pointingArrow)
         return pointingArrow
+    }
+
+    /**
+     * Function to initialize the Gameboard
+     */
+    fun initializeGame(activity: Activity, turnIndicators: List<TextView>) {
+        val gameManager = GameManager.get()
+        gameManager.territoryVisualList = initTerritoryViews()
+        gameManager.territoryVisualList.forEachIndexed { index, tri ->
+            val territory = TerritoryVisualAndroid(
+                TerritoryRecord(index + 1, 5),
+                tri.first,
+                tri.first,
+                tri.second,
+                tri.third
+            )
+            TerritoryManager.get().addTerritory(territory)
+        }
+
+        initArrow()
+        setPlayerNames(gameManager.getPlayers(), turnIndicators)
     }
 }
