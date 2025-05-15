@@ -72,7 +72,7 @@ class TerritoryManager private constructor(val me: PlayerRecord?, val pointingAr
                 i.changeStat(t.stat)
                 i.changeOwner(t.owner)
                 if (t.owner != null) {
-                    i.changeColor(GameManager.get().getPlayer(t.owner!!)?.color ?: TERRITORY_NO_OWNER_COLOR)
+                    i.changeColor(GameManager.get().getPlayer(t.owner!!)?.color!!)
                 } else {
                     i.changeColor(TERRITORY_NO_OWNER_COLOR)
                 }

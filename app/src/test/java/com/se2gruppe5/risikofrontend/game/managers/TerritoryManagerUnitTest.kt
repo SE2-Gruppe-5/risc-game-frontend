@@ -5,6 +5,7 @@ import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
+import com.se2gruppe5.risikofrontend.network.INetworkClient
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -26,6 +27,7 @@ class TerritoryManagerTestUnitTest {
 
     private lateinit var pointingArrow: PointingArrowAndroid
     private lateinit var mePlayerRecord: PlayerRecord
+    private lateinit var newOwner: PlayerRecord
     private lateinit var manager: TerritoryManager
     private lateinit var record: TerritoryRecord
     private lateinit var t: ITerritoryVisual
@@ -33,12 +35,13 @@ class TerritoryManagerTestUnitTest {
 
     @Before
     fun setUp() {
+
         pointingArrow = mock()
         mePlayerRecord = PlayerRecord(UUID.randomUUID(), "TestPlayer", 0xFF00FF)
         activity = mock()
 
         // Reset and init singleton
-        TerritoryManager.unitTestReset()
+        TerritoryManager.reset()
         TerritoryManager.init(mePlayerRecord, pointingArrow, activity)
         manager = TerritoryManager.get()
 
@@ -48,12 +51,20 @@ class TerritoryManagerTestUnitTest {
             on { territoryRecord } doReturn record
             on { getTerritoryId() } doReturn record.id
         }
+
+        val mockClient: INetworkClient = mock()
+        val playerList: HashMap<UUID, PlayerRecord> = HashMap()
+        newOwner = PlayerRecord(UUID.randomUUID(), "NewTest", 0x123456)
+        playerList.put(mePlayerRecord.id,mePlayerRecord)
+        playerList.put(newOwner.id,newOwner)
+        GameManager.reset()
+        GameManager.init(mePlayerRecord,UUID.randomUUID(),manager, mockClient, playerList)
     }
 
     // TerritoryManager.get() should throw if not initialized
     @Test(expected = IllegalStateException::class)
     fun getBeforeInitThrowsTest() {
-        TerritoryManager.unitTestReset()
+        TerritoryManager.reset()
         TerritoryManager.get()
     }
 
@@ -129,7 +140,7 @@ class TerritoryManagerTestUnitTest {
         val newOwner = PlayerRecord(UUID.randomUUID(), "Owner", 0x123456)
         manager.assignOwner(t, newOwner)
         verify(t).changeColor(newOwner.color)
-        assertEquals(newOwner, record.owner)
+        assertEquals(newOwner.id, record.owner)
     }
 
     @Test
@@ -145,12 +156,12 @@ class TerritoryManagerTestUnitTest {
     fun updateTerritoryTest() {
         manager.addTerritory(t)
         record.stat = 5
-        val newOwner = PlayerRecord(UUID.randomUUID(), "NewTest", 0x123456)
-        record.owner = newOwner
+        record.owner = newOwner.id
 
+        assertNotNull(GameManager.get().getPlayer(t.territoryRecord.owner!!))
         manager.updateTerritory(record)
         verify(t).changeStat(5)
-        verify(t).changeOwner(newOwner)
+        verify(t).changeOwner(newOwner.id)
         verify(t).changeColor(newOwner.color)
     }
 

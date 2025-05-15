@@ -48,8 +48,8 @@ class GameManagerUnitTest {
 
 
         //Reset singletons before each test
-        TerritoryManager.unitTestReset()
-        GameManager.unitTestReset()
+        TerritoryManager.reset()
+        GameManager.reset()
 
         //Initialize singletons
         territoryManagerMock = mock()
@@ -60,7 +60,7 @@ class GameManagerUnitTest {
 
     @After
     fun tearDown() {
-        GameManager.unitTestReset()
+        GameManager.reset()
     }
 
     @Test
@@ -82,7 +82,7 @@ class GameManagerUnitTest {
 
     @Test(expected = IllegalArgumentException::class)
     fun testGetCurrentPlayerReturnsError(){
-        GameManager.unitTestReset()
+        GameManager.reset()
         val newPlayers: HashMap<UUID, PlayerRecord> = mutableMapOf<UUID, PlayerRecord>() as HashMap<UUID, PlayerRecord>
         GameManager.init(me, gameUUID,territoryManagerMock, networkClient, newPlayers)
         GameManager.get().getCurrentPlayer()
@@ -91,13 +91,13 @@ class GameManagerUnitTest {
 
     @Test(expected = IllegalStateException::class)
     fun testThrowsOnGetBeforeInit() {
-        GameManager.unitTestReset()
+        GameManager.reset()
         GameManager.get()
     }
 
     @Test
     fun testUnitReset() {
-        GameManager.unitTestReset()
+        GameManager.reset()
         try {
             GameManager.get()
             fail("Expected IllegalStateException")
