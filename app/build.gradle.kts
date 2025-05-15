@@ -173,6 +173,7 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/popup/**",
                 "**/com/se2gruppe5/risikofrontend/enums/**",
                 "**/com/se2gruppe5/risikofrontend/game/managers/GameViewManager.kt",
+                "**/com/se2gruppe5/risikofrontend/game/managers/ToastUtils.kt"
             ).joinToString(",")
         )
 
