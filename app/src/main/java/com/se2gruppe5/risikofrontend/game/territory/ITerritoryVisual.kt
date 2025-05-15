@@ -18,10 +18,16 @@ interface ITerritoryVisual {
     fun setHighlightSelected(b: Boolean)
 
     /**
-     * Changes Territory Color
+     * Changes Territory Ribbon Color
      * @param color colorInt of desired color
      */
-    fun changeColor(color: Int)
+    fun changeRibbonColor(color: Int)
+
+    /**
+     * Changes Territory Background Color
+     * @param color colorInt of desired color
+     */
+    fun changeBgColor(color: Int)
 
     /**
      * Changes the Stats of the territory

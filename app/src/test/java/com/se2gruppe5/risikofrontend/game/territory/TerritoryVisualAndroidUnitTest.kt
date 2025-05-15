@@ -16,7 +16,6 @@ import org.mockito.Mock
 import org.mockito.MockedStatic
 import org.mockito.Mockito
 import org.mockito.Mockito.doAnswer
-import org.mockito.Mockito.doThrow
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
@@ -124,9 +123,15 @@ class TerritoryVisualAndroidUnitTest(
 
     //Test if changeColor changes color
     @Test
-    fun changeColorTest() {
-        territoryVisualAndroid.changeColor(colPTestData)
+    fun changeRibbonColorTest() {
+        territoryVisualAndroid.changeRibbonColor(colPTestData)
         verify(bgColorRibbonMock).setBackgroundColor(colPTestData)
+    }
+
+    @Test
+    fun changeBgColorTest() {
+        territoryVisualAndroid.changeBgColor(colPTestData)
+        verify(imgBTNMock).setBackgroundColor(colPTestData)
     }
 
     @Test

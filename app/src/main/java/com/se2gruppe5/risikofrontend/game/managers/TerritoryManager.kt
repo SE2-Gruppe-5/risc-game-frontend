@@ -49,10 +49,10 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
 
     fun updateTerritory(t: ITerritoryVisual) {
         if(t.territoryRecord.owner != null) {
-            t.changeColor(t.territoryRecord.owner!!.color)
+            t.changeRibbonColor(t.territoryRecord.owner!!.color)
         }
         else {
-            t.changeColor(TERRITORY_NO_OWNER_COLOR)
+            t.changeRibbonColor(TERRITORY_NO_OWNER_COLOR)
         }
 
         t.changeStat(t.territoryRecord.stat)
@@ -170,7 +170,7 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
 
 
     private fun attackTerritory(t: ITerritoryVisual){
-        t.changeColor(me!!.color)
+        t.changeRibbonColor(me!!.color)
         t.territoryRecord.owner = me
         me.capturedTerritory = true
     }

@@ -20,9 +20,10 @@ class TerritoryVisualAndroid(
 
     init {
         setHighlightSelected(false)
+        changeBgColor(territoryRecord.getColor())
     }
     val backgroundHighlightColor: Int = Color.argb(255, 255, 255, 0)
-    val backgroundNoHighlightColor: Int = territoryRecord.continent.color
+    val backgroundNoHighlightColor: Int = Color.argb(0, 255, 255, 0)
 
     override fun setHighlightSelected(b: Boolean) {
         if (b) {
@@ -32,8 +33,12 @@ class TerritoryVisualAndroid(
         }
     }
 
-    override fun changeColor(color: Int) {
+    override fun changeRibbonColor(color: Int) {
         bgColorRibbon.setBackgroundColor(color)
+    }
+
+    override fun changeBgColor(color: Int) {
+        imgBTN.setBackgroundColor(color);
     }
 
     override fun changeStat(stat: Int) {
