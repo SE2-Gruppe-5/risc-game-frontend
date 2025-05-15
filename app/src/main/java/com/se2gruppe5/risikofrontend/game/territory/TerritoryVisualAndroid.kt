@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.graphics.toColorInt
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 
 /**
@@ -20,7 +21,7 @@ class TerritoryVisualAndroid(
 
     init {
         setHighlightSelected(false)
-        changeBgColor(territoryRecord.getColor())
+        changeBgColor(territoryRecord.continent.color.toColorInt())
     }
     val backgroundHighlightColor: Int = Color.argb(255, 255, 255, 0)
     val backgroundNoHighlightColor: Int = Color.argb(0, 255, 255, 0)

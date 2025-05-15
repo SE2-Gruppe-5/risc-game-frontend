@@ -1,6 +1,5 @@
 package com.se2gruppe5.risikofrontend.game.dataclasses
 
-import androidx.core.graphics.toColorInt
 import com.se2gruppe5.risikofrontend.game.board.Continent
 
 data class TerritoryRecord (
@@ -12,8 +11,4 @@ data class TerritoryRecord (
 ) {
     val connections: MutableList<TerritoryRecord> = ArrayList()
     var owner: PlayerRecord? = null
-
-    fun getColor(): Int {
-        return continent.color.toColorInt()
-    }
 }

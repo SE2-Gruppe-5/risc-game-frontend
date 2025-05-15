@@ -8,19 +8,23 @@ import java.io.File
 
 
 class BoardLoaderUnitTest {
-    private lateinit var json: String
+    private lateinit var testBoard: String
+    private lateinit var testDuplicateConnections: String
+
     private lateinit var boardLoader: BoardLoader
     private lateinit var territories: List<TerritoryRecord>
 
     @Before
     fun setup() {
-        json = File("src/test/java/com/se2gruppe5/risikofrontend/game/board/testBoard.json").readText()
-        boardLoader = BoardLoader(json)
-        territories = boardLoader.territories
+        testBoard = File("src/test/java/com/se2gruppe5/risikofrontend/game/board/testBoard.json").readText()
+        testDuplicateConnections = File("src/test/java/com/se2gruppe5/risikofrontend/game/board/testBoardDuplicateConnections.json").readText()
     }
 
     @Test
     fun allTerritoriesLoaded() {
+        boardLoader = BoardLoader(testBoard)
+        territories = boardLoader.territories
+
         assertEquals(3, territories.size)
 
         assertTrue(territories.any {it.id == 1})
@@ -30,6 +34,9 @@ class BoardLoaderUnitTest {
 
     @Test
     fun territoryDetailsCorrect() {
+        boardLoader = BoardLoader(testBoard)
+        territories = boardLoader.territories
+
         val territory1: TerritoryRecord = territories[0]
         val territory2: TerritoryRecord = territories[1]
         val territory3: TerritoryRecord = territories[2]
@@ -57,6 +64,9 @@ class BoardLoaderUnitTest {
 
     @Test
     fun connectionsCorrect() {
+        boardLoader = BoardLoader(testBoard)
+        territories = boardLoader.territories
+
         val territory1: TerritoryRecord = territories[0]
         val territory2: TerritoryRecord = territories[1]
         val territory3: TerritoryRecord = territories[2]
@@ -65,5 +75,17 @@ class BoardLoaderUnitTest {
         assertTrue(territory2.connections.contains(territory3))
         assertFalse(territory1.connections.contains(territory3))
         assertFalse(territory3.connections.contains(territory1))
+    }
+
+    @Test
+    fun connectionsNoDuplicates() {
+        boardLoader = BoardLoader(testDuplicateConnections)
+        territories = boardLoader.territories
+
+        val territory1: TerritoryRecord = territories[0]
+        val territory2: TerritoryRecord = territories[1]
+
+        assertEquals(1, territory1.connections.size)
+        assertEquals(1, territory2.connections.size)
     }
 }
