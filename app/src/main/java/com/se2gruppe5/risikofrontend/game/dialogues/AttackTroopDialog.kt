@@ -1,11 +1,7 @@
-package com.se2gruppe5.risikofrontend.game.dialogs
+package com.se2gruppe5.risikofrontend.game.dialogues
 
 import android.content.Context
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 
-import android.view.LayoutInflater
-import com.se2gruppe5.risikofrontend.databinding.DialogMoveTroopsBinding
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 
 class AttackTroopDialog(

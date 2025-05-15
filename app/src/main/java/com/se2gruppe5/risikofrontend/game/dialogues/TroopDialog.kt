@@ -1,4 +1,4 @@
-package com.se2gruppe5.risikofrontend.game.dialogs
+package com.se2gruppe5.risikofrontend.game.dialogues
 
 import android.content.Context
 import android.view.LayoutInflater

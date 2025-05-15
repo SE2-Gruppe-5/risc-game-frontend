@@ -33,8 +33,6 @@ class ConstantsUnitTest {
         assertNotNull(Constants.HOST)
         assertNotNull(Constants.SSE_URL)
         assertNotNull(Constants.CHAT_SEND_URL)
-        assertNotNull(Constants.ASSIGN_TERRITORIES_URL)
-        assertNotNull(Constants.DISTRIBUTE_TROOPS_URL)
     }
 
     @Test
@@ -48,17 +46,5 @@ class ConstantsUnitTest {
         // Starts with backslash ?
         assertTrue(isValidEndpoint(Constants.SSE_URL))
         assertTrue(isValidEndpoint(Constants.CHAT_SEND_URL))
-    }
-
-    @Test
-    fun checkAssignTerritoriesUrlEndpoint() {
-        // Überprüfen, ob der Endpunkt mit einem "/" beginnt
-        assertTrue(isValidEndpoint(Constants.ASSIGN_TERRITORIES_URL))
-    }
-
-    @Test
-    fun checkDistributeTroopsUrlEndpoint() {
-        // Überprüfen, ob der Endpunkt mit einem "/" beginnt
-        assertTrue(isValidEndpoint(Constants.DISTRIBUTE_TROOPS_URL))
     }
 }

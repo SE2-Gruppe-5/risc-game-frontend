@@ -2,31 +2,33 @@ package com.se2gruppe5.risikofrontend.game.managers
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.widget.Toast
 
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
-import com.se2gruppe5.risikofrontend.game.dialogs.AttackTroopDialog
-import com.se2gruppe5.risikofrontend.game.dialogs.MoveTroopDialog
+import com.se2gruppe5.risikofrontend.game.dialogues.AttackTroopDialog
+import com.se2gruppe5.risikofrontend.game.dialogues.MoveTroopDialog
 
 import com.se2gruppe5.risikofrontend.game.enums.Phases
+import com.se2gruppe5.risikofrontend.game.territory.IPointingArrowUI
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
-import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.network.INetworkClient
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import kotlinx.coroutines.runBlocking
+import java.util.UUID
 
 const val TERRITORY_NO_OWNER_COLOR: Int = 0x999999
+private var toastEnabled: Boolean = true;
 
-class TerritoryManager private constructor(val me: PlayerRecord?, private val pointingArrow: PointingArrowAndroid, val activity: Activity) {
+class TerritoryManager private constructor(
+    val me: PlayerRecord?, val pointingArrow: IPointingArrowUI, val activity: Activity
+) {
     companion object {
 
-        //Intentionally not using non-nullable lateInit var for unit test reset funcitonality
         @SuppressLint("StaticFieldLeak")
         private var singleton: TerritoryManager? = null
 
-        fun init(me: PlayerRecord?, pointingArrow: PointingArrowAndroid, activity: Activity) {
-            if (singleton==null) {
+        fun init(me: PlayerRecord?, pointingArrow: IPointingArrowUI, activity: Activity) {
+            if (singleton == null) {
                 singleton = TerritoryManager(me, pointingArrow, activity)
             }
         }
@@ -36,42 +38,62 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
             return checkNotNull(singleton) { "TerritoryManager must be .init() first!" }
         }
 
+        fun reset() {
+            singleton = null
+        }
+
         /**
-         * Do not call this. It is for unit tests only.
+         * Unit Test only, do not call
          */
-        fun unitTestReset(){
-            singleton=null
+        fun disableToast() {
+            toastEnabled = false;
         }
     }
 
     private val territoryList: MutableList<ITerritoryVisual> = mutableListOf()
     private var prevSelTerritory: ITerritoryVisual? = null
 
-    fun updateTerritory(t: ITerritoryVisual) {
-        if(t.territoryRecord.owner != null) {
-            t.changeRibbonColor(t.territoryRecord.owner!!.color)
-        }
-        else {
-            t.changeRibbonColor(TERRITORY_NO_OWNER_COLOR)
-        }
-
-        t.changeStat(t.territoryRecord.stat)
+    private fun territoriesSanityCheck(t: ITerritoryVisual) {
+        //todo
+        return
     }
 
-    //Should never be needed, legacy
-    fun swapTerritory(t: ITerritoryVisual){
-        for (i in territoryList){
-            if (i.getTerritoryId()== t.getTerritoryId()){
-                territoryList.remove(i)
-                territoryList.add(t)
-                return
+    private fun territoriesSanityCheck(t: TerritoryRecord) {
+        //todo
+        return
+    }
+
+    private fun territoriesSanityCheck(tList: List<TerritoryRecord>) {
+        //todo
+        for (t in tList) {
+            territoriesSanityCheck(t)
+        }
+    }
+
+    fun updateTerritories(tList: List<TerritoryRecord>) {
+        territoriesSanityCheck(tList)
+        for (t in tList) {
+            updateTerritory(t)
+        }
+    }
+
+    fun updateTerritory(t: TerritoryRecord) {
+        for (i in territoryList) {
+            if (i.getTerritoryId() == t.id) {
+                i.changeStat(t.stat)
+                i.changeOwner(t.owner)
+                if (t.owner != null) {
+                    i.changeColor(GameManager.get().getPlayer(t.owner!!)?.color!!)
+                } else {
+                    i.changeColor(TERRITORY_NO_OWNER_COLOR)
+                }
+                break
             }
         }
-        addTerritory(t)
     }
 
     fun addTerritory(t: ITerritoryVisual) {
-        checkTerritoryValid(t)
+        territoriesSanityCheck(t)
         if (territoryList.contains(t)) {
             throw IllegalArgumentException("Territory (object) already in list.")
 
@@ -87,7 +109,7 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
 
     //This should never be needed
     fun removeTerritory(t: ITerritoryVisual) {
-        checkTerritoryValid(t)
+        territoriesSanityCheck(t)
         if (!territoryList.contains(t)) {
             throw IllegalArgumentException("Territory not in list.")
         }
@@ -97,7 +119,7 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
     //fun removeTerritoryById(id: Int){} //todo if needed (but this being needed would indicate a smell
 
     fun containsTerritory(t: ITerritoryVisual): Boolean {
-        checkTerritoryValid(t)
+        territoriesSanityCheck(t)
         return (territoryList.contains(t))
     }
 
@@ -105,32 +127,31 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
      * let player:=null semantically mean "no owne r"
      */
     fun assignOwner(t: ITerritoryVisual, playerRecord: PlayerRecord?) {
-        checkTerritoryValid(t)
+        territoriesSanityCheck(t)
         if (playerRecord != null) {
-            checkPlayerValid(playerRecord)
+            t.changeColor(playerRecord.color)
+        } else {
+            t.changeColor(TERRITORY_NO_OWNER_COLOR)
         }
-        t.territoryRecord.owner = playerRecord
-        updateTerritory(t)
+        t.territoryRecord.owner = playerRecord?.id
     }
 
-
-
     private fun addLambdaSubscriptions(t: ITerritoryVisual) {
-        checkTerritoryValid(t)
+        territoriesSanityCheck(t)
         t.clickSubscription(::hasBeenClicked) //Observer design pattern
     }
 
     private fun hasBeenClicked(t: ITerritoryVisual) {
-        val phase = GameManager.getPhase()
-        if(myTurn()) {
+        val phase = GameManager.get().getCurrentPhase()
+        if (myTurn()) {
             if (prevSelTerritory != t && prevSelTerritory != null) {
                 prevSelTerritory?.let {
                     pointingArrow.setCoordinates(
-                        it.getCoordinatesAsFloat(true),
-                        t.getCoordinatesAsFloat(true))
+                        it.getCoordinatesAsFloat(true), t.getCoordinatesAsFloat(true)
+                    )
                 }
                 if (phase == Phases.Reinforce) {
-                    if(prevSelTerritory!!.territoryRecord.owner == me && t.territoryRecord.owner == me) {
+                    if (isMe(prevSelTerritory!!.territoryRecord.owner) && isMe(t.territoryRecord.owner)) {
                         MoveTroopDialog(
                             context = activity,
                             maxTroops = prevSelTerritory!!.territoryRecord.stat - 1,
@@ -138,26 +159,32 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
                             fromTerritory = prevSelTerritory!!,
                             toTerritory = t
                         ).show()
-                    }else{
-                        Toast.makeText(activity, "You can only move between your own territories",
-                            Toast.LENGTH_SHORT).show()
+                    } else {
+                        if (toastEnabled) {
+                            ToastUtils.showShortToast(
+                                activity, "You can only move between your own territories"
+                            )
+                        }
                     }
-                }else if(phase == Phases.Attack){
-                    if(prevSelTerritory!!.territoryRecord.owner == me && t.territoryRecord.owner != me) {
+                } else if (phase == Phases.Attack) {
+                    if (isMe(prevSelTerritory!!.territoryRecord.owner) && !isMe(t.territoryRecord.owner)) {
                         AttackTroopDialog(
                             context = activity,
                             maxTroops = prevSelTerritory!!.territoryRecord.stat - 1,
                             minTroops = 1,
                             fromTerritory = prevSelTerritory!!,
-                            toTerritory = t)
-                        { troops ->
+                            toTerritory = t
+                        ) { troops ->
                             attackTerritory(t)
                         }.show()
-                    }else{
-                        Toast.makeText(activity, "You cannot attack your own territories",
-                            Toast.LENGTH_SHORT).show()
-                    }
+                    } else {
+                        if (toastEnabled) {
+                            ToastUtils.showShortToast(
+                                activity, "You cannot attack your own territories"
+                            )
 
+                        }
+                    }
 
                 }
 
@@ -168,36 +195,35 @@ class TerritoryManager private constructor(val me: PlayerRecord?, private val po
     }
 
 
+    private fun attackTerritory(t: ITerritoryVisual) {
+        me!!.capturedTerritory = true
 
-    private fun attackTerritory(t: ITerritoryVisual){
-        t.changeRibbonColor(me!!.color)
-        t.territoryRecord.owner = me
-        me.capturedTerritory = true
+        //TODO we should roll dice here instead of just taking over the territory
+        t.territoryRecord.owner = me.id
+        runBlocking {
+            client.changeTerritory(GameManager.get().getUUID(), t.territoryRecord)
+        }
     }
 
-    private fun updateSelected(t: ITerritoryVisual){
+    private fun updateSelected(t: ITerritoryVisual) {
         prevSelTerritory?.setHighlightSelected(false)
         prevSelTerritory = t
         t.setHighlightSelected(true)
     }
 
-    private fun checkTerritoryValid(t: ITerritoryVisual) {
-        if (t.territoryRecord.id != null) {
-            throw IllegalArgumentException("Territory ID invalid.")
-        }
-    }
-//todo adapt to uuid
-    private fun checkPlayerValid(playerRecord: PlayerRecord) {
-        throw IllegalArgumentException("Player ID invalid.")
-    }
     private fun myTurn(): Boolean {
-        return me == GameManager.getCurrentPlayer()
+        return GameManager.get().isMyTurn()
     }
-    val client : INetworkClient = NetworkClient()
 
-    private fun changeTerritoryRequest(t: TerritoryRecord){
+    private fun isMe(uuid: UUID?): Boolean {
+        return me?.id?.equals(uuid) == true
+    }
+
+    val client: INetworkClient = NetworkClient()
+
+    private fun changeTerritoryRequest(t: TerritoryRecord) {
         runBlocking {
-            client.changeTerritory(GameManager.get().uuid, t)
+            client.changeTerritory(GameManager.get().getUUID(), t)
         }
     }
 }

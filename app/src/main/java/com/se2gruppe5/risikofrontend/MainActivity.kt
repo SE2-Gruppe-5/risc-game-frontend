@@ -78,6 +78,7 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         Intent(this, SseClientService::class.java).also {
+            startService(it)
             bindService(it, serviceConnection, BIND_AUTO_CREATE)
         }
     }

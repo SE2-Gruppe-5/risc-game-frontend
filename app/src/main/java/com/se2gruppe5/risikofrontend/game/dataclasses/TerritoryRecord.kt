@@ -10,5 +10,5 @@ data class TerritoryRecord (
     val size: Pair<Int, Int>,
 ) {
     val connections: MutableList<TerritoryRecord> = ArrayList()
-    var owner: PlayerRecord? = null
+    var owner: UUID? = null
 }
