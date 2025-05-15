@@ -36,7 +36,7 @@ class GameViewManager(private val activity: Activity) {
     /**
      * Initializes all territory txt,btn and outline and puts them into a List
      */
-    fun initTerritoryViews() : MutableList<Triple<TextView, ImageButton, View>> {
+    fun initTerritoryViews(): MutableList<Triple<TextView, ImageButton, View>> {
         var territoryVisualList: MutableList<Triple<TextView, ImageButton, View>> = mutableListOf()
         territoryVisualList.add(
             Triple(

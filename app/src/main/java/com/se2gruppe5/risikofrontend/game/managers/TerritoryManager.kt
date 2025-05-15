@@ -20,9 +20,7 @@ const val TERRITORY_NO_OWNER_COLOR: Int = 0x999999
 private var toastEnabled: Boolean = true;
 
 class TerritoryManager private constructor(
-    val me: PlayerRecord?,
-    val pointingArrow: IPointingArrowUI,
-    val activity: Activity
+    val me: PlayerRecord?, val pointingArrow: IPointingArrowUI, val activity: Activity
 ) {
     companion object {
 
@@ -149,8 +147,7 @@ class TerritoryManager private constructor(
             if (prevSelTerritory != t && prevSelTerritory != null) {
                 prevSelTerritory?.let {
                     pointingArrow.setCoordinates(
-                        it.getCoordinatesAsFloat(true),
-                        t.getCoordinatesAsFloat(true)
+                        it.getCoordinatesAsFloat(true), t.getCoordinatesAsFloat(true)
                     )
                 }
                 if (phase == Phases.Reinforce) {
@@ -165,8 +162,7 @@ class TerritoryManager private constructor(
                     } else {
                         if (toastEnabled) {
                             ToastUtils.showShortToast(
-                                activity,
-                                "You can only move between your own territories"
+                                activity, "You can only move between your own territories"
                             )
                         }
                     }
@@ -178,15 +174,13 @@ class TerritoryManager private constructor(
                             minTroops = 1,
                             fromTerritory = prevSelTerritory!!,
                             toTerritory = t
-                        )
-                        { troops ->
+                        ) { troops ->
                             attackTerritory(t)
                         }.show()
                     } else {
                         if (toastEnabled) {
                             ToastUtils.showShortToast(
-                                activity,
-                                "You cannot attack your own territories"
+                                activity, "You cannot attack your own territories"
                             )
 
                         }
