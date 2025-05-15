@@ -1,8 +1,5 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
-import android.view.View
-import android.widget.ImageButton
-import android.widget.TextView
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.enums.Phases
@@ -69,8 +66,6 @@ class GameManager private constructor(
     fun getPhase(): Phases {
         return this.currentPhase
     }
-
-    var territoryVisualList: MutableList<Triple<TextView, ImageButton, View>> = mutableListOf()
 
     //todo sprint 3 refactoring possibility: PlayerManager
     fun playerUUIDSanityCheck(players: HashMap<UUID, PlayerRecord>) {

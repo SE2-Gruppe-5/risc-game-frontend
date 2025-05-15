@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     jacoco
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.1.20"
     id("org.sonarqube") version "5.1.0.4882"
 }
 
@@ -71,10 +72,11 @@ afterEvaluate { //afterEvaluate needed, as task is unknown in early stage
 }
 
 dependencies {
+    implementation(libs.kotlinx.coroutines)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.gson)
-    implementation(libs.kotlinxCoroutines)
     implementation(libs.okhttp)
-    implementation(libs.okhttpeventsource)
+    implementation(libs.okhttp.eventsource)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity)
@@ -162,16 +164,21 @@ sonar {
             listOf(
                 "**/com/se2gruppe5/risikofrontend/game/territory/TerritoryVisualAndroid.kt",
                 "**/com/se2gruppe5/risikofrontend/game/territory/PointingArrowAndroid.kt",
-                "**/com/se2gruppe5/risikofrontend/game/dice/DiceVisualAndroid.kt",
+                "**/com/se2gruppe5/risikofrontend/game/territory/LineAndroid.kt",
+                " **/com/se2gruppe5/risikofrontend/game/dice/DiceVisualAndroid.kt",
+                "**/com/se2gruppe5/risikofrontend/devtools/**",
                 "**/com/se2gruppe5/risikofrontend/lobby/**",
                 "**/com/se2gruppe5/risikofrontend/network/**",
                 "**/com/se2gruppe5/risikofrontend/startmenu/**",
                 "**/com/se2gruppe5/risikofrontend/MainActivity.kt",
                 "**/com/se2gruppe5/risikofrontend/game/GameActivity.kt",
+                "**/com/se2gruppe5/risikofrontend/game/board/BoardJsonClasses.kt",
+                "**/com/se2gruppe5/risikofrontend/game/board/BoardLoaderAndroid.kt",
+                "**/com/se2gruppe5/risikofrontend/game/board/BoardVisualGeneratorAndroid.kt",
                 "**/com/se2gruppe5/risikofrontend/Constants.kt",
                 "**/com/se2gruppe5/risikofrontend/game/dialogues/**",
-                "**/com/se2gruppe5/risikofrontend/popup/**",
-                "**/com/se2gruppe5/risikofrontend/enums/**",
+                "**/com/se2gruppe5/risikofrontend/game/popup/**",
+                "**/com/se2gruppe5/risikofrontend/game/enums/**",
                 "**/com/se2gruppe5/risikofrontend/game/managers/GameViewManager.kt",
                 "**/com/se2gruppe5/risikofrontend/game/managers/ToastUtils.kt"
             ).joinToString(",")

@@ -1,6 +1,7 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
 import android.app.Activity
+import com.se2gruppe5.risikofrontend.game.enums.Continent
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
@@ -48,7 +49,7 @@ class TerritoryManagerTestUnitTest {
         manager = TerritoryManager.get()
 
         // Base territory record and visual
-        record = TerritoryRecord(1, 1)
+        record = TerritoryRecord(1, 1, Continent.CPU, Pair(100, 100), Pair(100, 100))
         t = mock {
             on { territoryRecord } doReturn record
             on { getTerritoryId() } doReturn record.id
@@ -76,8 +77,8 @@ class TerritoryManagerTestUnitTest {
 
     @Test
     fun highlightTest() {
-        val record1 = TerritoryRecord(123, 1)
-        val record2 = TerritoryRecord(321, 1)
+        val record1 = TerritoryRecord(123, 1, Continent.CMOS, Pair(100, 100), Pair(100, 100))
+        val record2 = TerritoryRecord(321, 1, Continent.DCON, Pair(100, 100), Pair(100, 100))
 
 
         val territory1 = mock<ITerritoryVisual> {
@@ -160,7 +161,7 @@ class TerritoryManagerTestUnitTest {
 
     @Test(expected = IllegalArgumentException::class)
     fun addTerritoryDuplicateIDTest() {
-        val record2 = TerritoryRecord(1, 5)
+        val record2 = TerritoryRecord(1, 5, Continent.CPU, Pair(100, 100), Pair(100, 100))
         val t2 = mock<ITerritoryVisual> {
             on { territoryRecord } doReturn record2
             on { getTerritoryId() } doReturn record2.id
@@ -186,7 +187,7 @@ class TerritoryManagerTestUnitTest {
     fun assignNewOwnerTest() {
         val newOwner = PlayerRecord(UUID.randomUUID(), "Owner", 0x123456)
         manager.assignOwner(t, newOwner)
-        verify(t).changeColor(newOwner.color)
+        verify(t).changeRibbonColor(newOwner.color)
         assertEquals(newOwner.id, record.owner)
     }
 
@@ -195,7 +196,7 @@ class TerritoryManagerTestUnitTest {
         val initialOwner = PlayerRecord(UUID.randomUUID(), "Owner", 0x123456)
         manager.assignOwner(t, initialOwner)
         manager.assignOwner(t, null)
-        verify(t).changeColor(TERRITORY_NO_OWNER_COLOR)
+        verify(t).changeRibbonColor(TERRITORY_NO_OWNER_COLOR)
         assertNull(record.owner)
     }
 
@@ -209,7 +210,7 @@ class TerritoryManagerTestUnitTest {
         manager.updateTerritory(record)
         verify(t).changeStat(5)
         verify(t).changeOwner(newOwner.id)
-        verify(t).changeColor(newOwner.color)
+        verify(t).changeRibbonColor(newOwner.color)
     }
 
     @Test
@@ -221,13 +222,13 @@ class TerritoryManagerTestUnitTest {
         manager.updateTerritory(record)
         verify(t).changeStat(3)
         verify(t).changeOwner(null)
-        verify(t).changeColor(TERRITORY_NO_OWNER_COLOR)
+        verify(t).changeRibbonColor(TERRITORY_NO_OWNER_COLOR)
     }
 
     @Test
     fun updateCallsTerrManagerUpdateTest() {
         manager.addTerritory(t)
-        val record2 = TerritoryRecord(1, 2).apply { owner = null }
+        val record2 = TerritoryRecord(1, 2, Continent.MMC, Pair(100, 100), Pair(100, 100)).apply { owner = null }
         manager.updateTerritories(listOf(record, record2))
         verify(t, times(2)).changeStat(any())
     }

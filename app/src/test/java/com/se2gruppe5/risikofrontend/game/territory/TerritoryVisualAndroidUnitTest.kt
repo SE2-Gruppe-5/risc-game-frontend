@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import com.se2gruppe5.risikofrontend.game.enums.Continent
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertSame
@@ -16,10 +17,11 @@ import org.mockito.Mock
 import org.mockito.MockedStatic
 import org.mockito.Mockito
 import org.mockito.Mockito.doAnswer
-import org.mockito.Mockito.doThrow
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -29,20 +31,22 @@ class TerritoryVisualAndroidUnitTest(
     private val colPTestData: Int,
     private val posAndSizePTestData: Pair<Pair<Int, Int>, Pair<Int, Int>>
 ) {
-    @Mock
-    lateinit var recordMock: TerritoryRecord
+    private lateinit var recordMock: TerritoryRecord
 
     @Mock
-    lateinit var bgColorRibbonMock: TextView
+    private lateinit var bgColorRibbonMock: TextView
 
     @Mock
-    lateinit var textContentMock: TextView
+    private lateinit var textContentMock: TextView
 
     @Mock
-    lateinit var imgBTNMock: ImageButton
+    private lateinit var imgBTNMock: ImageButton
 
     @Mock
-    lateinit var outlineMock: View
+    private lateinit var bgMock: View
+
+    @Mock
+    private lateinit var outlineMock: View
 
     private lateinit var colorStaticMock: MockedStatic<Color>
 
@@ -61,12 +65,17 @@ class TerritoryVisualAndroidUnitTest(
 
         //colorStaticMock.`when`<Int> { Color.argb(any<Int>(), any<Int>(), any<Int>(), any<Int>()) }.thenReturn(0)
 
+        recordMock = mock{
+            on { continent } doReturn Continent.CPU
+        }
+
         //Initialize class itself
         territoryVisualAndroid = TerritoryVisualAndroid(
             recordMock,
             bgColorRibbonMock,
             textContentMock,
             imgBTNMock,
+            bgMock,
             outlineMock
         )
 
@@ -124,9 +133,15 @@ class TerritoryVisualAndroidUnitTest(
 
     //Test if changeColor changes color
     @Test
-    fun changeColorTest() {
-        territoryVisualAndroid.changeColor(colPTestData)
+    fun changeRibbonColorTest() {
+        territoryVisualAndroid.changeRibbonColor(colPTestData)
         verify(bgColorRibbonMock).setBackgroundColor(colPTestData)
+    }
+
+    @Test
+    fun changeBgColorTest() {
+        territoryVisualAndroid.changeBgColor(colPTestData)
+        verify(imgBTNMock).setBackgroundColor(colPTestData)
     }
 
     @Test

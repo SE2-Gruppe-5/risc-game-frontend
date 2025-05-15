@@ -5,76 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/territoryA"
-        android:layout_width="124dp"
-        android:layout_height="105dp"
-        android:layout_marginStart="24dp"
-        android:contentDescription="Territory A"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <View
-            android:id="@+id/territoryAoutline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#FFFFFF00"
-            android:clickable="false" />
-
-        <ImageButton
-            android:id="@+id/territoryAbtn"
+        <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="Press to select Territory"
-            app:srcCompat="@android:drawable/btn_star" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/territoryAtext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#504949"
-            android:text="Territory A"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF" />
-    </FrameLayout>
+            <FrameLayout
+                android:id="@+id/gameBoard"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/solid"
+                android:backgroundTint="#ffffff" >
 
-    <FrameLayout
-        android:id="@+id/territoryB"
-        android:layout_width="124dp"
-        android:layout_height="105dp"
-        android:layout_marginTop="167dp"
-        android:layout_marginBottom="15dp"
-        android:contentDescription="Territory B"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.81"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/diceText">
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Game Board"
+                    android:alpha="0"/>
 
-        <View
-            android:id="@+id/territoryBoutline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#FFFFFF00"
-            android:clickable="false" />
+            </FrameLayout>
 
-        <ImageButton
-            android:id="@+id/territoryBbtn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="Press to select Territory"
-            app:srcCompat="@android:drawable/btn_star" />
-
-        <TextView
-            android:id="@+id/territoryBtext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#646883"
-            android:text="Territory B"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF" />
-    </FrameLayout>
+        </HorizontalScrollView>
+    </ScrollView>
 
     <ImageButton
         android:id="@+id/diceButton"
@@ -112,7 +68,7 @@
         android:backgroundTint="#506850"
         android:contentDescription="press to attack"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/territoryB"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/arrow_up_float" />
 

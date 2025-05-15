@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="124dp"
+    android:layout_height="105dp"
+    android:contentDescription="Territory"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent">
+
+    <View
+        android:id="@+id/territoryBg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#FFCDCDCD"
+        android:clickable="false" />
+
+    <View
+        android:id="@+id/territoryOutline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF00"
+        android:clickable="false" />
+
+    <ImageButton
+        android:id="@+id/territoryBtn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:background="#FFCDCDCD"
+        android:contentDescription="Press to select Territory"
+        app:srcCompat="@android:drawable/btn_star" />
+
+    <TextView
+        android:id="@+id/territoryText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#504949"
+        android:text="0"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF" />
+</FrameLayout>

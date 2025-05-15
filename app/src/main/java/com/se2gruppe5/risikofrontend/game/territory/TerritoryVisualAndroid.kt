@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.graphics.toColorInt
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import java.util.UUID
 
@@ -16,11 +17,13 @@ class TerritoryVisualAndroid(
     val bgColorRibbon: TextView,
     val textContent: TextView,
     val imgBTN: ImageButton,
+    val bg: View,
     val outline: View,
 ) : ITerritoryVisual {
 
     init {
         setHighlightSelected(false)
+        changeBgColor(territoryRecord.continent.color.toColorInt())
     }
     val backgroundHighlightColor: Int = Color.argb(255, 255, 255, 0)
     val backgroundNoHighlightColor: Int = Color.argb(0, 255, 255, 0)
@@ -33,8 +36,13 @@ class TerritoryVisualAndroid(
         }
     }
 
-    override fun changeColor(color: Int) {
+    override fun changeRibbonColor(color: Int) {
         bgColorRibbon.setBackgroundColor(color)
+    }
+
+    override fun changeBgColor(color: Int) {
+        imgBTN.setBackgroundColor(color);
+        bg.setBackgroundColor(color);
     }
 
     override fun changeStat(stat: Int) {
