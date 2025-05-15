@@ -1,24 +1,8 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
-import android.app.Activity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.ImageButton
-import android.widget.TextView
-import androidx.core.graphics.toColorInt
-import com.se2gruppe5.risikofrontend.R
-import com.se2gruppe5.risikofrontend.game.board.BoardLoaderAndroid
-import com.se2gruppe5.risikofrontend.game.cards.CardHandler
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.enums.Phases
-import com.se2gruppe5.risikofrontend.game.territory.GameViewManager
-import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
-import com.se2gruppe5.risikofrontend.game.territory.LineAndroid
-import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
-import com.se2gruppe5.risikofrontend.game.territory.TerritoryVisualAndroid
 import com.se2gruppe5.risikofrontend.network.INetworkClient
 import java.util.UUID
 
@@ -82,8 +66,6 @@ class GameManager private constructor(
     fun getPhase(): Phases {
         return this.currentPhase
     }
-
-    var territoryVisualList: MutableList<Triple<TextView, ImageButton, View>> = mutableListOf()
 
     //todo sprint 3 refactoring possibility: PlayerManager
     fun playerUUIDSanityCheck(players: HashMap<UUID, PlayerRecord>) {

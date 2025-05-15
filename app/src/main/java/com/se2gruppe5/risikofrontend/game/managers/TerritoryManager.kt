@@ -83,9 +83,9 @@ class TerritoryManager private constructor(
                 i.changeStat(t.stat)
                 i.changeOwner(t.owner)
                 if (t.owner != null) {
-                    i.changeColor(GameManager.get().getPlayer(t.owner!!)?.color!!)
+                    i.changeRibbonColor(GameManager.get().getPlayer(t.owner!!)?.color!!)
                 } else {
-                    i.changeColor(TERRITORY_NO_OWNER_COLOR)
+                    i.changeRibbonColor(TERRITORY_NO_OWNER_COLOR)
                 }
                 break
             }
@@ -129,9 +129,9 @@ class TerritoryManager private constructor(
     fun assignOwner(t: ITerritoryVisual, playerRecord: PlayerRecord?) {
         territoriesSanityCheck(t)
         if (playerRecord != null) {
-            t.changeColor(playerRecord.color)
+            t.changeRibbonColor(playerRecord.color)
         } else {
-            t.changeColor(TERRITORY_NO_OWNER_COLOR)
+            t.changeRibbonColor(TERRITORY_NO_OWNER_COLOR)
         }
         t.territoryRecord.owner = playerRecord?.id
     }

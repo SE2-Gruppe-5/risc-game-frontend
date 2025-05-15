@@ -3,6 +3,7 @@ package com.se2gruppe5.risikofrontend.game.managers
 import android.app.Activity
 import android.graphics.Color
 import android.widget.TextView
+import com.se2gruppe5.risikofrontend.game.board.Continent
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.enums.Phases
@@ -178,7 +179,10 @@ class GameManagerUnitTest {
 
     @Test
     fun receiveTerritoryListUpdateDelegatesToTerritoryManager() {
-        val dummyTerritories = listOf(TerritoryRecord(1, 2), TerritoryRecord(3, 4))
+        val dummyTerritories = listOf(
+            TerritoryRecord(1, 2, Continent.CPU, Pair(100, 100), Pair(100, 100)),
+            TerritoryRecord(3, 4, Continent.RAM, Pair(100, 100), Pair(100, 100))
+        )
         gameManager.receiveTerritoryListUpdate(dummyTerritories)
         verify(territoryManagerMock).updateTerritories(dummyTerritories)
     }

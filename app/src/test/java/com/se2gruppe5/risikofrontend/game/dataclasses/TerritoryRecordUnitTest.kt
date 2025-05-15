@@ -10,7 +10,7 @@ class TerritoryRecordUnitTest {
     @Test
     fun inst() {
         val t = TerritoryRecord(1,1, Continent.POWER_SUPPLY, Pair(100, 100), Pair(100, 100))
-        t.owner = PlayerRecord(UUID.randomUUID(), "Mustermann", 0xFFFFFF)
+        t.owner = UUID.randomUUID()
         //Possibly needed in the future:
         //val p = TerritoryRecord(1,1)
         //assertNotNull(p)

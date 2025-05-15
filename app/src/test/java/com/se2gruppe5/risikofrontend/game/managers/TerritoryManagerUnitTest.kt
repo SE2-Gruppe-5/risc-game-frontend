@@ -77,8 +77,8 @@ class TerritoryManagerTestUnitTest {
 
     @Test
     fun highlightTest() {
-        val record1 = TerritoryRecord(123, 1)
-        val record2 = TerritoryRecord(321, 1)
+        val record1 = TerritoryRecord(123, 1, Continent.CMOS, Pair(100, 100), Pair(100, 100))
+        val record2 = TerritoryRecord(321, 1, Continent.DCON, Pair(100, 100), Pair(100, 100))
 
 
         val territory1 = mock<ITerritoryVisual> {
@@ -187,7 +187,7 @@ class TerritoryManagerTestUnitTest {
     fun assignNewOwnerTest() {
         val newOwner = PlayerRecord(UUID.randomUUID(), "Owner", 0x123456)
         manager.assignOwner(t, newOwner)
-        verify(t).changeColor(newOwner.color)
+        verify(t).changeRibbonColor(newOwner.color)
         assertEquals(newOwner.id, record.owner)
     }
 
@@ -196,7 +196,7 @@ class TerritoryManagerTestUnitTest {
         val initialOwner = PlayerRecord(UUID.randomUUID(), "Owner", 0x123456)
         manager.assignOwner(t, initialOwner)
         manager.assignOwner(t, null)
-        verify(t).changeColor(TERRITORY_NO_OWNER_COLOR)
+        verify(t).changeRibbonColor(TERRITORY_NO_OWNER_COLOR)
         assertNull(record.owner)
     }
 
@@ -210,7 +210,7 @@ class TerritoryManagerTestUnitTest {
         manager.updateTerritory(record)
         verify(t).changeStat(5)
         verify(t).changeOwner(newOwner.id)
-        verify(t).changeColor(newOwner.color)
+        verify(t).changeRibbonColor(newOwner.color)
     }
 
     @Test
@@ -222,13 +222,13 @@ class TerritoryManagerTestUnitTest {
         manager.updateTerritory(record)
         verify(t).changeStat(3)
         verify(t).changeOwner(null)
-        verify(t).changeColor(TERRITORY_NO_OWNER_COLOR)
+        verify(t).changeRibbonColor(TERRITORY_NO_OWNER_COLOR)
     }
 
     @Test
     fun updateCallsTerrManagerUpdateTest() {
         manager.addTerritory(t)
-        val record2 = TerritoryRecord(1, 2).apply { owner = null }
+        val record2 = TerritoryRecord(1, 2, Continent.MMC, Pair(100, 100), Pair(100, 100)).apply { owner = null }
         manager.updateTerritories(listOf(record, record2))
         verify(t, times(2)).changeStat(any())
     }
