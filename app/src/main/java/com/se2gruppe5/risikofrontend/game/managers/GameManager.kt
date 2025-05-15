@@ -73,7 +73,7 @@ class GameManager private constructor(
     var territoryVisualList: MutableList<Triple<TextView, ImageButton, View>> = mutableListOf()
 
     //todo sprint 3 refactoring possibility: PlayerManager
-    private fun playerUUIDSanityCheck(players: HashMap<UUID, PlayerRecord>) {
+    fun playerUUIDSanityCheck(players: HashMap<UUID, PlayerRecord>) {
         var c: Int = 0
         for (player in players) {
             if (player.value.id != player.key) {

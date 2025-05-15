@@ -117,6 +117,46 @@ class GameManagerUnitTest {
     }
 
     @Test
+    fun playerMapSanityCheck() {
+        val validMap = HashMap<UUID, PlayerRecord>().apply {
+            me.isCurrentTurn = true
+            put(me.id, me)
+            put(other.id, other)
+        }
+        gameManager.playerUUIDSanityCheck(validMap)
+
+        val invalidMap = HashMap<UUID, PlayerRecord>().apply {
+            me.isCurrentTurn = true
+            put(me.id, me)
+            put(other.id, other)
+            put(UUID.randomUUID(), PlayerRecord(UUID.randomUUID(), "Invalid", Color.GREEN))
+        }
+        assertThrows(IllegalStateException::class.java) {
+            gameManager.playerUUIDSanityCheck(invalidMap)
+        }
+
+        val manyTurnsMap = HashMap<UUID, PlayerRecord>().apply {
+            me.isCurrentTurn = true
+            other.isCurrentTurn = true
+            put(me.id, me)
+            put(other.id, other)
+        }
+        assertThrows(IllegalStateException::class.java) {
+            gameManager.playerUUIDSanityCheck(manyTurnsMap)
+        }
+
+        val noTurnsMap = HashMap<UUID, PlayerRecord>().apply {
+            me.isCurrentTurn = false
+            other.isCurrentTurn = false
+            put(me.id, me)
+            put(other.id, other)
+        }
+        assertThrows(IllegalStateException::class.java) {
+            gameManager.playerUUIDSanityCheck(noTurnsMap)
+        }
+    }
+
+    @Test
     fun receivePhaseUpdateUpdatesCurrentPhase() {
         gameManager.receivePhaseUpdate(Phases.Attack)
         assertEquals(Phases.Attack, gameManager.getPhase())
