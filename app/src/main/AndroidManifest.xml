@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <!-- Remove networksecurity Config setting, only for localhost testing-->
     <application
         android:usesCleartextTraffic="false"
         android:allowBackup="true"

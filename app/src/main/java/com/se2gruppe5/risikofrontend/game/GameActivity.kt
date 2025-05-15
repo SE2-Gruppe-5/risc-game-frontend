@@ -30,12 +30,12 @@ import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePlayersMessage
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.managers.GameViewManager
 import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
+import java.io.Serializable
 
 
 class GameActivity : AppCompatActivity() {
@@ -65,15 +65,16 @@ class GameActivity : AppCompatActivity() {
     var turnIndicators: MutableList<TextView> = mutableListOf()
     var gameManager: GameManager? = null
     var gameID: UUID? = null
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         enableEdgeToEdge()
         setContentView(R.layout.game)
 
-        val gameStart = intent.getSerializableExtra("GAME_DATA", GameStartMessage::class.java)!!
-        val me = intent.getSerializableExtra("LOCAL_PLAYER", PlayerRecord::class.java)!!
+        val gameStart = getSerializableExtraCompat(intent, "GAME_DATA", GameStartMessage::class.java)!!
+        val me = getSerializableExtraCompat(intent, "LOCAL_PLAYER", PlayerRecord::class.java)!!
 
         gameID = gameStart.gameId
 
@@ -202,6 +203,18 @@ class GameActivity : AppCompatActivity() {
 
         }
 
+    }
+
+    /**
+    Workaround for using getSerializableExtra on all Android versions
+    **/
+    private fun <T: Serializable> getSerializableExtraCompat(intent: Intent, varName: String, retClass: Class<T>): T? {
+        if (Build.VERSION.SDK_INT>=33) {
+            return intent.getSerializableExtra(varName, retClass)
+        }
+
+        @Suppress("DEPRECATION", "UNCHECKED_CAST")
+        return intent.getSerializableExtra(varName) as? T
     }
 
 
