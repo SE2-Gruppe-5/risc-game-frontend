@@ -10,6 +10,7 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
@@ -32,6 +33,7 @@ class TerritoryManagerTestUnitTest {
     private lateinit var record: TerritoryRecord
     private lateinit var t: ITerritoryVisual
     private lateinit var activity: Activity
+
 
     @Before
     fun setUp() {
@@ -59,6 +61,51 @@ class TerritoryManagerTestUnitTest {
         playerList.put(newOwner.id,newOwner)
         GameManager.reset()
         GameManager.init(mePlayerRecord,UUID.randomUUID(),manager, mockClient, playerList)
+        TerritoryManager.disableToast()
+    }
+
+    @Test
+    fun clickSubscriptionTest() {
+        manager.addTerritory(t)
+        val captor = argumentCaptor<(ITerritoryVisual) -> Unit>()
+        verify(t).clickSubscription(captor.capture())
+        val clickDoer = captor.firstValue
+        clickDoer(t)
+        verify(t).setHighlightSelected(true)
+    }
+
+    @Test
+    fun highlightTest() {
+        val record1 = TerritoryRecord(123, 1)
+        val record2 = TerritoryRecord(321, 1)
+
+
+        val territory1 = mock<ITerritoryVisual> {
+            on { territoryRecord } doReturn record1
+            on { getTerritoryId() } doReturn record1.id
+        }
+
+        val territory2 = mock<ITerritoryVisual> {
+            on { territoryRecord } doReturn record2
+            on { getTerritoryId() } doReturn record2.id
+        }
+
+        manager.addTerritory(territory1)
+        manager.addTerritory(territory2)
+
+        val cap1 = argumentCaptor<(ITerritoryVisual) -> Unit>()
+        verify(territory1).clickSubscription(cap1.capture())
+        val handler1 = cap1.firstValue
+
+        val cap2 = argumentCaptor<(ITerritoryVisual) -> Unit>()
+        verify(territory2).clickSubscription(cap2.capture())
+        val handler2 = cap2.firstValue
+
+        handler1(territory1)
+        handler2(territory2)
+
+        verify(territory1).setHighlightSelected(false)
+        verify(territory2).setHighlightSelected(true)
     }
 
     // TerritoryManager.get() should throw if not initialized
@@ -184,4 +231,7 @@ class TerritoryManagerTestUnitTest {
         manager.updateTerritories(listOf(record, record2))
         verify(t, times(2)).changeStat(any())
     }
+
+
+
 }
