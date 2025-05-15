@@ -4,7 +4,7 @@ import android.graphics.Color
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import com.se2gruppe5.risikofrontend.game.board.Continent
+import com.se2gruppe5.risikofrontend.game.enums.Continent
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertSame

@@ -1,6 +1,7 @@
 package com.se2gruppe5.risikofrontend.game.board
 
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.enums.Continent
 import org.junit.Test
 import org.junit.Assert.*
 import org.junit.Before

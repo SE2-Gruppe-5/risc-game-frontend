@@ -1,6 +1,6 @@
 package com.se2gruppe5.risikofrontend.game.dataclasses
 
-import com.se2gruppe5.risikofrontend.game.board.Continent
+import com.se2gruppe5.risikofrontend.game.enums.Continent
 import java.util.UUID
 
 data class TerritoryRecord (

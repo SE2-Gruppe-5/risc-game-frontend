@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikofrontend.game.board
 
+import com.se2gruppe5.risikofrontend.game.enums.Continent
 import kotlinx.serialization.Serializable
 
 @Serializable

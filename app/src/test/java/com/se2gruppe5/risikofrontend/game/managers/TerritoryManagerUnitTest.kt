@@ -1,7 +1,7 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
 import android.app.Activity
-import com.se2gruppe5.risikofrontend.game.board.Continent
+import com.se2gruppe5.risikofrontend.game.enums.Continent
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
