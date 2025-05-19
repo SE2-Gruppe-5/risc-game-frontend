@@ -31,6 +31,7 @@ import kotlinx.coroutines.runBlocking
 import java.util.UUID
 import android.util.Log
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dialogues.DialogueHandler
 import com.se2gruppe5.risikofrontend.game.managers.GameViewManager
 import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
@@ -78,7 +79,7 @@ class GameActivity : AppCompatActivity() {
 
         gameID = gameStart.gameId
 
-        TerritoryManager.init(me, PointingArrowAndroid(this), this)
+        TerritoryManager.init(me, PointingArrowAndroid(this), this, DialogueHandler(this))
         GameManager.init(me, gameID!!, TerritoryManager.get(), client, gameStart.players)
 
         //Placeholder

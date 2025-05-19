@@ -66,7 +66,12 @@ class GameManager private constructor(
     fun getPhase(): Phases {
         return this.currentPhase
     }
-
+    /**
+     * Unit Test only, do not call
+     */
+    fun setPhase(p : Phases){
+        this.currentPhase = p
+    }
     //todo sprint 3 refactoring possibility: PlayerManager
     fun playerUUIDSanityCheck(players: HashMap<UUID, PlayerRecord>) {
         var c: Int = 0
