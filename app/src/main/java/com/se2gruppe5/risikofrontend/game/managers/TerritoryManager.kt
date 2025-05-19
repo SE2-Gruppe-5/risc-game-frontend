@@ -153,13 +153,7 @@ class TerritoryManager private constructor(
                 }
                 if (phase == Phases.Reinforce) {
                     if (isMe(prevSelTerritory!!.territoryRecord.owner) && isMe(t.territoryRecord.owner)) {
-                        MoveTroopDialog(
-                            context = activity,
-                            maxTroops = prevSelTerritory!!.territoryRecord.stat - 1,
-                            minTroops = 2,
-                            fromTerritory = prevSelTerritory!!,
-                            toTerritory = t
-                        ).show()
+                        useReinforceDialog(prevSelTerritory!!, t)
                     } else {
                         if (toastEnabled) {
                             ToastUtils.showShortToast(
@@ -169,15 +163,7 @@ class TerritoryManager private constructor(
                     }
                 } else if (phase == Phases.Attack) {
                     if (isMe(prevSelTerritory!!.territoryRecord.owner) && !isMe(t.territoryRecord.owner)) {
-                        AttackTroopDialog(
-                            context = activity,
-                            maxTroops = prevSelTerritory!!.territoryRecord.stat - 1,
-                            minTroops = 1,
-                            fromTerritory = prevSelTerritory!!,
-                            toTerritory = t
-                        ) { troops ->
-                            attackTerritory(t)
-                        }.show()
+                        useAttackDialog(prevSelTerritory!!, t)
                     } else {
                         if (toastEnabled) {
                             ToastUtils.showShortToast(
@@ -193,8 +179,30 @@ class TerritoryManager private constructor(
             updateSelected(t)
             changeTerritoryRequest(t.territoryRecord)
         }
+
+
+    }
+    private fun useReinforceDialog(from: ITerritoryVisual, to: ITerritoryVisual){
+        MoveTroopDialog(
+            context = activity,
+            maxTroops = from.territoryRecord.stat - 1,
+            minTroops = 2,
+            fromTerritory = from,
+            toTerritory = to
+        ).show()
     }
 
+    private fun useAttackDialog(from: ITerritoryVisual, to: ITerritoryVisual){
+        AttackTroopDialog(
+            context = activity,
+            maxTroops = from.territoryRecord.stat - 1,
+            minTroops = 1,
+            fromTerritory = from,
+            toTerritory = to
+        ) { troops ->
+            attackTerritory(to)
+        }.show()
+    }
 
     private fun attackTerritory(t: ITerritoryVisual) {
         me!!.capturedTerritory = true
