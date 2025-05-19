@@ -53,6 +53,12 @@ class TerritoryManager private constructor(
     private val territoryList: MutableList<ITerritoryVisual> = mutableListOf()
     private var prevSelTerritory: ITerritoryVisual? = null
 
+    /**
+     * Unit Test only, do not call
+     */
+    fun setPrevSelTerritory(t: ITerritoryVisual){
+        prevSelTerritory = t
+    }
     private fun territoriesSanityCheck(t: ITerritoryVisual) {
         //todo
         return
@@ -141,7 +147,7 @@ class TerritoryManager private constructor(
         t.clickSubscription(::hasBeenClicked) //Observer design pattern
     }
 
-    private fun hasBeenClicked(t: ITerritoryVisual) {
+     fun hasBeenClicked(t: ITerritoryVisual) {
         val phase = GameManager.get().getCurrentPhase()
         if (myTurn()) {
             if (prevSelTerritory != t && prevSelTerritory != null
@@ -182,7 +188,7 @@ class TerritoryManager private constructor(
 
 
     }
-    private fun useReinforceDialog(from: ITerritoryVisual, to: ITerritoryVisual){
+    fun useReinforceDialog(from: ITerritoryVisual, to: ITerritoryVisual){
         MoveTroopDialog(
             context = activity,
             maxTroops = from.territoryRecord.stat - 1,
@@ -192,7 +198,7 @@ class TerritoryManager private constructor(
         ).show()
     }
 
-    private fun useAttackDialog(from: ITerritoryVisual, to: ITerritoryVisual){
+    fun useAttackDialog(from: ITerritoryVisual, to: ITerritoryVisual){
         AttackTroopDialog(
             context = activity,
             maxTroops = from.territoryRecord.stat - 1,

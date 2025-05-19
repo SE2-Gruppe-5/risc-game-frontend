@@ -4,18 +4,23 @@ import android.app.Activity
 import com.se2gruppe5.risikofrontend.game.enums.Continent
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.network.INetworkClient
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.times
+import org.mockito.kotlin.whenever
 import java.util.UUID
 /*
 Note:
@@ -32,13 +37,17 @@ class TerritoryManagerTestUnitTest {
     private lateinit var newOwner: PlayerRecord
     private lateinit var manager: TerritoryManager
     private lateinit var record: TerritoryRecord
-    private lateinit var t: ITerritoryVisual
+    private lateinit var record2: TerritoryRecord
+    private lateinit var t1: ITerritoryVisual
+    private lateinit var t2: ITerritoryVisual
     private lateinit var activity: Activity
+    private lateinit var mockClient: INetworkClient
 
+    private lateinit var mockScope: AutoCloseable
 
     @Before
     fun setUp() {
-
+        mockScope = Mockito.mockStatic(TerritoryManager::class.java)
         pointingArrow = mock()
         mePlayerRecord = PlayerRecord(UUID.randomUUID(), "TestPlayer", 0xFF00FF)
         activity = mock()
@@ -50,12 +59,17 @@ class TerritoryManagerTestUnitTest {
 
         // Base territory record and visual
         record = TerritoryRecord(1, 1, Continent.CPU, Pair(100, 100), Pair(100, 100))
-        t = mock {
+        t1 = mock {
             on { territoryRecord } doReturn record
             on { getTerritoryId() } doReturn record.id
         }
+        record2 = TerritoryRecord(1, 1, Continent.CPU, Pair(100, 100), Pair(100, 100))
+        t2 = mock {
+            on { territoryRecord } doReturn record2
+            on { getTerritoryId() } doReturn record2.id
+        }
 
-        val mockClient: INetworkClient = mock()
+        mockClient = mock()
         val playerList: HashMap<UUID, PlayerRecord> = HashMap()
         newOwner = PlayerRecord(UUID.randomUUID(), "NewTest", 0x123456)
         playerList.put(mePlayerRecord.id,mePlayerRecord)
@@ -67,12 +81,12 @@ class TerritoryManagerTestUnitTest {
 
     @Test
     fun clickSubscriptionTest() {
-        manager.addTerritory(t)
+        manager.addTerritory(t1)
         val captor = argumentCaptor<(ITerritoryVisual) -> Unit>()
-        verify(t).clickSubscription(captor.capture())
+        verify(t1).clickSubscription(captor.capture())
         val clickDoer = captor.firstValue
-        clickDoer(t)
-        verify(t).setHighlightSelected(true)
+        clickDoer(t1)
+        verify(t1).setHighlightSelected(true)
     }
 
     @Test
@@ -139,24 +153,24 @@ class TerritoryManagerTestUnitTest {
 
     @Test
     fun addTerritory() {
-        manager.addTerritory(t)
+        manager.addTerritory(t1)
         // Verify subscription lambda added
-        verify(t).clickSubscription(any())
+        verify(t1).clickSubscription(any())
     }
 
     @Test
     fun addAndRemoveValidTerritoryTest() {
-        manager.addTerritory(t)
-        assertTrue(manager.containsTerritory(t))
+        manager.addTerritory(t1)
+        assertTrue(manager.containsTerritory(t1))
 
-        manager.removeTerritory(t)
-        assertFalse(manager.containsTerritory(t))
+        manager.removeTerritory(t1)
+        assertFalse(manager.containsTerritory(t1))
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun addTerritoryDuplicateRefTest() {
-        manager.addTerritory(t)
-        manager.addTerritory(t)
+        manager.addTerritory(t1)
+        manager.addTerritory(t1)
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -166,73 +180,88 @@ class TerritoryManagerTestUnitTest {
             on { territoryRecord } doReturn record2
             on { getTerritoryId() } doReturn record2.id
         }
-        manager.addTerritory(t)
+        manager.addTerritory(t1)
         manager.addTerritory(t2)
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun removeNotAddedTerritoryTest() {
-        manager.removeTerritory(t)
+        manager.removeTerritory(t1)
     }
 
     @Test
     fun reAddTerritoryTest() {
-        manager.addTerritory(t)
-        manager.removeTerritory(t)
-        manager.addTerritory(t)
-        assertTrue(manager.containsTerritory(t))
+        manager.addTerritory(t1)
+        manager.removeTerritory(t1)
+        manager.addTerritory(t1)
+        assertTrue(manager.containsTerritory(t1))
     }
 
     @Test
     fun assignNewOwnerTest() {
         val newOwner = PlayerRecord(UUID.randomUUID(), "Owner", 0x123456)
-        manager.assignOwner(t, newOwner)
-        verify(t).changeRibbonColor(newOwner.color)
+        manager.assignOwner(t1, newOwner)
+        verify(t1).changeRibbonColor(newOwner.color)
         assertEquals(newOwner.id, record.owner)
     }
 
     @Test
     fun removeAssignedOwnerTest() {
         val initialOwner = PlayerRecord(UUID.randomUUID(), "Owner", 0x123456)
-        manager.assignOwner(t, initialOwner)
-        manager.assignOwner(t, null)
-        verify(t).changeRibbonColor(TERRITORY_NO_OWNER_COLOR)
+        manager.assignOwner(t1, initialOwner)
+        manager.assignOwner(t1, null)
+        verify(t1).changeRibbonColor(TERRITORY_NO_OWNER_COLOR)
         assertNull(record.owner)
     }
 
     @Test
     fun updateTerritoryTest() {
-        manager.addTerritory(t)
+        manager.addTerritory(t1)
         record.stat = 5
         record.owner = newOwner.id
 
-        assertNotNull(GameManager.get().getPlayer(t.territoryRecord.owner!!))
+        assertNotNull(GameManager.get().getPlayer(t1.territoryRecord.owner!!))
         manager.updateTerritory(record)
-        verify(t).changeStat(5)
-        verify(t).changeOwner(newOwner.id)
-        verify(t).changeRibbonColor(newOwner.color)
+        verify(t1).changeStat(5)
+        verify(t1).changeOwner(newOwner.id)
+        verify(t1).changeRibbonColor(newOwner.color)
     }
 
     @Test
     fun updateTerritoryNoOwnerTest() {
-        manager.addTerritory(t)
+        manager.addTerritory(t1)
         record.stat = 3
         record.owner = null
 
         manager.updateTerritory(record)
-        verify(t).changeStat(3)
-        verify(t).changeOwner(null)
-        verify(t).changeRibbonColor(TERRITORY_NO_OWNER_COLOR)
+        verify(t1).changeStat(3)
+        verify(t1).changeOwner(null)
+        verify(t1).changeRibbonColor(TERRITORY_NO_OWNER_COLOR)
     }
 
     @Test
     fun updateCallsTerrManagerUpdateTest() {
-        manager.addTerritory(t)
+        manager.addTerritory(t1)
         val record2 = TerritoryRecord(1, 2, Continent.MMC, Pair(100, 100), Pair(100, 100)).apply { owner = null }
         manager.updateTerritories(listOf(record, record2))
-        verify(t, times(2)).changeStat(any())
+        verify(t1, times(2)).changeStat(any())
     }
 
-
-
+    @Test
+    fun testNoTerritoryUpdateIfNotMyTurn(){
+        whenever(manager.useReinforceDialog(any(), any())).thenAnswer {
+            t2.changeStat(88) // Simulate stat update when called
+            Unit
+        }
+        assertTrue(GameManager.get().getPhase() == Phases.Reinforce)
+        val playerList: HashMap<UUID, PlayerRecord> = HashMap()
+        newOwner.isCurrentTurn = true
+        playerList.put(mePlayerRecord.id,mePlayerRecord)
+        playerList.put(newOwner.id,newOwner)
+        GameManager.get().receivePlayerListUpdate(playerList)
+        manager.setPrevSelTerritory(t1)
+        manager.hasBeenClicked(t2)
+        assert(t2.territoryRecord.stat == 0) { "t2.territoryRecord.stat should be 0, but was ${t2.territoryRecord.stat}" }
+        verify(manager, atLeastOnce()).useReinforceDialog(any(), any())
+    }
 }
