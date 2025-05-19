@@ -4,6 +4,7 @@ import android.app.Activity
 import com.se2gruppe5.risikofrontend.game.enums.Continent
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dialogues.DialogueHandler
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
@@ -15,7 +16,9 @@ import org.mockito.Mockito
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeastOnce
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -37,24 +40,24 @@ class TerritoryManagerTestUnitTest {
     private lateinit var newOwner: PlayerRecord
     private lateinit var manager: TerritoryManager
     private lateinit var record: TerritoryRecord
-    private lateinit var record2: TerritoryRecord
+    private lateinit var record3: TerritoryRecord
     private lateinit var t1: ITerritoryVisual
     private lateinit var t2: ITerritoryVisual
     private lateinit var activity: Activity
     private lateinit var mockClient: INetworkClient
 
-    private lateinit var mockScope: AutoCloseable
+    private lateinit var dialogueHandler: DialogueHandler
 
     @Before
     fun setUp() {
-        mockScope = Mockito.mockStatic(TerritoryManager::class.java)
         pointingArrow = mock()
         mePlayerRecord = PlayerRecord(UUID.randomUUID(), "TestPlayer", 0xFF00FF)
         activity = mock()
+        dialogueHandler = mock()
 
         // Reset and init singleton
         TerritoryManager.reset()
-        TerritoryManager.init(mePlayerRecord, pointingArrow, activity)
+        TerritoryManager.init(mePlayerRecord, pointingArrow, activity, dialogueHandler)
         manager = TerritoryManager.get()
 
         // Base territory record and visual
@@ -62,11 +65,15 @@ class TerritoryManagerTestUnitTest {
         t1 = mock {
             on { territoryRecord } doReturn record
             on { getTerritoryId() } doReturn record.id
+            on { changeStat(any()) } doAnswer  { record.stat = it.getArgument(0) }
+            on { changeOwner(any())} doAnswer {record.owner = it.getArgument(0)}
         }
-        record2 = TerritoryRecord(1, 1, Continent.CPU, Pair(100, 100), Pair(100, 100))
+        record3 = TerritoryRecord(1, 1, Continent.CPU, Pair(100, 100), Pair(100, 100))
         t2 = mock {
-            on { territoryRecord } doReturn record2
-            on { getTerritoryId() } doReturn record2.id
+            on { territoryRecord } doReturn record3
+            on { getTerritoryId() } doReturn record3.id
+            on { changeStat(any()) } doAnswer  { record3.stat = it.getArgument(0) }
+            on { changeOwner(any())} doAnswer {record3.owner = it.getArgument(0)}
         }
 
         mockClient = mock()
@@ -98,11 +105,13 @@ class TerritoryManagerTestUnitTest {
         val territory1 = mock<ITerritoryVisual> {
             on { territoryRecord } doReturn record1
             on { getTerritoryId() } doReturn record1.id
+
         }
 
         val territory2 = mock<ITerritoryVisual> {
             on { territoryRecord } doReturn record2
             on { getTerritoryId() } doReturn record2.id
+
         }
 
         manager.addTerritory(territory1)
@@ -141,7 +150,7 @@ class TerritoryManagerTestUnitTest {
     fun singletonNotMutableTest() {
         // Re-init should not change 'me' reference
         val newMe = PlayerRecord(UUID.randomUUID(), "Test2", 0x00FF00)
-        TerritoryManager.init(newMe, pointingArrow, activity)
+        TerritoryManager.init(newMe, pointingArrow, activity, dialogueHandler)
         val inst = TerritoryManager.get()
         assertEquals(mePlayerRecord, inst.me)
     }
@@ -249,9 +258,12 @@ class TerritoryManagerTestUnitTest {
 
     @Test
     fun testNoTerritoryUpdateIfNotMyTurn(){
-        whenever(manager.useReinforceDialog(any(), any())).thenAnswer {
-            t2.changeStat(88) // Simulate stat update when called
-            Unit
+        t1.territoryRecord.connections.add(t2.territoryRecord)
+        t2.territoryRecord.connections.add(t1.territoryRecord)
+        t1.territoryRecord.owner = mePlayerRecord.id
+        t2.territoryRecord.owner = mePlayerRecord.id
+        whenever(dialogueHandler.useReinforceDialog(any(), eq(t2))).then {
+            t2.changeStat(88)
         }
         assertTrue(GameManager.get().getPhase() == Phases.Reinforce)
         val playerList: HashMap<UUID, PlayerRecord> = HashMap()
@@ -261,7 +273,90 @@ class TerritoryManagerTestUnitTest {
         GameManager.get().receivePlayerListUpdate(playerList)
         manager.setPrevSelTerritory(t1)
         manager.hasBeenClicked(t2)
-        assert(t2.territoryRecord.stat == 0) { "t2.territoryRecord.stat should be 0, but was ${t2.territoryRecord.stat}" }
-        verify(manager, atLeastOnce()).useReinforceDialog(any(), any())
+        assert(t2.territoryRecord.stat == 1) { "t2.territoryRecord.stat should be 1, but was ${t2.territoryRecord.stat}" }
+
     }
+    @Test
+    fun testTerritoryUpdateIfMyTurn(){
+        t1.territoryRecord.connections.add(t2.territoryRecord)
+        t2.territoryRecord.connections.add(t1.territoryRecord)
+        t1.territoryRecord.owner = mePlayerRecord.id
+        t2.territoryRecord.owner = mePlayerRecord.id
+        whenever(dialogueHandler.useReinforceDialog(any(), any())).then {
+            t2.changeStat(88)
+        }
+        assertTrue(GameManager.get().getPhase() == Phases.Reinforce)
+        val playerList: HashMap<UUID, PlayerRecord> = HashMap()
+        mePlayerRecord.isCurrentTurn = true
+        playerList.put(mePlayerRecord.id,mePlayerRecord)
+        playerList.put(newOwner.id,newOwner)
+        GameManager.get().receivePlayerListUpdate(playerList)
+        manager.setPrevSelTerritory(t1)
+        manager.hasBeenClicked(t2)
+        assert(t2.territoryRecord.stat == 88) { "t2.territoryRecord.stat should be 88, but was ${t2.territoryRecord.stat}" }
+
+    }
+    @Test
+    fun testNoTerritoryUpdateIfNotConnected(){
+
+        t1.territoryRecord.owner = mePlayerRecord.id
+        t2.territoryRecord.owner = mePlayerRecord.id
+        whenever(dialogueHandler.useReinforceDialog(any(), any())).then {
+            t2.changeStat(88)
+        }
+        assertTrue(GameManager.get().getPhase() == Phases.Reinforce)
+        val playerList: HashMap<UUID, PlayerRecord> = HashMap()
+        mePlayerRecord.isCurrentTurn = true
+        playerList.put(mePlayerRecord.id,mePlayerRecord)
+        playerList.put(newOwner.id,newOwner)
+        GameManager.get().receivePlayerListUpdate(playerList)
+        manager.setPrevSelTerritory(t1)
+        manager.hasBeenClicked(t2)
+        assert(t2.territoryRecord.stat == 1) { "t2.territoryRecord.stat should be 1, but was ${t2.territoryRecord.stat}" }
+
+    }
+    @Test
+    fun testNoTerritoryUpdateIfSameTerritory(){
+        t1.territoryRecord.connections.add(t2.territoryRecord)
+        t2.territoryRecord.connections.add(t1.territoryRecord)
+        t1.territoryRecord.owner = mePlayerRecord.id
+        t2.territoryRecord.owner = mePlayerRecord.id
+        whenever(dialogueHandler.useReinforceDialog(any(), any())).then {
+            t2.changeStat(88)
+        }
+        assertTrue(GameManager.get().getPhase() == Phases.Reinforce)
+        val playerList: HashMap<UUID, PlayerRecord> = HashMap()
+        mePlayerRecord.isCurrentTurn = true
+        playerList.put(mePlayerRecord.id,mePlayerRecord)
+        playerList.put(newOwner.id,newOwner)
+        GameManager.get().receivePlayerListUpdate(playerList)
+        manager.setPrevSelTerritory(t1)
+        manager.hasBeenClicked(t1)
+        assert(t2.territoryRecord.stat == 1) { "t2.territoryRecord.stat should be 1, but was ${t2.territoryRecord.stat}" }
+
+    }
+
+    @Test
+    fun testAttackMoveCapturesTerritory(){
+        t1.territoryRecord.connections.add(t2.territoryRecord)
+        t2.territoryRecord.connections.add(t1.territoryRecord)
+        t1.territoryRecord.owner = mePlayerRecord.id
+        t2.territoryRecord.owner = newOwner.id
+        whenever(dialogueHandler.useAttackDialog(any(), any(), any())).then {
+            t2.changeOwner(mePlayerRecord.id)
+        }
+        GameManager.get().setPhase(Phases.Attack)
+        assertTrue(GameManager.get().getPhase() == Phases.Attack)
+        val playerList: HashMap<UUID, PlayerRecord> = HashMap()
+        mePlayerRecord.isCurrentTurn = true
+        playerList.put(mePlayerRecord.id,mePlayerRecord)
+        playerList.put(newOwner.id,newOwner)
+        GameManager.get().receivePlayerListUpdate(playerList)
+        manager.setPrevSelTerritory(t1)
+        manager.hasBeenClicked(t2)
+        assertEquals(t2.territoryRecord.owner, mePlayerRecord.id)
+
+    }
+
+
 }
