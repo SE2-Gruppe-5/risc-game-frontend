@@ -1,6 +1,5 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
-import android.annotation.SuppressLint
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.dialogues.IDialogueHandler
@@ -19,7 +18,6 @@ class TerritoryManager private constructor(
 ) {
     companion object {
 
-        @SuppressLint("StaticFieldLeak")
         private var singleton: TerritoryManager? = null
 
         fun init(me: PlayerRecord?, pointingArrow: IPointingArrowUI, toastUtil: IToastUtil, dialogManager: IDialogueHandler) {
@@ -151,9 +149,7 @@ class TerritoryManager private constructor(
                         dialogueManager.useReinforceDialog(prevSelTerritory!!, t)
                     }
                     else {
-                        toastUtil.showShortToast(
-                            "You can only move between your own territories"
-                        )
+                        toastUtil.showShortToast("You can only move between your own territories")
                     }
                 }
                 else if (phase == Phases.Attack) {
@@ -161,9 +157,7 @@ class TerritoryManager private constructor(
                         dialogueManager.useAttackDialog(prevSelTerritory!!, t, { troops -> attackTerritory(t)})
                     }
                     else {
-                        toastUtil.showShortToast(
-                            "You cannot attack your own territories"
-                        )
+                        toastUtil.showShortToast("You cannot attack your own territories")
                     }
                 }
             }
