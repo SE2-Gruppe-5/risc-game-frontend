@@ -118,6 +118,9 @@ tasks.withType<Test>().configureEach {
  Android-Tests use 'createDebugCoverageReport' instead.
 */
 tasks.register<JacocoReport>("jacocoTestReport") {
+    description = "Generates a JaCoCo report after a unit test run"
+    group = "verification"
+
     reports {
         xml.required = true
         csv.required = false
