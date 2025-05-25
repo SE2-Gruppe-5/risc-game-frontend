@@ -32,7 +32,7 @@ class SseClientService : Service() {
 
     private val handlers: HashMap<MessageType, Consumer<IMessage>> = HashMap()
 
-    override fun onBind(p0: Intent?): IBinder? {
+    override fun onBind(p0: Intent?): IBinder {
         setupDefaultHandlers()
         return binder
     }
@@ -63,11 +63,11 @@ class SseClientService : Service() {
 
     private fun connectEventSource() {
         val url = if (uuid == null) {
-            Constants.Companion.SSE_URL
+            Constants.SSE_URL
         } else {
-            Constants.Companion.SSE_URL_REJOIN.replace("{id}", uuid.toString())
+            Constants.SSE_URL_REJOIN.replace("{id}", uuid.toString())
         }
-        eventSource = EventSource.Builder(eventHandler, URI.create(Constants.Companion.HOST + url))
+        eventSource = EventSource.Builder(eventHandler, URI.create(Constants.HOST + url))
             .connectTimeout(Duration.ofSeconds(10))
             .backoffResetThreshold(Duration.ofSeconds(10))
             .build()
@@ -96,7 +96,7 @@ class SseClientService : Service() {
         try {
             if (replaying) {
                 Log.d("SSE_REPLAY", "Message type $type not handled, saving to replay")
-                replay.put(System.nanoTime(), ReplayMessage(type, message))
+                replay[System.nanoTime()] = ReplayMessage(type, message)
             } else {
                 handlers[type]?.accept(message)
             }
@@ -106,7 +106,7 @@ class SseClientService : Service() {
     }
 
     fun handler(type: MessageType, handler: Consumer<IMessage>) {
-        handlers.put(type, handler)
+        handlers[type] = handler
     }
 
     inner class LocalBinder : Binder() {

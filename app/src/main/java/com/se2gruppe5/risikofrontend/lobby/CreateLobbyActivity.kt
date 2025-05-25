@@ -23,17 +23,17 @@ class CreateLobbyActivity :AppCompatActivity() {
         setContentView(R.layout.createlobby)
 
         val backBtn = this.findViewById<ImageButton>(R.id.backBtn)
-        backBtn.setOnClickListener({
+        backBtn.setOnClickListener {
             Log.i("NAVIGATION", "Quit lobby")
             finish()
-        })
+        }
 
         val createBtn = this.findViewById<Button>(R.id.createLobbyBtn)
         val nameInput = findViewById<EditText>(R.id.name_input)
-        createBtn.setOnClickListener({
+        createBtn.setOnClickListener {
             val name = nameInput.text.toString()
             Log.i("NAVIGATION", "Create lobby")
-            var code = createLobby()
+            val code = createLobby()
             if (code == null) {
                 Log.e("NAVIGATION", "Error creating lobby")
                 Toast.makeText(this, "Error creating lobby", Toast.LENGTH_SHORT).show()
@@ -43,7 +43,7 @@ class CreateLobbyActivity :AppCompatActivity() {
             intent.putExtra("PLAYER_NAME", name)
             intent.putExtra("LOBBY_CODE", code)
             startActivity(intent)
-        })
+        }
 
     }
 

@@ -2,7 +2,6 @@ package com.se2gruppe5.risikofrontend.network.sse
 
 import android.util.Log
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.launchdarkly.eventsource.EventHandler
 import com.launchdarkly.eventsource.MessageEvent
 import java.util.Base64

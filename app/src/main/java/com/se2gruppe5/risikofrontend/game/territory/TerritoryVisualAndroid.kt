@@ -41,8 +41,8 @@ class TerritoryVisualAndroid(
     }
 
     override fun changeBgColor(color: Int) {
-        imgBTN.setBackgroundColor(color);
-        bg.setBackgroundColor(color);
+        imgBTN.setBackgroundColor(color)
+        bg.setBackgroundColor(color)
     }
 
     override fun changeStat(stat: Int) {

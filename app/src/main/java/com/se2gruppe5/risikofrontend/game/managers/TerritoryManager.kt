@@ -154,7 +154,9 @@ class TerritoryManager private constructor(
                 }
                 else if (phase == Phases.Attack) {
                     if (isMe(prevSelTerritory!!.territoryRecord.owner) && !isMe(t.territoryRecord.owner)) {
-                        dialogueManager.useAttackDialog(prevSelTerritory!!, t, { troops -> attackTerritory(t)})
+                        dialogueManager.useAttackDialog(prevSelTerritory!!, t) { troops ->
+                            attackTerritory(t)
+                        }
                     }
                     else {
                         toastUtil.showShortToast("You cannot attack your own territories")
