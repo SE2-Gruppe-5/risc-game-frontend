@@ -134,38 +134,45 @@ class TerritoryManager private constructor(
         if (myTurn()) {
             if (prevSelTerritory != t && prevSelTerritory != null
                 && t.territoryRecord.isConnected(prevSelTerritory!!.territoryRecord)) {
+
                 prevSelTerritory?.let {
                     pointingArrow.setCoordinates(
                         it.getCoordinatesAsFloat(true), t.getCoordinatesAsFloat(true)
                     )
                 }
+
                 if (phase == Phases.Reinforce) {
-                    if (isMe(prevSelTerritory!!.territoryRecord.owner) && isMe(t.territoryRecord.owner)) {
-                        dialogueManager.useReinforceDialog(prevSelTerritory!!, t)
-                    }
-                    else {
-                        toastUtil.showShortToast("You can only move between your own territories")
-                    }
+                    requestReinforce(prevSelTerritory!!, t)
                 }
                 else if (phase == Phases.Attack) {
-                    if (isMe(prevSelTerritory!!.territoryRecord.owner) && !isMe(t.territoryRecord.owner)) {
-                        dialogueManager.useAttackDialog(prevSelTerritory!!, t) { troops ->
-                            attackTerritory(t)
-                        }
-                    }
-                    else {
-                        toastUtil.showShortToast("You cannot attack your own territories")
-                    }
+                    requestAttack(prevSelTerritory!!, t)
                 }
             }
 
             updateSelected(t)
             changeTerritoryRequest(t.territoryRecord)
         }
-
-
     }
 
+    private fun requestReinforce(fromTerritory: ITerritoryVisual, toTerritory: ITerritoryVisual) {
+        if (isMe(fromTerritory.territoryRecord.owner) && isMe(toTerritory.territoryRecord.owner)) {
+            dialogueManager.useReinforceDialog(fromTerritory, toTerritory)
+        }
+        else {
+            toastUtil.showShortToast("You can only move between your own territories")
+        }
+    }
+
+    private fun requestAttack(fromTerritory: ITerritoryVisual, toTerritory: ITerritoryVisual) {
+        if (isMe(fromTerritory.territoryRecord.owner) && !isMe(toTerritory.territoryRecord.owner)) {
+            dialogueManager.useAttackDialog(fromTerritory, toTerritory) { troops ->
+                attackTerritory(toTerritory)
+            }
+        }
+        else {
+            toastUtil.showShortToast("You cannot attack your own territories")
+        }
+    }
 
     private fun attackTerritory(t: ITerritoryVisual) {
         me!!.capturedTerritory = true
