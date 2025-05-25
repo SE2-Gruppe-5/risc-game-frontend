@@ -34,6 +34,7 @@ import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dialogues.DialogueHandler
 import com.se2gruppe5.risikofrontend.game.managers.GameViewManager
 import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
+import com.se2gruppe5.risikofrontend.game.managers.ToastUtilAndroid
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
 import java.io.Serializable
@@ -79,7 +80,7 @@ class GameActivity : AppCompatActivity() {
 
         gameID = gameStart.gameId
 
-        TerritoryManager.init(me, PointingArrowAndroid(this), this, DialogueHandler(this))
+        TerritoryManager.init(me, PointingArrowAndroid(this), ToastUtilAndroid(this), DialogueHandler(this))
         GameManager.init(me, gameID!!, TerritoryManager.get(), client, gameStart.players)
 
         //Placeholder

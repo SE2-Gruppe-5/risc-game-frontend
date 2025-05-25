@@ -12,19 +12,17 @@ import com.se2gruppe5.risikofrontend.network.INetworkClient
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.times
 import org.mockito.kotlin.whenever
 import java.util.UUID
+
 /*
 Note:
         val t = mock<ITerritoryVisual> {
@@ -33,6 +31,7 @@ Note:
 This suffices to mock away the visual wrapper, as only the "core" territory data object is needed most of the time.
 The wrapper may however be needed, as it plays a role in color changes etc.
  */
+
 class TerritoryManagerTestUnitTest {
 
     private lateinit var pointingArrow: PointingArrowAndroid
@@ -43,7 +42,7 @@ class TerritoryManagerTestUnitTest {
     private lateinit var record3: TerritoryRecord
     private lateinit var t1: ITerritoryVisual
     private lateinit var t2: ITerritoryVisual
-    private lateinit var activity: Activity
+    private lateinit var toastUtil: IToastUtil
     private lateinit var mockClient: INetworkClient
 
     private lateinit var dialogueHandler: DialogueHandler
@@ -52,12 +51,12 @@ class TerritoryManagerTestUnitTest {
     fun setUp() {
         pointingArrow = mock()
         mePlayerRecord = PlayerRecord(UUID.randomUUID(), "TestPlayer", 0xFF00FF)
-        activity = mock()
+        toastUtil = mock()
         dialogueHandler = mock()
 
         // Reset and init singleton
         TerritoryManager.reset()
-        TerritoryManager.init(mePlayerRecord, pointingArrow, activity, dialogueHandler)
+        TerritoryManager.init(mePlayerRecord, pointingArrow, toastUtil, dialogueHandler)
         manager = TerritoryManager.get()
 
         // Base territory record and visual
@@ -83,7 +82,6 @@ class TerritoryManagerTestUnitTest {
         playerList.put(newOwner.id,newOwner)
         GameManager.reset()
         GameManager.init(mePlayerRecord,UUID.randomUUID(),manager, mockClient, playerList)
-        TerritoryManager.disableToast()
     }
 
     @Test
@@ -150,7 +148,7 @@ class TerritoryManagerTestUnitTest {
     fun singletonNotMutableTest() {
         // Re-init should not change 'me' reference
         val newMe = PlayerRecord(UUID.randomUUID(), "Test2", 0x00FF00)
-        TerritoryManager.init(newMe, pointingArrow, activity, dialogueHandler)
+        TerritoryManager.init(newMe, pointingArrow, toastUtil, dialogueHandler)
         val inst = TerritoryManager.get()
         assertEquals(mePlayerRecord, inst.me)
     }

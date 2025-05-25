@@ -1,7 +1,6 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.dialogues.IDialogueHandler
@@ -14,19 +13,18 @@ import kotlinx.coroutines.runBlocking
 import java.util.UUID
 
 const val TERRITORY_NO_OWNER_COLOR: Int = 0x999999
-private var toastEnabled: Boolean = true;
 
 class TerritoryManager private constructor(
-    val me: PlayerRecord?, val pointingArrow: IPointingArrowUI, val activity: Activity, val dialogManager: IDialogueHandler
+    val me: PlayerRecord?, val pointingArrow: IPointingArrowUI, val toastUtil: IToastUtil, val dialogueManager: IDialogueHandler
 ) {
     companion object {
 
         @SuppressLint("StaticFieldLeak")
         private var singleton: TerritoryManager? = null
 
-        fun init(me: PlayerRecord?, pointingArrow: IPointingArrowUI, activity: Activity, dialogManager: IDialogueHandler) {
+        fun init(me: PlayerRecord?, pointingArrow: IPointingArrowUI, toastUtil: IToastUtil, dialogManager: IDialogueHandler) {
             if (singleton == null) {
-                singleton = TerritoryManager(me, pointingArrow, activity, dialogManager)
+                singleton = TerritoryManager(me, pointingArrow, toastUtil, dialogManager)
             }
         }
 
@@ -37,13 +35,6 @@ class TerritoryManager private constructor(
 
         fun reset() {
             singleton = null
-        }
-
-        /**
-         * Unit Test only, do not call
-         */
-        fun disableToast() {
-            toastEnabled = false;
         }
     }
 
@@ -157,26 +148,24 @@ class TerritoryManager private constructor(
                 }
                 if (phase == Phases.Reinforce) {
                     if (isMe(prevSelTerritory!!.territoryRecord.owner) && isMe(t.territoryRecord.owner)) {
-                        dialogManager.useReinforceDialog(prevSelTerritory!!, t)
+                        dialogueManager.useReinforceDialog(prevSelTerritory!!, t)
                     }
-                    else if (toastEnabled) {
-                        ToastUtils.showShortToast(
-                            activity, "You can only move between your own territories"
+                    else {
+                        toastUtil.showShortToast(
+                            "You can only move between your own territories"
                         )
                     }
                 }
                 else if (phase == Phases.Attack) {
                     if (isMe(prevSelTerritory!!.territoryRecord.owner) && !isMe(t.territoryRecord.owner)) {
-                        dialogManager.useAttackDialog(prevSelTerritory!!, t, {troops -> attackTerritory(t)})
+                        dialogueManager.useAttackDialog(prevSelTerritory!!, t, { troops -> attackTerritory(t)})
                     }
-                    else if (toastEnabled) {
-                        ToastUtils.showShortToast(
-                            activity, "You cannot attack your own territories"
+                    else {
+                        toastUtil.showShortToast(
+                            "You cannot attack your own territories"
                         )
                     }
-
                 }
-
             }
 
             updateSelected(t)
