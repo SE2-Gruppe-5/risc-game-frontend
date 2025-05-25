@@ -87,13 +87,10 @@ class TerritoryManager private constructor(
 
     fun addTerritory(t: ITerritoryVisual) {
         territoriesSanityCheck(t)
-        if (territoryList.contains(t)) {
-            throw IllegalArgumentException("Territory (object) already in list.")
 
-        }
-        if (territoryList.any { it.territoryRecord.id == t.territoryRecord.id }) { //just in case
-            throw IllegalArgumentException("Territory ID duplicated [!?] how is this even possible")
-        }
+        require(!(territoryList.contains(t))) { "Territory (object) already in list." }
+        require(!(territoryList.any { it.territoryRecord.id == t.territoryRecord.id })) {
+            "Territory ID duplicated [!?] how is this even possible" }
 
         territoryList.add(t)
         addLambdaSubscriptions(t)
@@ -103,9 +100,7 @@ class TerritoryManager private constructor(
     //This should never be needed
     fun removeTerritory(t: ITerritoryVisual) {
         territoriesSanityCheck(t)
-        if (!territoryList.contains(t)) {
-            throw IllegalArgumentException("Territory not in list.")
-        }
+        require(territoryList.contains(t)) { "Territory not in list." }
         territoryList.remove(t)
     }
 

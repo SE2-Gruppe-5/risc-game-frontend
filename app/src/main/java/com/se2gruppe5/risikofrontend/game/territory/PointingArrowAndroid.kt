@@ -62,9 +62,8 @@ class PointingArrowAndroid : View, IPointingArrowUI{
     }
 
     override fun setWidth(width: Float) {
-        if (width <= 0) {
-            throw IllegalArgumentException("Invalid stroke-width")
-        }
+        require(width > 0) { "Invalid stroke-width" }
+
         arrowPaint.strokeWidth = width
         redraw()
     }

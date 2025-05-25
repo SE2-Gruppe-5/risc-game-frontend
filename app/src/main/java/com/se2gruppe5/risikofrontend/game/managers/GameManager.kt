@@ -76,19 +76,14 @@ class GameManager private constructor(
     fun playerUUIDSanityCheck(players: HashMap<UUID, PlayerRecord>) {
         var c = 0
         for (player in players) {
-            if (player.value.id != player.key) {
-                throw IllegalStateException("UUID mismatch in Player Hashmap (this is very very bad)")
-            }
+            check(player.value.id == player.key) { "UUID mismatch in Player Hashmap (this is very very bad)" }
 
             if (player.value.isCurrentTurn) {
                 c++
             }
         }
-        if (c <= 0) {
-            throw IllegalStateException("Currently it's nobody's turn (this shouldn't be the case)")
-        } else if (c > 1) {
-            throw IllegalStateException("It cannot be more than one player's turn at any given moment")
-        }
+        check(c > 0) { "Currently it's nobody's turn (this shouldn't be the case)" }
+        check(c <= 1) { "It cannot be more than one player's turn at any given moment" }
 
     }
 

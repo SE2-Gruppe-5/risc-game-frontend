@@ -42,7 +42,7 @@ class LineAndroid: View, ILine {
     }
 
     override fun setWidth(width: Float) {
-        require(width > 0)
+        require(width > 0) { "Invalid stroke width" }
         paint.strokeWidth = width
         redraw()
     }

@@ -46,9 +46,8 @@ class TerritoryVisualAndroid(
     }
 
     override fun changeStat(stat: Int) {
-        if (stat <= 0 || stat > 99) {
-            throw IllegalArgumentException("Invalid territory stat: $stat")
-        }
+        require(!(stat <= 0 || stat > 99)) { "Invalid territory stat: $stat" }
+
         territoryRecord.stat = stat
         textContent.text = stat.toString()
     }
