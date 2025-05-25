@@ -182,7 +182,7 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/game/popup/**",
                 "**/com/se2gruppe5/risikofrontend/game/enums/**",
                 "**/com/se2gruppe5/risikofrontend/game/managers/GameViewManager.kt",
-                "**/com/se2gruppe5/risikofrontend/game/managers/ToastUtils.kt"
+                "**/com/se2gruppe5/risikofrontend/game/managers/ToastUtilAndroid.kt"
             ).joinToString(",")
         )
 
