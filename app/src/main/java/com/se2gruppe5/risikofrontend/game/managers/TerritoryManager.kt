@@ -128,7 +128,7 @@ class TerritoryManager private constructor(
     }
 
     /**
-     * let player:=null semantically mean "no owne r"
+     * let player:=null semantically mean "no owner"
      */
     fun assignOwner(t: ITerritoryVisual, playerRecord: PlayerRecord?) {
         territoriesSanityCheck(t)
@@ -158,23 +158,21 @@ class TerritoryManager private constructor(
                 if (phase == Phases.Reinforce) {
                     if (isMe(prevSelTerritory!!.territoryRecord.owner) && isMe(t.territoryRecord.owner)) {
                         dialogManager.useReinforceDialog(prevSelTerritory!!, t)
-                    } else {
-                        if (toastEnabled) {
-                            ToastUtils.showShortToast(
-                                activity, "You can only move between your own territories"
-                            )
-                        }
                     }
-                } else if (phase == Phases.Attack) {
+                    else if (toastEnabled) {
+                        ToastUtils.showShortToast(
+                            activity, "You can only move between your own territories"
+                        )
+                    }
+                }
+                else if (phase == Phases.Attack) {
                     if (isMe(prevSelTerritory!!.territoryRecord.owner) && !isMe(t.territoryRecord.owner)) {
                         dialogManager.useAttackDialog(prevSelTerritory!!, t, {troops -> attackTerritory(t)})
-                    } else {
-                        if (toastEnabled) {
-                            ToastUtils.showShortToast(
-                                activity, "You cannot attack your own territories"
-                            )
-
-                        }
+                    }
+                    else if (toastEnabled) {
+                        ToastUtils.showShortToast(
+                            activity, "You cannot attack your own territories"
+                        )
                     }
 
                 }
