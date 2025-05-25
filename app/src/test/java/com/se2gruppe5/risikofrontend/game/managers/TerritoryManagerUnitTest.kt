@@ -1,6 +1,5 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
-import android.app.Activity
 import com.se2gruppe5.risikofrontend.game.enums.Continent
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
@@ -78,8 +77,8 @@ class TerritoryManagerTestUnitTest {
         mockClient = mock()
         val playerList: HashMap<UUID, PlayerRecord> = HashMap()
         newOwner = PlayerRecord(UUID.randomUUID(), "NewTest", 0x123456)
-        playerList.put(mePlayerRecord.id,mePlayerRecord)
-        playerList.put(newOwner.id,newOwner)
+        playerList[mePlayerRecord.id] = mePlayerRecord
+        playerList[newOwner.id] = newOwner
         GameManager.reset()
         GameManager.init(mePlayerRecord,UUID.randomUUID(),manager, mockClient, playerList)
     }
@@ -261,15 +260,12 @@ class TerritoryManagerTestUnitTest {
         t1.territoryRecord.owner = mePlayerRecord.id
         t2.territoryRecord.owner = mePlayerRecord.id
         whenever(dialogueHandler.useReinforceDialog(any(), eq(t2))).then {
-            t2.changeStat(88)
+            t2.changeStat(50)
         }
 
         assertTrue(GameManager.get().getPhase() == Phases.Reinforce)
-        val playerList: HashMap<UUID, PlayerRecord> = HashMap()
         newOwner.isCurrentTurn = true
-        playerList.put(mePlayerRecord.id,mePlayerRecord)
-        playerList.put(newOwner.id,newOwner)
-        GameManager.get().receivePlayerListUpdate(playerList)
+        updatePlayerList()
 
         manager.setPrevSelTerritory(t1)
         manager.hasBeenClicked(t2)
@@ -283,19 +279,16 @@ class TerritoryManagerTestUnitTest {
         t1.territoryRecord.owner = mePlayerRecord.id
         t2.territoryRecord.owner = mePlayerRecord.id
         whenever(dialogueHandler.useReinforceDialog(any(), any())).then {
-            t2.changeStat(88)
+            t2.changeStat(50)
         }
 
         assertTrue(GameManager.get().getPhase() == Phases.Reinforce)
-        val playerList: HashMap<UUID, PlayerRecord> = HashMap()
         mePlayerRecord.isCurrentTurn = true
-        playerList.put(mePlayerRecord.id,mePlayerRecord)
-        playerList.put(newOwner.id,newOwner)
-        GameManager.get().receivePlayerListUpdate(playerList)
+        updatePlayerList()
 
         manager.setPrevSelTerritory(t1)
         manager.hasBeenClicked(t2)
-        assert(t2.territoryRecord.stat == 88) { "t2.territoryRecord.stat should be 88, but was ${t2.territoryRecord.stat}" }
+        assert(t2.territoryRecord.stat == 50) { "t2.territoryRecord.stat should be 50, but was ${t2.territoryRecord.stat}" }
 
     }
     @Test
@@ -304,15 +297,12 @@ class TerritoryManagerTestUnitTest {
         t1.territoryRecord.owner = mePlayerRecord.id
         t2.territoryRecord.owner = mePlayerRecord.id
         whenever(dialogueHandler.useReinforceDialog(any(), any())).then {
-            t2.changeStat(88)
+            t2.changeStat(50)
         }
 
         assertTrue(GameManager.get().getPhase() == Phases.Reinforce)
-        val playerList: HashMap<UUID, PlayerRecord> = HashMap()
         mePlayerRecord.isCurrentTurn = true
-        playerList.put(mePlayerRecord.id,mePlayerRecord)
-        playerList.put(newOwner.id,newOwner)
-        GameManager.get().receivePlayerListUpdate(playerList)
+        updatePlayerList()
 
         manager.setPrevSelTerritory(t1)
         manager.hasBeenClicked(t2)
@@ -326,15 +316,12 @@ class TerritoryManagerTestUnitTest {
         t1.territoryRecord.owner = mePlayerRecord.id
         t2.territoryRecord.owner = mePlayerRecord.id
         whenever(dialogueHandler.useReinforceDialog(any(), any())).then {
-            t2.changeStat(88)
+            t2.changeStat(50)
         }
 
         assertTrue(GameManager.get().getPhase() == Phases.Reinforce)
-        val playerList: HashMap<UUID, PlayerRecord> = HashMap()
         mePlayerRecord.isCurrentTurn = true
-        playerList.put(mePlayerRecord.id,mePlayerRecord)
-        playerList.put(newOwner.id,newOwner)
-        GameManager.get().receivePlayerListUpdate(playerList)
+        updatePlayerList()
 
         manager.setPrevSelTerritory(t1)
         manager.hasBeenClicked(t1)
@@ -354,11 +341,8 @@ class TerritoryManagerTestUnitTest {
 
         GameManager.get().setPhase(Phases.Attack)
         assertTrue(GameManager.get().getPhase() == Phases.Attack)
-        val playerList: HashMap<UUID, PlayerRecord> = HashMap()
         mePlayerRecord.isCurrentTurn = true
-        playerList.put(mePlayerRecord.id,mePlayerRecord)
-        playerList.put(newOwner.id,newOwner)
-        GameManager.get().receivePlayerListUpdate(playerList)
+        updatePlayerList()
 
         manager.setPrevSelTerritory(t1)
         manager.hasBeenClicked(t2)
@@ -373,15 +357,12 @@ class TerritoryManagerTestUnitTest {
         t1.territoryRecord.owner = mePlayerRecord.id
         t2.territoryRecord.owner = newOwner.id
         whenever(dialogueHandler.useReinforceDialog(any(), eq(t2))).then {
-            t2.changeStat(88)
+            t2.changeStat(50)
         }
 
         assertTrue(GameManager.get().getPhase() == Phases.Reinforce)
-        val playerList: HashMap<UUID, PlayerRecord> = HashMap()
         mePlayerRecord.isCurrentTurn = true
-        playerList.put(mePlayerRecord.id,mePlayerRecord)
-        playerList.put(newOwner.id,newOwner)
-        GameManager.get().receivePlayerListUpdate(playerList)
+        updatePlayerList()
 
         manager.setPrevSelTerritory(t1)
         manager.hasBeenClicked(t2)
@@ -397,22 +378,26 @@ class TerritoryManagerTestUnitTest {
         t1.territoryRecord.owner = mePlayerRecord.id
         t2.territoryRecord.owner = mePlayerRecord.id
         whenever(dialogueHandler.useReinforceDialog(any(), eq(t2))).then {
-            t2.changeStat(88)
+            t2.changeStat(50)
         }
 
         GameManager.get().setPhase(Phases.Attack)
         assertTrue(GameManager.get().getPhase() == Phases.Attack)
-
-        val playerList: HashMap<UUID, PlayerRecord> = HashMap()
         mePlayerRecord.isCurrentTurn = true
-        playerList.put(mePlayerRecord.id,mePlayerRecord)
-        GameManager.get().receivePlayerListUpdate(playerList)
+        updatePlayerList()
 
         manager.setPrevSelTerritory(t1)
         manager.hasBeenClicked(t2)
 
         verify(toastUtil).showShortToast(any())
         assertEquals(1, t2.territoryRecord.stat)
+    }
+
+    private fun updatePlayerList() {
+        val playerList: HashMap<UUID, PlayerRecord> = HashMap()
+        playerList[mePlayerRecord.id] = mePlayerRecord
+        playerList[newOwner.id] = newOwner
+        GameManager.get().receivePlayerListUpdate(playerList)
     }
 
 
