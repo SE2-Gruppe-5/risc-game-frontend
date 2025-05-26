@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import kotlin.Float
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
