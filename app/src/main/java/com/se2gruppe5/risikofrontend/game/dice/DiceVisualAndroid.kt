@@ -11,7 +11,7 @@ import com.se2gruppe5.risikofrontend.game.dice.diceModels.IDice
 class DiceVisualAndroid(override val dice: IDice, val imgBTN: ImageButton, val txt: TextView? = null) :
     IDiceVisual {
     override fun roll() {
-        var result = dice.roll()
+        val result = dice.roll()
         if (txt != null) {
             txt.text = result.toString()
         }

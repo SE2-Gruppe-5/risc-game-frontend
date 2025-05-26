@@ -14,6 +14,6 @@ class MapPreviewActivity: AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.devtools_map_preview)
 
-        BoardVisualGeneratorAndroid.initTerritoryViews(this, true);
+        BoardVisualGeneratorAndroid.initTerritoryViews(this, true)
     }
 }

@@ -23,24 +23,24 @@ class MenuActivity : AppCompatActivity() {
         val createLobbyBtn = this.findViewById<Button>(R.id.createLobbyBtn)
         val joinLobbyBtn = this.findViewById<Button>(R.id.joinLobbyBtn)
         val tutorialBtn = this.findViewById<Button>(R.id.tutorialBtn)
-        createLobbyBtn.setOnClickListener({
+        createLobbyBtn.setOnClickListener {
             Log.i("NAVIGATION", "Creating Lobby")
             val intent = Intent(this, CreateLobbyActivity::class.java)
             startActivity(intent)
-        })
+        }
 
-        joinLobbyBtn.setOnClickListener({
+        joinLobbyBtn.setOnClickListener {
             Log.i("NAVIGATION", "Joining Lobby")
             val intent = Intent(this, JoinLobbyActivity::class.java)
             startActivity(intent)
-        })
+        }
 
 
-        tutorialBtn.setOnClickListener({
+        tutorialBtn.setOnClickListener {
             Log.i("NAVIGATION", "Entering Tutorial")
             val intent = Intent(this, ReinforcementActivity::class.java)
             startActivity(intent)
-        })
+        }
 
     }
 

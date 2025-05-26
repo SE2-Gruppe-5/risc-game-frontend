@@ -4,8 +4,8 @@ import java.io.Serializable
 import java.util.UUID
 
 data class PlayerRecord(val id: UUID, val name: String, val color: Int): Serializable {
-    var cards = mutableListOf<CardRecord>();
-    var capturedTerritory = false;
+    var cards = mutableListOf<CardRecord>()
+    var capturedTerritory = false
     var freeTroops = 0
     var isCurrentTurn = false
 

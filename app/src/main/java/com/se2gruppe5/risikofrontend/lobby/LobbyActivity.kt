@@ -15,16 +15,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.GameActivity
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
-import com.se2gruppe5.risikofrontend.game.managers.GameManager
-import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
-import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import com.se2gruppe5.risikofrontend.network.sse.MessageType
 import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
 import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.JoinLobbyMessage
-import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
 
@@ -90,14 +86,14 @@ class LobbyActivity :AppCompatActivity() {
         val backBtn = this.findViewById<ImageButton>(R.id.backBtn)
         val startGameBtn = this.findViewById<Button>(R.id.startGameBtn)
 
-        backBtn.setOnClickListener({
+        backBtn.setOnClickListener {
             Log.i("NAVIGATION", "Quit lobby")
             finish()
-        })
-        startGameBtn.setOnClickListener({
+        }
+        startGameBtn.setOnClickListener {
             Log.i("NAVIGATION", "Starting Game")
             startGame(joinCode)
-        })
+        }
 
     }
 
@@ -129,8 +125,8 @@ class LobbyActivity :AppCompatActivity() {
             runOnUiThread {
                 Log.i("lobby", "Hello from lobbyhandler")
                 Log.i("lobby", "$it")
-                var uuid: UUID = it.uuid
-                var name: String = it.playerName
+                val uuid: UUID = it.uuid
+                val name: String = it.playerName
                 playerTxt?.get(joinedPlayers - 1)?.visibility = View.VISIBLE
                 playerTxt?.get(joinedPlayers - 1)?.text = name
                 playerBtn?.get(joinedPlayers - 1)?.visibility = View.VISIBLE
@@ -143,7 +139,7 @@ class LobbyActivity :AppCompatActivity() {
                 if (me == null && SseClientService.uuid == uuid) {
                     me = player
                 }
-                players.put(player.id, player)
+                players[player.id] = player
                 Log.i("LobbyJoin", player.toString())
             }
         }

@@ -1,6 +1,5 @@
 package com.se2gruppe5.risikofrontend
 
-import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import io.github.cdimascio.dotenv.dotenv
 
 

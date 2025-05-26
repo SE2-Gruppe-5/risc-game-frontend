@@ -54,7 +54,7 @@ class GameManager private constructor(
         return this.players[id]
     }
 
-    fun getPlayers(): HashMap<UUID, PlayerRecord>? {
+    fun getPlayers(): HashMap<UUID, PlayerRecord> {
         return this.players
     }
 
@@ -74,21 +74,16 @@ class GameManager private constructor(
     }
     //todo sprint 3 refactoring possibility: PlayerManager
     fun playerUUIDSanityCheck(players: HashMap<UUID, PlayerRecord>) {
-        var c: Int = 0
+        var c = 0
         for (player in players) {
-            if (player.value.id != player.key) {
-                throw IllegalStateException("UUID mismatch in Player Hashmap (this is very very bad)")
-            }
+            check(player.value.id == player.key) { "UUID mismatch in Player Hashmap (this is very very bad)" }
 
-            if (player.value.isCurrentTurn == true) {
+            if (player.value.isCurrentTurn) {
                 c++
             }
         }
-        if (c <= 0) {
-            throw IllegalStateException("Currently it's nobody's turn (this shouldn't be the case)")
-        } else if (c > 1) {
-            throw IllegalStateException("It cannot be more than one player's turn at any given moment")
-        }
+        check(c > 0) { "Currently it's nobody's turn (this shouldn't be the case)" }
+        check(c <= 1) { "It cannot be more than one player's turn at any given moment" }
 
     }
 
@@ -99,7 +94,7 @@ class GameManager private constructor(
         playerUUIDSanityCheck(playersUpdated)
         this.players = playersUpdated
         for (player in this.players) {
-            if (player.value.isCurrentTurn == true) {
+            if (player.value.isCurrentTurn) {
                 this.currentPlayerUUID = player.key
                 return
             }

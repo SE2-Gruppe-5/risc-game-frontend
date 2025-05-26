@@ -6,16 +6,14 @@ import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import java.util.Optional
 import java.util.UUID
 
-class NetworkClient() : INetworkClient{
+class NetworkClient : INetworkClient{
     val client = OkHttpClient()
 
     override suspend fun sendChat(message: String) {
@@ -109,7 +107,6 @@ class NetworkClient() : INetworkClient{
             .build()
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun execute(request: Request): Response {
         val call = client.newCall(request)
         return withContext(Dispatchers.IO) {

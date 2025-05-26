@@ -3,7 +3,7 @@ package com.se2gruppe5.risikofrontend.game.dialogues
 import android.app.Activity
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 
-class DialogueHandler constructor(val activity: Activity) : IDialogueHandler {
+class DialogueHandler (val activity: Activity) : IDialogueHandler {
     override fun useAttackDialog(
         from: ITerritoryVisual,
         to: ITerritoryVisual,

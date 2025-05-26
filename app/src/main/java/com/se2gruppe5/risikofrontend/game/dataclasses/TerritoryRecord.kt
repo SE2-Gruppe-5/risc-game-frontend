@@ -6,7 +6,7 @@ import java.util.UUID
 data class TerritoryRecord (
     val id: Int,
     var stat: Int,
-    var continent: Continent,
+    val continent: Continent,
     val position: Pair<Int, Int>,
     val size: Pair<Int, Int>,
 ) {
@@ -18,6 +18,6 @@ data class TerritoryRecord (
     }
 
     fun isConnected(t: TerritoryRecord): Boolean {
-        return connections.contains(t) 
+        return connections.contains(t)
     }
 }

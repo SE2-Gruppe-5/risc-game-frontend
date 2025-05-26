@@ -26,12 +26,16 @@ object CardHandler :ICardHandler {
     override fun getCard(player: PlayerRecord?) {
         if(player != null) {
             val rand = (1..3).random()
-            if (rand == 1) {
-                player.cards.add(CardRecord(CardType.Infantry))
-            } else if (rand == 2) {
-                player.cards.add(CardRecord(CardType.Cavalry))
-            } else if (rand == 3) {
-                player.cards.add(CardRecord(CardType.Artillery))
+            when (rand) {
+                1 -> {
+                    player.cards.add(CardRecord(CardType.Infantry))
+                }
+                2 -> {
+                    player.cards.add(CardRecord(CardType.Cavalry))
+                }
+                3 -> {
+                    player.cards.add(CardRecord(CardType.Artillery))
+                }
             }
         }else throw IllegalArgumentException ("Call with valid Player")
     }

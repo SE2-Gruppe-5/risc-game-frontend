@@ -41,14 +41,13 @@ class TerritoryVisualAndroid(
     }
 
     override fun changeBgColor(color: Int) {
-        imgBTN.setBackgroundColor(color);
-        bg.setBackgroundColor(color);
+        imgBTN.setBackgroundColor(color)
+        bg.setBackgroundColor(color)
     }
 
     override fun changeStat(stat: Int) {
-        if (stat <= 0 || stat > 99) {
-            throw IllegalArgumentException("Invalid territory stat: $stat")
-        }
+        require(!(stat <= 0 || stat > 99)) { "Invalid territory stat: $stat" }
+
         territoryRecord.stat = stat
         textContent.text = stat.toString()
     }

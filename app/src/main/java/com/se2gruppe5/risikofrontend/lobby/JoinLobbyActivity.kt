@@ -3,22 +3,14 @@ package com.se2gruppe5.risikofrontend.lobby
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.os.StrictMode
 import android.util.Log
 import android.widget.ImageButton
 import android.widget.Button
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import com.se2gruppe5.risikofrontend.R
-import com.se2gruppe5.risikofrontend.network.INetworkClient
-import com.se2gruppe5.risikofrontend.network.NetworkClient
-import com.se2gruppe5.risikofrontend.network.sse.SseClientService
-import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
-import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+
 
 class JoinLobbyActivity :AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,15 +20,15 @@ class JoinLobbyActivity :AppCompatActivity() {
         setContentView(R.layout.joinlobby)
 
         val backBtn = this.findViewById<ImageButton>(R.id.backBtn)
-        backBtn.setOnClickListener({
+        backBtn.setOnClickListener {
             Log.i("NAVIGATION", "Quit lobby")
             finish()
-        })
+        }
 
         val joinBtn = this.findViewById<Button>(R.id.joinLobbyBtn)
         val nameInput = findViewById<EditText>(R.id.name_input)
         val joinInput = findViewById<EditText>(R.id.join_input)
-        joinBtn.setOnClickListener({
+        joinBtn.setOnClickListener {
             val name = nameInput.text.toString()
             val joincode = joinInput.text.toString()
 
@@ -45,6 +37,6 @@ class JoinLobbyActivity :AppCompatActivity() {
             intent.putExtra("PLAYER_NAME", name)
             intent.putExtra("LOBBY_CODE", joincode)
             startActivity(intent)
-        })
+        }
     }
 }

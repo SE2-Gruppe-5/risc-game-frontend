@@ -87,13 +87,10 @@ class TerritoryManager private constructor(
 
     fun addTerritory(t: ITerritoryVisual) {
         territoriesSanityCheck(t)
-        if (territoryList.contains(t)) {
-            throw IllegalArgumentException("Territory (object) already in list.")
 
-        }
-        if (territoryList.any { it.territoryRecord.id == t.territoryRecord.id }) { //just in case
-            throw IllegalArgumentException("Territory ID duplicated [!?] how is this even possible")
-        }
+        require(!(territoryList.contains(t))) { "Territory (object) already in list." }
+        require(!(territoryList.any { it.territoryRecord.id == t.territoryRecord.id })) {
+            "Territory ID duplicated [!?] how is this even possible" }
 
         territoryList.add(t)
         addLambdaSubscriptions(t)
@@ -103,9 +100,7 @@ class TerritoryManager private constructor(
     //This should never be needed
     fun removeTerritory(t: ITerritoryVisual) {
         territoriesSanityCheck(t)
-        if (!territoryList.contains(t)) {
-            throw IllegalArgumentException("Territory not in list.")
-        }
+        require(territoryList.contains(t)) { "Territory not in list." }
         territoryList.remove(t)
     }
 
@@ -139,36 +134,45 @@ class TerritoryManager private constructor(
         if (myTurn()) {
             if (prevSelTerritory != t && prevSelTerritory != null
                 && t.territoryRecord.isConnected(prevSelTerritory!!.territoryRecord)) {
+
                 prevSelTerritory?.let {
                     pointingArrow.setCoordinates(
                         it.getCoordinatesAsFloat(true), t.getCoordinatesAsFloat(true)
                     )
                 }
+
                 if (phase == Phases.Reinforce) {
-                    if (isMe(prevSelTerritory!!.territoryRecord.owner) && isMe(t.territoryRecord.owner)) {
-                        dialogueManager.useReinforceDialog(prevSelTerritory!!, t)
-                    }
-                    else {
-                        toastUtil.showShortToast("You can only move between your own territories")
-                    }
+                    requestReinforce(prevSelTerritory!!, t)
                 }
                 else if (phase == Phases.Attack) {
-                    if (isMe(prevSelTerritory!!.territoryRecord.owner) && !isMe(t.territoryRecord.owner)) {
-                        dialogueManager.useAttackDialog(prevSelTerritory!!, t, { troops -> attackTerritory(t)})
-                    }
-                    else {
-                        toastUtil.showShortToast("You cannot attack your own territories")
-                    }
+                    requestAttack(prevSelTerritory!!, t)
                 }
             }
 
             updateSelected(t)
             changeTerritoryRequest(t.territoryRecord)
         }
-
-
     }
 
+    private fun requestReinforce(fromTerritory: ITerritoryVisual, toTerritory: ITerritoryVisual) {
+        if (isMe(fromTerritory.territoryRecord.owner) && isMe(toTerritory.territoryRecord.owner)) {
+            dialogueManager.useReinforceDialog(fromTerritory, toTerritory)
+        }
+        else {
+            toastUtil.showShortToast("You can only move between your own territories")
+        }
+    }
+
+    private fun requestAttack(fromTerritory: ITerritoryVisual, toTerritory: ITerritoryVisual) {
+        if (isMe(fromTerritory.territoryRecord.owner) && !isMe(toTerritory.territoryRecord.owner)) {
+            dialogueManager.useAttackDialog(fromTerritory, toTerritory) { troops ->
+                attackTerritory(toTerritory)
+            }
+        }
+        else {
+            toastUtil.showShortToast("You cannot attack your own territories")
+        }
+    }
 
     private fun attackTerritory(t: ITerritoryVisual) {
         me!!.capturedTerritory = true
