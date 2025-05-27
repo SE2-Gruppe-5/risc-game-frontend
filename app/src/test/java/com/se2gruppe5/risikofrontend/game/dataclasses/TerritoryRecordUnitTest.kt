@@ -7,6 +7,7 @@ import org.junit.Assert.*
 import java.util.UUID
 
 class TerritoryRecordUnitTest {
+    // fixme test something
     @Test
     fun inst() {
         val t = TerritoryRecord(1,1, Continent.POWER_SUPPLY, Pair(100, 100), Pair(100, 100))

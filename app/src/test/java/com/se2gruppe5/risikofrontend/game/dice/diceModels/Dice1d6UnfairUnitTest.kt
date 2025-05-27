@@ -13,6 +13,7 @@ class Dice1d6UnfairUnitTest {
         d = Dice1d6Unfair()
     }
 
+    // fixme consider that this test would also pass for cheating and generic dice rolls
     @Test
     fun testCheatingDice() {
         repeat(15) {

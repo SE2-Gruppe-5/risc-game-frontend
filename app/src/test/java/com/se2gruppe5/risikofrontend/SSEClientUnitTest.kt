@@ -9,6 +9,7 @@ import org.junit.Assert.*
  * Unit Tests for SSEClient.kt
  */
 class SSEClientUnitTest {
+    // fixme test something
     @Test
     fun testInitialization() {
         val sseClient = SseClientService();

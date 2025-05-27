@@ -10,6 +10,7 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
+// fixme putting them outside the class declaration makes them global constants, move inside (same for other files) eg., into a companion object
 const val POINTING_ARROW_STROKE_COLOR: Int = Color.RED
 const val POINTING_ARROW_STROKE_WIDTH: Float = 10f
 const val POINTING_ARROW_ARROWHEAD_LENGTH: Float = 50f

@@ -28,6 +28,7 @@ class ConstantsUnitTest {
         Constants()
     }
 
+    // fixme unnecessary test, if a constant used in production code is missing it should throw a compile error anyway
     @Test
     fun checkConstantsExist() {
         assertNotNull(Constants.HOST)

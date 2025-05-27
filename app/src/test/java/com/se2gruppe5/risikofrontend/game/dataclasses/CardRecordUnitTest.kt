@@ -6,6 +6,7 @@ import org.junit.Test
 import org.junit.Assert.*
 
 class CardRecordUnitTest {
+    // fixme test something
     @Test
     fun inst() {
         CardRecord(CardType.Infantry)

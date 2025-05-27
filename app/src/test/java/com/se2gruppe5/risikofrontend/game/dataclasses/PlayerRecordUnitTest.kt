@@ -10,6 +10,7 @@ import java.util.UUID
 
 class PlayerRecordUnitTest {
 
+    // fixme test something
     @Test
     fun inst() {
         PlayerRecord(UUID.randomUUID(),"a",0xFFFFFF)

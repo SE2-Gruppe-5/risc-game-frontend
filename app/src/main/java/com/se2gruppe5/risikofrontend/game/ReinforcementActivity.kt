@@ -40,6 +40,7 @@ class ReinforcementActivity : AppCompatActivity() {
     private val selectedCards = mutableListOf<View>()
     private val selectedIndices = mutableListOf<Int>()
 
+    // fixme too large method, extract into sub methods
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

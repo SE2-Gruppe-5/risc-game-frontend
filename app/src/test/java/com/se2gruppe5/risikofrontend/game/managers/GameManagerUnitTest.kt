@@ -117,6 +117,7 @@ class GameManagerUnitTest {
         assertEquals(me, gameManager.getCurrentPlayer())
     }
 
+    // fixme split into multiple tests with the preceding test being the precondition for the next
     @Test
     fun playerMapSanityCheck() {
         val validMap = HashMap<UUID, PlayerRecord>().apply {

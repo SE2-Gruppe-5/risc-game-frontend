@@ -17,6 +17,7 @@ data class TerritoryData(
     val size: XY
 )
 
+// fixme use something like Position / Transform for readability
 @Serializable
 data class XY(
     val x: Int,
