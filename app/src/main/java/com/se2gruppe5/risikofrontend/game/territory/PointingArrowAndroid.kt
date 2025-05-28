@@ -10,12 +10,6 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
-// fixme putting them outside the class declaration makes them global constants, move inside (same for other files) eg., into a companion object
-const val POINTING_ARROW_STROKE_COLOR: Int = Color.RED
-const val POINTING_ARROW_STROKE_WIDTH: Float = 10f
-const val POINTING_ARROW_ARROWHEAD_LENGTH: Float = 50f
-const val POINTING_ARROW_ARROWHEAD_ANGLE: Float = 35f
-
 /**
  * Custom View Class for painting pointing arrows
  */
@@ -24,6 +18,12 @@ class PointingArrowAndroid : View, IPointingArrowUI{
     //Coming from Java, i prefer this for readability. (Albeit a bit more verbose)
     //Note: Language-level rule of Kotlin that "Constructors must delegate directly", still applies.
     //(Hence the inline call to super)
+    companion object{
+        private const val POINTING_ARROW_STROKE_COLOR: Int = Color.RED
+        private const val POINTING_ARROW_STROKE_WIDTH: Float = 10f
+        private const val POINTING_ARROW_ARROWHEAD_LENGTH: Float = 50f
+        private const val POINTING_ARROW_ARROWHEAD_ANGLE: Float = 35f
+    }
 
     private val arrowPaint = Paint()
     private var startPoint: Pair<Float, Float> = Pair(0f, 0f)
