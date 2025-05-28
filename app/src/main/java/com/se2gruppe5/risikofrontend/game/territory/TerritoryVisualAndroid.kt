@@ -28,9 +28,12 @@ class TerritoryVisualAndroid(
     val backgroundHighlightColor: Int = Color.argb(255, 255, 255, 0)
     val backgroundNoHighlightColor: Int = Color.argb(0, 255, 255, 0)
 
-    // fixme rename b to convey meaning/semantics for readability
-    override fun setHighlightSelected(b: Boolean) {
-        if (b) {
+    /**
+     * Toggles visual selection-highlighting of Territory
+     * @param useHighlightedColor Enable/Disable the Highlighting
+     */
+    override fun setHighlightSelected(useHighlightedColor: Boolean) {
+        if (useHighlightedColor) {
             outline.setBackgroundColor(backgroundHighlightColor)
         } else {
             outline.setBackgroundColor(backgroundNoHighlightColor)
