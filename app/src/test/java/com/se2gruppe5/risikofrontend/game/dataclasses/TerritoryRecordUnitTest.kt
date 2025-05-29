@@ -4,18 +4,8 @@ import com.se2gruppe5.risikofrontend.game.enums.Continent
 import org.junit.Test
 
 import org.junit.Assert.*
-import java.util.UUID
 
 class TerritoryRecordUnitTest {
-    // fixme test something
-    @Test
-    fun inst() {
-        val t = TerritoryRecord(1,1, Continent.POWER_SUPPLY, Pair(100, 100), Pair(100, 100))
-        t.owner = UUID.randomUUID()
-        //Possibly needed in the future:
-        //val p = TerritoryRecord(1,1)
-        //assertNotNull(p)
-    }
 
     @Test
     fun getCenterCorrect() {
