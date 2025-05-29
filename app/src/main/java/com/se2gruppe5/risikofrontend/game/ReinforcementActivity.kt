@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.se2gruppe5.risikofrontend.R
+import androidx.core.view.isGone
 
 class ReinforcementActivity : AppCompatActivity() {
 
@@ -29,8 +30,8 @@ class ReinforcementActivity : AppCompatActivity() {
     private lateinit var btnAccept: ImageView
 
 
-    private var troopCount = 10 // to change
-    private var deployedTroops = 0 // to change
+    private var troopCount = 10 // to change //todo ?
+    private var deployedTroops = 0 // to change //todo ?
 
     private lateinit var scrollView: HorizontalScrollView
     private lateinit var container: LinearLayout
@@ -40,7 +41,6 @@ class ReinforcementActivity : AppCompatActivity() {
     private val selectedCards = mutableListOf<View>()
     private val selectedIndices = mutableListOf<Int>()
 
-    // fixme too large method, extract into sub methods
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -50,6 +50,44 @@ class ReinforcementActivity : AppCompatActivity() {
         findViewById<ImageButton>(R.id.territoryAbtn).setOnClickListener {
             troopSelector.visibility = View.VISIBLE
         }
+
+        snapHelper = LinearSnapHelper().also {
+            it.attachToRecyclerView(troopNumbers)
+        }
+
+        setupButtons()
+        setupTroopCountDisplay()
+
+    }
+
+    private fun setupTroopCountDisplay() {
+        troopNumbers = findViewById(R.id.rvTroopNumbers)
+        troopNumbers.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        adapter = TroopNumberAdapter()
+        troopNumbers.adapter = adapter
+        troopNumbers.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                troopNumbers.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                val totalPx = troopNumbers.width
+                val circlePx = btnDecline.width
+                val availablePx = totalPx - (circlePx * 2)
+                adapter.itemWidth = availablePx / 3
+                adapter.numbers = (1..troopCount).toList()
+            }
+        })
+
+        findViewById<TextView>(R.id.Troop_Count).text = troopCount.toString()
+    }
+
+    private fun setupButtons() {
+        btnShowCards = findViewById(R.id.Card_Count)
+        btnShowCards.text = cardValues.size.toString()
+        scrollView = findViewById(R.id.scrollView)
+        container = findViewById(R.id.cardContainer)
+        btnTradeIn = findViewById(R.id.btnTradeIn)
+        btnTradeIn.visibility = View.GONE
 
         btnDecline = findViewById(R.id.btnDecline)
         btnDecline.setOnClickListener {
@@ -71,37 +109,8 @@ class ReinforcementActivity : AppCompatActivity() {
             troopSelector.visibility = View.GONE
         }
 
-        troopNumbers = findViewById(R.id.rvTroopNumbers)
-        troopNumbers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        adapter = TroopNumberAdapter()
-        troopNumbers.adapter = adapter
-
-        snapHelper = LinearSnapHelper().also {
-            it.attachToRecyclerView(troopNumbers)
-        }
-
-        troopNumbers.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                troopNumbers.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                val totalPx = troopNumbers.width
-                val circlePx = btnDecline.width
-                val availablePx = totalPx - (circlePx * 2)
-                adapter.itemWidth = availablePx / 3
-                adapter.numbers = (1..troopCount).toList()
-            }
-        })
-
-        findViewById<TextView>(R.id.Troop_Count).text = troopCount.toString()
-
-        btnShowCards = findViewById(R.id.Card_Count)
-        btnShowCards.text = cardValues.size.toString()
-        scrollView = findViewById(R.id.scrollView)
-        container = findViewById(R.id.cardContainer)
-        btnTradeIn = findViewById(R.id.btnTradeIn)
-        btnTradeIn.visibility = View.GONE
-
         btnShowCards.setOnClickListener {
-            if (scrollView.visibility == View.GONE) {
+            if (scrollView.isGone) {
                 rebuildCardContainer()
                 scrollView.visibility = View.VISIBLE
                 btnTradeIn.visibility = View.VISIBLE
@@ -148,7 +157,8 @@ class ReinforcementActivity : AppCompatActivity() {
                 } else if (selectedIndices.size < 3) {
                     selectedIndices.add(idx)
                     selectedCards.add(card)
-                    card.background = ContextCompat.getDrawable(this, R.drawable.selected_card_border)
+                    card.background =
+                        ContextCompat.getDrawable(this, R.drawable.selected_card_border)
                 }
             }
             container.addView(card)
