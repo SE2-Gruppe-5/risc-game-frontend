@@ -1,0 +1,4 @@
+package com.se2gruppe5.risikofrontend.game.engine
+
+data class Transform2D(var position: Point2D, var scale: Size2D)
+

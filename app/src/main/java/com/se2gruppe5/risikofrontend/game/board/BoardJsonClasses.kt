@@ -19,12 +19,12 @@ data class TerritoryData(
 
 @Serializable
 data class Position(
-    val x: Int,
-    val y: Int
+    val x: Float,
+    val y: Float
 )
 
 @Serializable
 data class Size(
-    val x: Int,
-    val y: Int
+    val x: Float,
+    val y: Float
 )

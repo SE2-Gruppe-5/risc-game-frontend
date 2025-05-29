@@ -137,7 +137,7 @@ class TerritoryManager private constructor(
 
                 prevSelTerritory?.let {
                     pointingArrow.setCoordinates(
-                        it.getCoordinatesAsFloat(true), t.getCoordinatesAsFloat(true)
+                        it.getCoordinates(true), t.getCoordinates(true)
                     )
                 }
 

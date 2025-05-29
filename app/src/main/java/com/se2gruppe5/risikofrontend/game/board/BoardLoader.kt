@@ -1,6 +1,9 @@
 package com.se2gruppe5.risikofrontend.game.board
 
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.engine.Point2D
+import com.se2gruppe5.risikofrontend.game.engine.Size2D
+import com.se2gruppe5.risikofrontend.game.engine.Transform2D
 import kotlinx.serialization.json.Json
 
 
@@ -14,10 +17,12 @@ class BoardLoader(jsonSrc: String) {
         val jsonTerritories = boardData.territories
 
         for(t in jsonTerritories) {
-            val position: Pair<Int, Int> = Pair(t.position.x, t.position.y)
-            val size: Pair<Int, Int> = Pair(t.size.x, t.size.y)
+            val transform = Transform2D( //todo maybe change json to actually use float
+                Point2D(t.position.x.toFloat(),t.position.y.toFloat()),
+                Size2D(t.size.x.toFloat(),t.size.y.toFloat()))
 
-            territories[t.id] = TerritoryRecord(t.id, 0, t.continent, position, size)
+
+            territories[t.id] = TerritoryRecord(t.id, 0, t.continent, transform)
         }
 
         val jsonConnections = boardData.connections

@@ -6,6 +6,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.graphics.toColorInt
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.engine.Point2D
 import java.util.UUID
 
 /**
@@ -66,7 +67,7 @@ class TerritoryVisualAndroid(
         }
     }
 
-    override fun getCoordinatesAsFloat(center: Boolean): Pair<Float, Float> {
+    override fun getCoordinates(center: Boolean): Point2D {
         val location = IntArray(2)
         imgBTN.getLocationInWindow(location)
         var x = location[0].toFloat()
@@ -75,7 +76,7 @@ class TerritoryVisualAndroid(
             x += imgBTN.width / 2
             y += imgBTN.height / 2
         }
-        return Pair(x, y)
+        return Point2D(x,y)
     }
 
     override fun getTerritoryId(): Int{

@@ -4,6 +4,9 @@ import com.se2gruppe5.risikofrontend.game.enums.Continent
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.dialogues.DialogueHandler
+import com.se2gruppe5.risikofrontend.game.engine.Point2D
+import com.se2gruppe5.risikofrontend.game.engine.Size2D
+import com.se2gruppe5.risikofrontend.game.engine.Transform2D
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
@@ -59,14 +62,14 @@ class TerritoryManagerTestUnitTest {
         manager = TerritoryManager.get()
 
         // Base territory record and visual
-        record = TerritoryRecord(1, 1, Continent.CPU, Pair(100, 100), Pair(100, 100))
+        record = TerritoryRecord(1, 1, Continent.CPU, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f)))
         t1 = mock {
             on { territoryRecord } doReturn record
             on { getTerritoryId() } doReturn record.id
             on { changeStat(any()) } doAnswer  { record.stat = it.getArgument(0) }
             on { changeOwner(any())} doAnswer {record.owner = it.getArgument(0)}
         }
-        record3 = TerritoryRecord(1, 1, Continent.CPU, Pair(100, 100), Pair(100, 100))
+        record3 = TerritoryRecord(1, 1, Continent.CPU, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f)))
         t2 = mock {
             on { territoryRecord } doReturn record3
             on { getTerritoryId() } doReturn record3.id
@@ -95,8 +98,8 @@ class TerritoryManagerTestUnitTest {
 
     @Test
     fun highlightTest() {
-        val record1 = TerritoryRecord(123, 1, Continent.CMOS, Pair(100, 100), Pair(100, 100))
-        val record2 = TerritoryRecord(321, 1, Continent.DCON, Pair(100, 100), Pair(100, 100))
+        val record1 = TerritoryRecord(123, 1, Continent.CMOS, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f)))
+        val record2 = TerritoryRecord(321, 1, Continent.DCON, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f)))
 
 
         val territory1 = mock<ITerritoryVisual> {
@@ -181,7 +184,7 @@ class TerritoryManagerTestUnitTest {
 
     @Test(expected = IllegalArgumentException::class)
     fun addTerritoryDuplicateIDTest() {
-        val record2 = TerritoryRecord(1, 5, Continent.CPU, Pair(100, 100), Pair(100, 100))
+        val record2 = TerritoryRecord(1, 5, Continent.CPU, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f)))
         val t2 = mock<ITerritoryVisual> {
             on { territoryRecord } doReturn record2
             on { getTerritoryId() } doReturn record2.id
@@ -248,7 +251,7 @@ class TerritoryManagerTestUnitTest {
     @Test
     fun updateCallsTerrManagerUpdateTest() {
         manager.addTerritory(t1)
-        val record2 = TerritoryRecord(1, 2, Continent.MMC, Pair(100, 100), Pair(100, 100)).apply { owner = null }
+        val record2 = TerritoryRecord(1, 2, Continent.MMC, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))).apply { owner = null }
         manager.updateTerritories(listOf(record, record2))
         verify(t1, times(2)).changeStat(any())
     }

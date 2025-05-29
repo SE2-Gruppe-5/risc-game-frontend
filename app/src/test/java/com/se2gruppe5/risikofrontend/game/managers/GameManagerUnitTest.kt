@@ -6,6 +6,9 @@ import android.widget.TextView
 import com.se2gruppe5.risikofrontend.game.enums.Continent
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.engine.Point2D
+import com.se2gruppe5.risikofrontend.game.engine.Size2D
+import com.se2gruppe5.risikofrontend.game.engine.Transform2D
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.network.INetworkClient
 import kotlinx.coroutines.runBlocking
@@ -195,8 +198,8 @@ class GameManagerUnitTest {
     @Test
     fun receiveTerritoryListUpdateDelegatesToTerritoryManager() {
         val dummyTerritories = listOf(
-            TerritoryRecord(1, 2, Continent.CPU, Pair(100, 100), Pair(100, 100)),
-            TerritoryRecord(3, 4, Continent.RAM, Pair(100, 100), Pair(100, 100))
+            TerritoryRecord(1, 2, Continent.CPU, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))),
+            TerritoryRecord(3, 4, Continent.RAM, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f)))
         )
         gameManager.receiveTerritoryListUpdate(dummyTerritories)
         verify(territoryManagerMock).updateTerritories(dummyTerritories)

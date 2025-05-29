@@ -1,6 +1,7 @@
 package com.se2gruppe5.risikofrontend.game.territory
 
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.engine.Point2D
 import java.util.UUID
 
 /**
@@ -57,7 +58,7 @@ interface ITerritoryVisual {
     /**
      * Returns the Territory's local center coordinates (in respect to window not screen)
      */
-    fun getCoordinatesAsFloat(center: Boolean): Pair<Float, Float>
+    fun getCoordinates(center: Boolean): Point2D
 
     fun getTerritoryId(): Int
 }
