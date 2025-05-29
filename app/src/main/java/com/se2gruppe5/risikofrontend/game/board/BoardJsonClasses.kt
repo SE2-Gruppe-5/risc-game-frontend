@@ -13,13 +13,18 @@ data class BoardData (
 data class TerritoryData(
     val id: Int,
     val continent: Continent,
-    val position: XY,
-    val size: XY
+    val position: Position,
+    val size: Size
 )
 
-// fixme use something like Position / Transform for readability
 @Serializable
-data class XY(
+data class Position(
+    val x: Int,
+    val y: Int
+)
+
+@Serializable
+data class Size(
     val x: Int,
     val y: Int
 )
