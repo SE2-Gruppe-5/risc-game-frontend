@@ -6,12 +6,10 @@ import org.junit.Test
 import org.junit.Assert.*
 
 class CardRecordUnitTest {
-    // fixme test something
     @Test
-    fun inst() {
-        CardRecord(CardType.Infantry)
+    fun inst() { //todo this is a bit useless atm
         //Possibly needed in the future:
-        //val c = CardRecord(CardType.Infantry)
-        //assertNotNull(c)
+        val c = CardRecord(CardType.Infantry)
+        assertNotNull(c)
     }
 }
