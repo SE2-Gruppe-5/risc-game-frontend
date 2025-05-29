@@ -46,8 +46,6 @@ class GameManagerUnitTest {
         }
 
 
-
-
         //Reset singletons before each test
         TerritoryManager.reset()
         GameManager.reset()
@@ -55,7 +53,7 @@ class GameManagerUnitTest {
         //Initialize singletons
         territoryManagerMock = mock()
         gameUUID = UUID.randomUUID()
-        GameManager.init(me, gameUUID,territoryManagerMock, networkClient, players)
+        GameManager.init(me, gameUUID, territoryManagerMock, networkClient, players)
         gameManager = GameManager.get()
     }
 
@@ -73,19 +71,20 @@ class GameManagerUnitTest {
     }
 
     @Test
-    fun testInitSingletonTwiceDoesntWork(){
+    fun testInitSingletonTwiceDoesntWork() {
         assertNotNull(gameManager)
         val other = PlayerRecord(UUID.randomUUID(), "a", 0xFFFFFF)
-        GameManager.init(other, gameUUID,territoryManagerMock, networkClient, players)
+        GameManager.init(other, gameUUID, territoryManagerMock, networkClient, players)
         assertEquals(me, gameManager.whoAmI())
 
     }
 
     @Test(expected = IllegalArgumentException::class)
-    fun testGetCurrentPlayerReturnsError(){
+    fun testGetCurrentPlayerReturnsError() {
         GameManager.reset()
-        val newPlayers: HashMap<UUID, PlayerRecord> = mutableMapOf<UUID, PlayerRecord>() as HashMap<UUID, PlayerRecord>
-        GameManager.init(me, gameUUID,territoryManagerMock, networkClient, newPlayers)
+        val newPlayers: HashMap<UUID, PlayerRecord> =
+            mutableMapOf<UUID, PlayerRecord>() as HashMap<UUID, PlayerRecord>
+        GameManager.init(me, gameUUID, territoryManagerMock, networkClient, newPlayers)
         GameManager.get().getCurrentPlayer()
 
     }
@@ -117,36 +116,18 @@ class GameManagerUnitTest {
         assertEquals(me, gameManager.getCurrentPlayer())
     }
 
-    // fixme split into multiple tests with the preceding test being the precondition for the next
     @Test
-    fun playerMapSanityCheck() {
-        val validMap = HashMap<UUID, PlayerRecord>().apply {
-            me.isCurrentTurn = true
-            put(me.id, me)
-            put(other.id, other)
-        }
-        gameManager.playerUUIDSanityCheck(validMap)
+    fun playerMapSanityCheckTest() {
+        playerMapSanityCheckValid()
 
-        val invalidMap = HashMap<UUID, PlayerRecord>().apply {
-            me.isCurrentTurn = true
-            put(me.id, me)
-            put(other.id, other)
-            put(UUID.randomUUID(), PlayerRecord(UUID.randomUUID(), "Invalid", Color.GREEN))
-        }
-        assertThrows(IllegalStateException::class.java) {
-            gameManager.playerUUIDSanityCheck(invalidMap)
-        }
+        playerMapSanityCheckInvalid()
 
-        val manyTurnsMap = HashMap<UUID, PlayerRecord>().apply {
-            me.isCurrentTurn = true
-            other.isCurrentTurn = true
-            put(me.id, me)
-            put(other.id, other)
-        }
-        assertThrows(IllegalStateException::class.java) {
-            gameManager.playerUUIDSanityCheck(manyTurnsMap)
-        }
+        playerMapSanityCheckManyTurns()
 
+        playerMapSanityCheckNoTurns()
+    }
+
+    private fun playerMapSanityCheckNoTurns() {
         val noTurnsMap = HashMap<UUID, PlayerRecord>().apply {
             me.isCurrentTurn = false
             other.isCurrentTurn = false
@@ -156,6 +137,39 @@ class GameManagerUnitTest {
         assertThrows(IllegalStateException::class.java) {
             gameManager.playerUUIDSanityCheck(noTurnsMap)
         }
+    }
+
+    private fun playerMapSanityCheckManyTurns() {
+        val manyTurnsMap = HashMap<UUID, PlayerRecord>().apply {
+            me.isCurrentTurn = true
+            other.isCurrentTurn = true
+            put(me.id, me)
+            put(other.id, other)
+        }
+        assertThrows(IllegalStateException::class.java) {
+            gameManager.playerUUIDSanityCheck(manyTurnsMap)
+        }
+    }
+
+    private fun playerMapSanityCheckInvalid() {
+        val invalidMap = HashMap<UUID, PlayerRecord>().apply {
+            me.isCurrentTurn = true
+            put(me.id, me)
+            put(other.id, other)
+            put(UUID.randomUUID(), PlayerRecord(UUID.randomUUID(), "Invalid", Color.GREEN))
+        }
+        assertThrows(IllegalStateException::class.java) {
+            gameManager.playerUUIDSanityCheck(invalidMap)
+        }
+    }
+
+    private fun playerMapSanityCheckValid() {
+        val validMap = HashMap<UUID, PlayerRecord>().apply {
+            me.isCurrentTurn = true
+            put(me.id, me)
+            put(other.id, other)
+        }
+        gameManager.playerUUIDSanityCheck(validMap)
     }
 
     @Test
@@ -216,16 +230,18 @@ class GameManagerUnitTest {
     }
 
     @Test
-    fun whoAmIreturnsMe(){
+    fun whoAmIreturnsMe() {
         assertEquals(me, gameManager.whoAmI())
     }
+
     @Test
-    fun getUUIDReturnsCorrectUUID(){
+    fun getUUIDReturnsCorrectUUID() {
         assertEquals(gameUUID, gameManager.getUUID())
     }
+
     @Test
-    fun getTerritoryManagerReturnsTerritoryManager(){
-        assertEquals(territoryManagerMock,gameManager.getTerritoryManager())
+    fun getTerritoryManagerReturnsTerritoryManager() {
+        assertEquals(territoryManagerMock, gameManager.getTerritoryManager())
     }
 
 
