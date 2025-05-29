@@ -7,7 +7,17 @@ import kotlin.random.Random
  * Returns a number 1-6
  */
 class Dice1d6Generic : IDice {
+    private val rng: Random
+
+    constructor() {
+        this.rng = Random.Default
+    }
+
+    constructor(random: Random) {
+        this.rng = random
+    }
+
     override fun roll(): Int {
-        return Random.Default.nextInt(1, 6 + 1)
+        return rng.nextInt(1, 6 + 1)
     }
 }
