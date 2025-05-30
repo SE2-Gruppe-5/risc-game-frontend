@@ -120,17 +120,7 @@ class GameManagerUnitTest {
     }
 
     @Test
-    fun playerMapSanityCheckTest() {
-        playerMapSanityCheckValid()
-
-        playerMapSanityCheckInvalid()
-
-        playerMapSanityCheckManyTurns()
-
-        playerMapSanityCheckNoTurns()
-    }
-
-    private fun playerMapSanityCheckNoTurns() {
+    fun playerMapSanityCheckNoTurns() {
         val noTurnsMap = HashMap<UUID, PlayerRecord>().apply {
             me.isCurrentTurn = false
             other.isCurrentTurn = false
@@ -142,7 +132,8 @@ class GameManagerUnitTest {
         }
     }
 
-    private fun playerMapSanityCheckManyTurns() {
+    @Test
+    fun playerMapSanityCheckManyTurns() {
         val manyTurnsMap = HashMap<UUID, PlayerRecord>().apply {
             me.isCurrentTurn = true
             other.isCurrentTurn = true
@@ -154,7 +145,8 @@ class GameManagerUnitTest {
         }
     }
 
-    private fun playerMapSanityCheckInvalid() {
+    @Test
+    fun playerMapSanityCheckInvalid() {
         val invalidMap = HashMap<UUID, PlayerRecord>().apply {
             me.isCurrentTurn = true
             put(me.id, me)
@@ -166,7 +158,8 @@ class GameManagerUnitTest {
         }
     }
 
-    private fun playerMapSanityCheckValid() {
+    @Test
+    fun playerMapSanityCheckValid() {
         val validMap = HashMap<UUID, PlayerRecord>().apply {
             me.isCurrentTurn = true
             put(me.id, me)
