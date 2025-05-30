@@ -99,7 +99,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.intents)
     //--------------------------------------------------------
     releaseImplementation(libs.slf4j.nop)
-    testImplementation(kotlin("test"))
 }
 
 /*
