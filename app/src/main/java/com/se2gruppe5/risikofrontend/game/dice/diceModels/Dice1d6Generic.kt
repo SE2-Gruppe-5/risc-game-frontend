@@ -9,11 +9,7 @@ import kotlin.random.Random
 class Dice1d6Generic : IDice {
     private val rng: Random
 
-    constructor() {
-        this.rng = Random.Default
-    }
-
-    constructor(random: Random) {
+    constructor(random: Random = Random.Default) {
         this.rng = random
     }
 

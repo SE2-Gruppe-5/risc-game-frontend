@@ -8,11 +8,9 @@ import kotlin.random.Random
  */
 class Dice1d6Cheating : IDice {
 
-    constructor()
-
     //For compatibility.
     // This Dice does not require any RNG given the degree to which it is cheating.
-    constructor(random: Random)
+    constructor(random: Random = Random.Default)
 
     override fun roll(): Int {
         return 6
