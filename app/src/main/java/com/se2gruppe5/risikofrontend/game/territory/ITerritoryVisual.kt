@@ -1,7 +1,7 @@
 package com.se2gruppe5.risikofrontend.game.territory
 
-import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
-import com.se2gruppe5.risikofrontend.game.engine.Point2D
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.util.Point2D
 import java.util.UUID
 
 /**

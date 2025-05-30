@@ -1,7 +1,7 @@
-package com.se2gruppe5.risikofrontend.game.dataclasses
+package com.se2gruppe5.risikofrontend.game.dataclasses.game
 
-import com.se2gruppe5.risikofrontend.game.engine.Point2D
-import com.se2gruppe5.risikofrontend.game.engine.Transform2D
+import com.se2gruppe5.risikofrontend.game.dataclasses.util.Point2D
+import com.se2gruppe5.risikofrontend.game.dataclasses.util.Transform2D
 import com.se2gruppe5.risikofrontend.game.enums.Continent
 import java.util.UUID
 

@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import com.se2gruppe5.risikofrontend.game.engine.Point2D
+import com.se2gruppe5.risikofrontend.game.dataclasses.util.Point2D
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin

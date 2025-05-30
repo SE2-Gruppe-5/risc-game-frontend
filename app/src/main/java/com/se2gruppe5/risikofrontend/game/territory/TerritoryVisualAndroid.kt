@@ -5,8 +5,8 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.graphics.toColorInt
-import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
-import com.se2gruppe5.risikofrontend.game.engine.Point2D
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.util.Point2D
 import java.util.UUID
 
 /**

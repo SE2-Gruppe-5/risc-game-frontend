@@ -1,8 +1,8 @@
 package com.se2gruppe5.risikofrontend.game.board
 
-import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
-import com.se2gruppe5.risikofrontend.game.engine.Point2D
-import com.se2gruppe5.risikofrontend.game.engine.Size2D
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.util.Point2D
+import com.se2gruppe5.risikofrontend.game.dataclasses.util.Size2D
 import com.se2gruppe5.risikofrontend.game.enums.Continent
 import org.junit.Test
 import org.junit.Assert.*

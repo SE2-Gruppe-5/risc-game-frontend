@@ -1,5 +1,7 @@
 package com.se2gruppe5.risikofrontend.game.dataclasses
 
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.CardRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.enums.CardType
 import org.junit.Test
 

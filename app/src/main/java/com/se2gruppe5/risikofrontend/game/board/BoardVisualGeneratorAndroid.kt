@@ -9,7 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.graphics.toColorInt
 import com.se2gruppe5.risikofrontend.R
-import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.LineAndroid
