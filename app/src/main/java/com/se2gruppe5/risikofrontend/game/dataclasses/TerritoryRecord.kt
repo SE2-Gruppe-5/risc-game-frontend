@@ -15,8 +15,8 @@ data class TerritoryRecord (
     var owner: UUID? = null
 
     fun getCenter(): Point2D {
-        val centerX: Float = transform.position.x+transform.scale.x/2
-        val centerY: Float = transform.position.y+transform.scale.y/2
+        val centerX: Float = transform.position.x+transform.size.x/2
+        val centerY: Float = transform.position.y+transform.size.y/2
         return Point2D(centerX,centerY)
     }
 

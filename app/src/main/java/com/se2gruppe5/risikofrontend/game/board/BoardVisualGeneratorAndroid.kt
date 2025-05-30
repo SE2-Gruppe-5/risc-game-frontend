@@ -30,7 +30,7 @@ class BoardVisualGeneratorAndroid {
                     LayoutInflater.from(activity).inflate(R.layout.territory_template, board, false)
                 territoryLayout.id = View.generateViewId()
 
-                val params = FrameLayout.LayoutParams(territory.transform.scale.x.toInt(), territory.transform.scale.y.toInt())
+                val params = FrameLayout.LayoutParams(territory.transform.size.x.toInt(), territory.transform.size.y.toInt())
                 params.leftMargin = territory.transform.position.x.toInt()
                 params.topMargin = territory.transform.position.y.toInt()
                 territoryLayout.layoutParams = params

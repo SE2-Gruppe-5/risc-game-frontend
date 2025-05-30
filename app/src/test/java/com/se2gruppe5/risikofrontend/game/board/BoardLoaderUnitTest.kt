@@ -55,9 +55,9 @@ class BoardLoaderUnitTest {
         assertEquals(Point2D(300f,100f), territory3.transform.position)
 
         // Sizes correct
-        assertEquals(Size2D(100f, 100f), territory1.transform.scale)
-        assertEquals(Size2D(100f, 100f), territory2.transform.scale)
-        assertEquals(Size2D(100f, 100f), territory3.transform.scale)
+        assertEquals(Size2D(100f, 100f), territory1.transform.size)
+        assertEquals(Size2D(100f, 100f), territory2.transform.size)
+        assertEquals(Size2D(100f, 100f), territory3.transform.size)
 
         // Continent assignment correct
         assertEquals(Continent.RAM, territory1.continent)
