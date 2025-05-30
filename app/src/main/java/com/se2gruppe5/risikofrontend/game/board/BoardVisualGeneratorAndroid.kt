@@ -63,9 +63,5 @@ class BoardVisualGeneratorAndroid {
                 }
             }
         }
-
-        private fun intPairToFloatPair(pair: Pair<Int, Int>): Pair<Float, Float> {
-            return Pair(pair.first.toFloat(), pair.second.toFloat())
-        }
     }
 }
