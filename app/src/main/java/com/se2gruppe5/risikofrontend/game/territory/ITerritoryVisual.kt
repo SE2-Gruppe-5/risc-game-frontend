@@ -17,7 +17,7 @@ interface ITerritoryVisual {
      * Visually accentuate the territory, as being currently selected
      * @param b Is this territory currently selected?
      */
-    fun setHighlightSelected(b: Boolean)
+    fun setHighlightSelected(highlighted: Boolean)
 
     /**
      * Changes Territory Ribbon Color

@@ -31,10 +31,10 @@ class TerritoryVisualAndroid(
 
     /**
      * Toggles visual selection-highlighting of Territory
-     * @param useHighlightedColor Enable/Disable the Highlighting
+     * @param highlighted Enable/Disable the Highlighting
      */
-    override fun setHighlightSelected(useHighlightedColor: Boolean) {
-        if (useHighlightedColor) {
+    override fun setHighlightSelected(highlighted: Boolean) {
+        if (highlighted) {
             outline.setBackgroundColor(backgroundHighlightColor)
         } else {
             outline.setBackgroundColor(backgroundNoHighlightColor)
