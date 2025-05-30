@@ -13,12 +13,15 @@ import com.se2gruppe5.risikofrontend.game.dice.diceModels.IDice
 class DiceVisualAndroid(
     dice: IDice? = null,
     val imgBTN: ImageButton,
-    val txt: TextView? = null
+    val txt: TextView? = null,
+    diceHardware: IDiceHardware? = null
 ) : IDiceVisual {
 
     //To facilitate backwards compatibility (i.e. setting the die by constructor param)
     //If omitted, default to standard dice-model.
     private var diceModel: IDice = dice ?: Dice1d6Generic()
+
+    private val diceHW: IDiceHardware = diceHardware ?: DiceHardwareAndroid()
 
     override fun setDice(dice: IDice) {
         diceModel = dice
@@ -33,6 +36,11 @@ class DiceVisualAndroid(
         if (txt != null) {
             txt.text = result.toString()
         }
+    }
+    override fun hwInteraction(){
+        diceHW
+        roll()
+
     }
 
     override fun clickSubscription(lambda: (IDiceVisual) -> Unit) {

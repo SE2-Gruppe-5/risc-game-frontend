@@ -15,6 +15,11 @@ interface IDiceVisual {
     fun roll()
 
     /**
+     * Perform input interaction with device hardware
+     */
+    fun hwInteraction()
+
+    /**
      * Observer-Pattern like system
      * Pass a functions that is to be executed upon a dice-roll being issued by button click (e.g.)
      * Multiple may be provided
