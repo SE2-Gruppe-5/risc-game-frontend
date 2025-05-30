@@ -87,7 +87,7 @@ class GameActivity : AppCompatActivity() {
         val diceBtn = this.findViewById<ImageButton>(R.id.diceButton)
         val diceTxt = this.findViewById<TextView>(R.id.diceText)
         val diceVisualAndroid = DiceVisualAndroid(Dice1d6Generic(), diceBtn, diceTxt)
-        diceVisualAndroid.clickSubscription { it.roll() }
+        diceVisualAndroid.clickSubscription { it.hwInteraction() }
         turnIndicators.add(this.findViewById<TextView>(R.id.player1txt))
         turnIndicators.add(this.findViewById<TextView>(R.id.player2txt))
         turnIndicators.add(this.findViewById<TextView>(R.id.player3txt))

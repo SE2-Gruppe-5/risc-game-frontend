@@ -2,6 +2,8 @@ package com.se2gruppe5.risikofrontend.game.dice
 
 import android.widget.ImageButton
 import android.widget.TextView
+import com.se2gruppe5.risikofrontend.game.dice.diceHardware.DiceHardwareAndroid
+import com.se2gruppe5.risikofrontend.game.dice.diceHardware.IDiceHardware
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.Dice1d6Generic
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.IDice
 
