@@ -32,6 +32,8 @@ import java.util.UUID
 import android.util.Log
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dialogues.DialogueHandler
+import com.se2gruppe5.risikofrontend.game.dice.diceHardware.DiceHardwareAndroid
+import com.se2gruppe5.risikofrontend.game.dice.popups.ShakePhoneAlert
 import com.se2gruppe5.risikofrontend.game.managers.GameViewManager
 import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.managers.ToastUtilAndroid
@@ -86,8 +88,11 @@ class GameActivity : AppCompatActivity() {
         //Placeholder
         val diceBtn = this.findViewById<ImageButton>(R.id.diceButton)
         val diceTxt = this.findViewById<TextView>(R.id.diceText)
-        val diceVisualAndroid = DiceVisualAndroid(Dice1d6Generic(), diceBtn, diceTxt)
+        val diceHW = DiceHardwareAndroid(this)
+        val diceShakePopup = ShakePhoneAlert(this, diceHW)
+        val diceVisualAndroid = DiceVisualAndroid(Dice1d6Generic(), diceBtn, diceTxt, diceHW, diceShakePopup)
         diceVisualAndroid.clickSubscription { it.hwInteraction() }
+
         turnIndicators.add(this.findViewById<TextView>(R.id.player1txt))
         turnIndicators.add(this.findViewById<TextView>(R.id.player2txt))
         turnIndicators.add(this.findViewById<TextView>(R.id.player3txt))
