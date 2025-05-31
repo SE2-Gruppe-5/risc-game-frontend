@@ -2,10 +2,10 @@ package com.se2gruppe5.risikofrontend.game.dice
 
 import android.widget.ImageButton
 import android.widget.TextView
-import com.se2gruppe5.risikofrontend.game.dice.diceHardware.DiceHardwareAndroid
 import com.se2gruppe5.risikofrontend.game.dice.diceHardware.IDiceHardware
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.Dice1d6Generic
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.IDice
+import com.se2gruppe5.risikofrontend.game.dice.popups.ShakePhoneAlert
 
 /**
  *  @param dice *OPTIONAL* setDice() via constructor param
@@ -16,14 +16,13 @@ class DiceVisualAndroid(
     dice: IDice? = null,
     val imgBTN: ImageButton,
     val txt: TextView? = null,
-    diceHardware: IDiceHardware? = null
+    val diceHardware: IDiceHardware? = null,
+    val diceShakePopup: ShakePhoneAlert? = null
 ) : IDiceVisual {
 
     //To facilitate backwards compatibility (i.e. setting the die by constructor param)
     //If omitted, default to standard dice-model.
     private var diceModel: IDice = dice ?: Dice1d6Generic()
-
-    private val diceHW: IDiceHardware = diceHardware ?: DiceHardwareAndroid()
 
     override fun setDice(dice: IDice) {
         diceModel = dice
@@ -33,16 +32,24 @@ class DiceVisualAndroid(
         return diceModel
     }
 
+    /**
+     * Subscribe to this with clickSubscription for simply rolling the dice by button press
+     */
     override fun roll() {
         val result = diceModel.roll()
         if (txt != null) {
             txt.text = result.toString()
         }
     }
-    override fun hwInteraction(){
-        diceHW
-        roll()
 
+    override fun hwInteraction(){
+        //If there is no hardware... do not use it.
+        if(diceHardware==null){
+            roll()
+        }
+        diceHardware?.setInteractionLambdaSubscription { this.roll() }
+        diceShakePopup?.showShakePromptDialog()
+        diceHardware?.sensorRegisterListener()
     }
 
     override fun clickSubscription(lambda: (IDiceVisual) -> Unit) {
