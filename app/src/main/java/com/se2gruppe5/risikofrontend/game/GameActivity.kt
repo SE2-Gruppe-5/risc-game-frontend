@@ -36,6 +36,8 @@ import com.se2gruppe5.risikofrontend.game.managers.GameViewManager
 import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.managers.ToastUtilAndroid
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
+import com.se2gruppe5.risikofrontend.game.vibrateonterritoryloss.PhoneHWViberInstance
+import com.se2gruppe5.risikofrontend.game.vibrateonterritoryloss.RealPhoneHWViber
 import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
 import java.io.Serializable
 
@@ -71,6 +73,9 @@ class GameActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        PhoneHWViberInstance.instance = RealPhoneHWViber(applicationContext)
+
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         enableEdgeToEdge()
         setContentView(R.layout.game)
