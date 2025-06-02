@@ -5,17 +5,6 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-condensed"
-        android:text="Select how many cards you want to trade (3 cards in total)"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
     <EditText
         android:id="@+id/type1Input"
         android:layout_width="match_parent"

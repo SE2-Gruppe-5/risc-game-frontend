@@ -6,7 +6,7 @@
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/type1Input"
+        android:id="@+id/troopsInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="number"
