@@ -68,6 +68,9 @@ class GameViewManager(private val activity: Activity) {
         cardDisplays.add(activity.findViewById<TextView>(R.id.card5))
 
        val  cards = player.cards
+        for(i in 0..4) {
+            cardDisplays.get(i).visibility = View.INVISIBLE
+        }
 
         for(i in 0..cards.size){
             cardDisplays.get(i).visibility = View.VISIBLE
