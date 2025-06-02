@@ -104,7 +104,16 @@ class CardHandlerUnitTest {
     }
     @Test
     fun checkIfOneOfEachReturnsCorrectTroops(){
-        val cards = listOf(CardRecord(CardType.Cavalry),CardRecord(CardType.Infantry),CardRecord(CardType.Artillery))
+        var cards = listOf(CardRecord(CardType.Cavalry),CardRecord(CardType.Infantry),CardRecord(CardType.Artillery))
+        assertEquals(10, CardHandler.tradeCards(cards))
+        cards = listOf(CardRecord(CardType.Infantry),CardRecord(CardType.Cavalry),CardRecord(CardType.Artillery))
+        assertEquals(10, CardHandler.tradeCards(cards))
+        cards = listOf(CardRecord(CardType.Artillery),CardRecord(CardType.Cavalry),CardRecord(CardType.Infantry))
+        assertEquals(10, CardHandler.tradeCards(cards))
+    }
+    @Test
+    fun checkIfOneOfEachReturnsCorrectTroops(){
+
         assertEquals(10, CardHandler.tradeCards(cards))
     }
     @Test
@@ -113,8 +122,13 @@ class CardHandlerUnitTest {
         assertEquals(-1, CardHandler.tradeCards(cards))
     }
     @Test
-    fun checkIfTooLittleCardsnReturnsCorrectTroops(){
+    fun checkIfTooLittleCardsReturnsCorrectTroops(){
         val cards = listOf(CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry))
+        assertEquals(-1, CardHandler.tradeCards(cards))
+    }
+    @Test
+    fun checkIfTooManyCardsReturnsCorrectTroops(){
+        val cards = listOf(CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry))
         assertEquals(-1, CardHandler.tradeCards(cards))
     }
 

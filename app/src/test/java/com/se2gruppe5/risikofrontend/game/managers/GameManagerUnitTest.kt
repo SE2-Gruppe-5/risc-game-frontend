@@ -192,6 +192,20 @@ class GameManagerUnitTest {
         gameManager.nextPhase()
         verify(networkClient, times(1)).changePhase(gameManager.getUUID())
     }
+    @Test
+    fun nextPhaseAddsCardWhenCapturedATerritory() = runBlocking {
+        me.capturedTerritory = true
+        val before = me.cards.size
+        gameManager.nextPhase()
+        assertEquals(before+1, me.cards.size)
+    }
+    @Test
+    fun nextPhaseDoesntAddACardWhenNotCapturedATerritory() = runBlocking {
+        me.capturedTerritory = false
+        val before = me.cards.size
+        gameManager.nextPhase()
+        assertEquals(before, me.cards.size)
+    }
 
     @Test
     fun nextPhaseDoesNotInvokeNetworkClientWhenNotCurrent() = runBlocking {
