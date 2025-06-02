@@ -63,10 +63,12 @@ class GameActivity : AppCompatActivity() {
     var attackIndicator: TextView? = null
     var tradeIndicator: TextView? = null
     var phaseTxt: TextView? = null
+    var viewManager: GameViewManager? = null
 
     var turnIndicators: MutableList<TextView> = mutableListOf()
     var gameManager: GameManager? = null
     var gameID: UUID? = null
+    var me: PlayerRecord? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,12 +78,12 @@ class GameActivity : AppCompatActivity() {
         setContentView(R.layout.game)
 
         val gameStart = getSerializableExtraCompat(intent, "GAME_DATA", GameStartMessage::class.java)!!
-        val me = getSerializableExtraCompat(intent, "LOCAL_PLAYER", PlayerRecord::class.java)!!
+        me = getSerializableExtraCompat(intent, "LOCAL_PLAYER", PlayerRecord::class.java)!!
 
         gameID = gameStart.gameId
 
         TerritoryManager.init(me, PointingArrowAndroid(this), ToastUtilAndroid(this), DialogueHandler(this))
-        GameManager.init(me, gameID!!, TerritoryManager.get(), client, gameStart.players)
+        GameManager.init(me!!, gameID!!, TerritoryManager.get(), client, gameStart.players)
 
         //Placeholder
         val diceBtn = this.findViewById<ImageButton>(R.id.diceButton)
@@ -101,8 +103,8 @@ class GameActivity : AppCompatActivity() {
         tradeIndicator = this.findViewById<TextView>(R.id.tradeIndicator)
         phaseTxt = this.findViewById<TextView>(R.id.currentPhaseTxt)
 
-        val viewManager = GameViewManager(this)
-        viewManager.initializeGame(this, turnIndicators)
+        viewManager = GameViewManager(this)
+        viewManager?.initializeGame(this, turnIndicators)
 
         nextPhaseBtn?.setOnClickListener {
             changePhase()
@@ -136,6 +138,7 @@ class GameActivity : AppCompatActivity() {
             if (!GameManager.get().nextPhase()) {
                 Toast.makeText(this@GameActivity, "It's not your turn", Toast.LENGTH_SHORT).show()
             }
+            viewManager?.updateCardDisplay(me!!)
         }
     }
 

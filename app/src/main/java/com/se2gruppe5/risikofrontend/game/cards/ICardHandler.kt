@@ -18,11 +18,4 @@ interface ICardHandler {
     fun getCard(player: PlayerRecord?)
 
 
-
-
-
-
-
-
-
 }

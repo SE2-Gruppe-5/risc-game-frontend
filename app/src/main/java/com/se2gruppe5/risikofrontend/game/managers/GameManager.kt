@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
+import com.se2gruppe5.risikofrontend.game.cards.CardHandler
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.enums.Phases
@@ -125,6 +126,10 @@ class GameManager private constructor(
     suspend fun nextPhase(): Boolean {
         if (isMyTurn()) {
             networkClient.changePhase(gameManagerUUID)
+            if(me.capturedTerritory && me.cards.size < 5){
+                CardHandler.getCard(me)
+                me.capturedTerritory = false
+            }
             return true
         }
         return false
