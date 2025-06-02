@@ -7,18 +7,29 @@ import com.se2gruppe5.risikofrontend.game.enums.CardType
 object CardHandler :ICardHandler {
 
 
-    //TODO
-    override fun tradeCards(player: PlayerRecord, cards: List<CardRecord>, starCount: Int) {
-//        var infantry = 0
-//        var cavalry = 0
-//        var artillery = 0
-//        cards.forEach { card ->{
-//            if (card.type == CardType.Infantry) infantry++
-//            if(card.type == CardType.Cavalry) cavalry++
-//            if(card.type == CardType.Artillery) artillery++
-//        } }
 
+    override fun tradeCards(cards: List<CardRecord>): Int {
+        if(cards.size ==3) {
+            var infantry = 0
+            var cavalry = 0
+            var artillery = 0
+            for(card in cards){
+                    if (card.type == CardType.Infantry) infantry++
+                    if (card.type == CardType.Cavalry) cavalry++
+                    if (card.type == CardType.Artillery) artillery++
+                }
 
+            if (infantry == 3) {
+                return 4
+            } else if (cavalry == 3) {
+                return 6
+            } else if (artillery == 3) {
+                return 8
+            } else if (artillery == 1 && cavalry == 1 && infantry == 1) {
+                return 10
+            }
+        }
+        return -1
     }
 
 

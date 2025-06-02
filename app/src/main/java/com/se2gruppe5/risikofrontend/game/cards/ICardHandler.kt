@@ -7,8 +7,10 @@ interface ICardHandler {
 
     /**
      * Trade a list of cards for troops
+     * if the traded cards don't match the schema return -1
+     * Else return the number of troops that the player gets from the trade
      */
-    fun tradeCards(player: PlayerRecord, cards: List<CardRecord>, starCount: Int)
+    fun tradeCards(cards: List<CardRecord>): Int
 
 
     /**
