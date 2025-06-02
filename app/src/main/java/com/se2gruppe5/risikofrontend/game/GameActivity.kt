@@ -30,8 +30,10 @@ import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePlayersMessage
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
 import android.util.Log
+import com.se2gruppe5.risikofrontend.game.dataclasses.CardRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dialogues.DialogueHandler
+import com.se2gruppe5.risikofrontend.game.enums.CardType
 import com.se2gruppe5.risikofrontend.game.managers.GameViewManager
 import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.managers.ToastUtilAndroid
@@ -79,10 +81,10 @@ class GameActivity : AppCompatActivity() {
 
         val gameStart = getSerializableExtraCompat(intent, "GAME_DATA", GameStartMessage::class.java)!!
         me = getSerializableExtraCompat(intent, "LOCAL_PLAYER", PlayerRecord::class.java)!!
-
+        val dialogHandler = DialogueHandler(this)
         gameID = gameStart.gameId
 
-        TerritoryManager.init(me, PointingArrowAndroid(this), ToastUtilAndroid(this), DialogueHandler(this))
+        TerritoryManager.init(me, PointingArrowAndroid(this), ToastUtilAndroid(this),dialogHandler )
         GameManager.init(me!!, gameID!!, TerritoryManager.get(), client, gameStart.players)
 
         //Placeholder
@@ -106,8 +108,13 @@ class GameActivity : AppCompatActivity() {
         viewManager = GameViewManager(this)
         viewManager?.initializeGame(this, turnIndicators)
 
+
+
         nextPhaseBtn?.setOnClickListener {
             changePhase()
+            if(me!!.cards.size == 5){
+                dialogHandler.useTradeCardDialog(me!!, true)
+            }
             viewManager?.updateCardDisplay(me!!)
             Log.i("GameManger", gameID.toString())
         }

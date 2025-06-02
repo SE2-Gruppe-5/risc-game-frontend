@@ -47,6 +47,7 @@ class TradeCardDialog(
         setButton(BUTTON_NEGATIVE, "Cancel") { _, _ ->
             dismiss()
         }
+        setTitle("Select how many cards you want to trade (3 cards in total)")
     }
 
     private fun handlePositiveButton(){
