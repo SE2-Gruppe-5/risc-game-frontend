@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:text="Select how many cards you want to trade (3 cards in total)"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/type1Input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="How many 1 cards (1-3)"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/type2Input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="How many 2 cards (1-3)"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/type3Input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="How many 3 cards (1-3)"
+        android:inputType="number" />
+</LinearLayout>
