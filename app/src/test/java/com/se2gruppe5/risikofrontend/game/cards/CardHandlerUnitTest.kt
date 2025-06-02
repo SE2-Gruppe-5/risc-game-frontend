@@ -111,11 +111,7 @@ class CardHandlerUnitTest {
         cards = listOf(CardRecord(CardType.Artillery),CardRecord(CardType.Cavalry),CardRecord(CardType.Infantry))
         assertEquals(10, CardHandler.tradeCards(cards))
     }
-    @Test
-    fun checkIfOneOfEachReturnsCorrectTroops(){
 
-        assertEquals(10, CardHandler.tradeCards(cards))
-    }
     @Test
     fun checkIfWrongCardSelectionReturnsCorrectTroops(){
         val cards = listOf(CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry),CardRecord(CardType.Artillery))
