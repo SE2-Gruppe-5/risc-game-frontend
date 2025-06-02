@@ -107,9 +107,6 @@ class GameActivity : AppCompatActivity() {
         phaseTxt = this.findViewById<TextView>(R.id.currentPhaseTxt)
         val troopText = this.findViewById<TextView>(R.id.freeTroopTxt)
 
-        for(i in 0..3){
-            CardHandler.getCard(me!!)
-        }
         viewManager = GameViewManager(this)
         viewManager?.initializeGame(this, turnIndicators)
 
