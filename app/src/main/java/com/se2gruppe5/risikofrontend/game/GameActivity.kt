@@ -108,6 +108,7 @@ class GameActivity : AppCompatActivity() {
 
         nextPhaseBtn?.setOnClickListener {
             changePhase()
+            viewManager?.updateCardDisplay(me!!)
             Log.i("GameManger", gameID.toString())
         }
         val showContinentButton: Button = this.findViewById(R.id.btn_show_continents)
@@ -138,8 +139,8 @@ class GameActivity : AppCompatActivity() {
             if (!GameManager.get().nextPhase()) {
                 Toast.makeText(this@GameActivity, "It's not your turn", Toast.LENGTH_SHORT).show()
             }
-            viewManager?.updateCardDisplay(me!!)
         }
+
     }
 
     private fun getGameInfo() {

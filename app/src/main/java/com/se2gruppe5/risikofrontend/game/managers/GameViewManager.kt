@@ -68,21 +68,20 @@ class GameViewManager(private val activity: Activity) {
         cardDisplays.add(activity.findViewById<TextView>(R.id.card5))
 
        val  cards = player.cards
-        for(i in 0..4) {
-            cardDisplays.get(i).visibility = View.INVISIBLE
+        for(display in cardDisplays) {
+            display.visibility = View.INVISIBLE
         }
-
-        for(i in 0..cards.size){
-            cardDisplays.get(i).visibility = View.VISIBLE
-            var cardtype = 0
-            when(cards.get(i).type){
-                Infantry -> cardtype = 1
-                Cavalry -> cardtype = 2
-                Artillery -> cardtype = 3
+        if(cards.isNotEmpty()) {
+            for (i in cards.indices) {
+                cardDisplays[i].visibility = View.VISIBLE
+                val cardtype = when (cards[i].type) {
+                    Infantry -> 1
+                    Cavalry -> 2
+                    Artillery -> 3
+                }
+                cardDisplays[i].text = cardtype.toString()
             }
-            cardDisplays.get(i).text = cardtype.toString()
         }
-
 
 
 
