@@ -40,6 +40,8 @@ class DiceVisualAndroid(
         if (txt != null) {
             txt.text = result.toString()
         }
+        //Hide popup if dice roll occurred
+        diceShakePopup?.dismissShakePromptDialog()
     }
 
     /**
