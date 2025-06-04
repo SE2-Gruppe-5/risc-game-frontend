@@ -170,6 +170,7 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/game/territory/LineAndroid.kt",
                 "**/com/se2gruppe5/risikofrontend/game/dice/DiceVisualAndroid.kt",
                 "**/com/se2gruppe5/risikofrontend/game/dice/diceHardware/**",
+                "**/com/se2gruppe5/risikofrontend/game/dice/popups/ShakePhoneAlert.kt",
                 "**/com/se2gruppe5/risikofrontend/devtools/**",
                 "**/com/se2gruppe5/risikofrontend/lobby/**",
                 "**/com/se2gruppe5/risikofrontend/network/**",
