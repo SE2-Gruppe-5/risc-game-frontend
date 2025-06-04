@@ -42,6 +42,10 @@ class DiceVisualAndroid(
         }
     }
 
+    /**
+     * Subscribe to this with clickSubscription for initiating Hardware-Roll-Interaction
+     * (HW omitted if not set, calls roll() instead)
+     */
     override fun hwInteraction(){
         //If there is no hardware... do not use it.
         if(diceHardware==null){
@@ -57,5 +61,6 @@ class DiceVisualAndroid(
             lambda(this)
         }
     }
+
 
 }
