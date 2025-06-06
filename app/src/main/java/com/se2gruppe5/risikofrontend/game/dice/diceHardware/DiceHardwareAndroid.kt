@@ -15,8 +15,8 @@ class DiceHardwareAndroid(private val context: Context) : IDiceHardware, SensorE
     private var shakeLambda: () -> Unit = {}
 
     //Settings
-    private val shakeDetectionThreshold = 15
-    private val shakeAverageSoften = 0.8f // 0.0f < x < 1.0f
+    private val shakeDetectionThreshold = 25
+    private val shakeAverageSoften = 0.6f // 0.0f < x < 1.0f
 
     override fun sensorRegisterListener() {
         sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
