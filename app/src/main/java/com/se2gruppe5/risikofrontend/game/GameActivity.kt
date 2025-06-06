@@ -77,21 +77,35 @@ class GameActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.game)
 
-        val gameStart = getSerializableExtraCompat(intent, "GAME_DATA", GameStartMessage::class.java)!!
+        val gameStart =
+            getSerializableExtraCompat(intent, "GAME_DATA", GameStartMessage::class.java)!!
         val me = getSerializableExtraCompat(intent, "LOCAL_PLAYER", PlayerRecord::class.java)!!
 
         gameID = gameStart.gameId
 
-        TerritoryManager.init(me, PointingArrowAndroid(this), ToastUtilAndroid(this), DialogueHandler(this))
+        TerritoryManager.init(
+            me,
+            PointingArrowAndroid(this),
+            ToastUtilAndroid(this),
+            DialogueHandler(this)
+        )
         GameManager.init(me, gameID!!, TerritoryManager.get(), client, gameStart.players)
 
-        //Placeholder
+        // - Dice UI/UX -
         val diceBtn = this.findViewById<ImageButton>(R.id.diceButton)
         val diceTxt = this.findViewById<TextView>(R.id.diceText)
         val diceHW = DiceHardwareAndroid(this)
-        val diceShakePopup = ShakePhoneAlert(this, diceHW)
-        val diceVisualAndroid = DiceVisualAndroid(Dice1d6Generic(), diceBtn, diceTxt, diceHW, diceShakePopup)
+        val shakePhoneAlert = ShakePhoneAlert(this)
+        val diceVisualAndroid =
+            DiceVisualAndroid(Dice1d6Generic(), diceBtn, diceTxt, diceHW, shakePhoneAlert)
+        //Wire up lambda interactions
         diceVisualAndroid.clickSubscription { it.hwInteraction() }
+        shakePhoneAlert.registerLambda = { diceHW.sensorRegisterListener() }
+        shakePhoneAlert.deregisterLambda = {
+            diceHW.sensorDeRegisterListener()
+            diceVisualAndroid.resetDice()
+        }
+        shakePhoneAlert.setCheatLambda = { dice -> diceVisualAndroid.setDice(dice) }
 
         turnIndicators.add(this.findViewById<TextView>(R.id.player1txt))
         turnIndicators.add(this.findViewById<TextView>(R.id.player2txt))
@@ -198,8 +212,11 @@ class GameActivity : AppCompatActivity() {
         sseService?.handler(MessageType.UPDATE_PLAYERS) {
             it as UpdatePlayersMessage
             GameManager.get().receivePlayerListUpdate(it.players)
-            for(player in it.players){
-                Log.i("GameManger", "${player.value.id} ${player.key} ${player.value.isCurrentTurn}")
+            for (player in it.players) {
+                Log.i(
+                    "GameManger",
+                    "${player.value.id} ${player.key} ${player.value.isCurrentTurn}"
+                )
             }
             val currentPlayerIndex = it.players.values.indexOfFirst { it.isCurrentTurn }
             changeHighlightedPlayer(currentPlayerIndex, turnIndicators)
@@ -214,9 +231,13 @@ class GameActivity : AppCompatActivity() {
 
     /**
     Workaround for using getSerializableExtra on all Android versions
-    **/
-    private fun <T: Serializable> getSerializableExtraCompat(intent: Intent, varName: String, retClass: Class<T>): T? {
-        if (Build.VERSION.SDK_INT>=33) {
+     **/
+    private fun <T : Serializable> getSerializableExtraCompat(
+        intent: Intent,
+        varName: String,
+        retClass: Class<T>
+    ): T? {
+        if (Build.VERSION.SDK_INT >= 33) {
             return intent.getSerializableExtra(varName, retClass)
         }
 

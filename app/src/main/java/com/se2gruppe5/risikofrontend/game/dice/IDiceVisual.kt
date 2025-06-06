@@ -8,6 +8,7 @@ interface IDiceVisual {
      */
     fun setDice(dice: IDice)
     fun getDice(): IDice
+    fun resetDice()
 
     /**
      * Roll the dice!

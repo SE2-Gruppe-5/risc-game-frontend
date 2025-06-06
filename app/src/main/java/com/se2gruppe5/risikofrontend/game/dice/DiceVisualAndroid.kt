@@ -23,6 +23,7 @@ class DiceVisualAndroid(
     //To facilitate backwards compatibility (i.e. setting the die by constructor param)
     //If omitted, default to standard dice-model.
     private var diceModel: IDice = dice ?: Dice1d6Generic()
+    private val defaultDiceModel = diceModel
 
     override fun setDice(dice: IDice) {
         diceModel = dice
@@ -30,6 +31,16 @@ class DiceVisualAndroid(
 
     override fun getDice(): IDice {
         return diceModel
+    }
+
+    override fun resetDice() {
+        /*
+        Reset for next roll
+        EDGE CASE: When changing dice model with hwInteraction,
+        cancelling the roll by pressing back and then somehow subsequently calling roll() instead of hwInteraction()
+        the previously selected (e.g. cheating) dice will still be used)
+         */
+        diceModel = defaultDiceModel
     }
 
     /**
@@ -55,7 +66,6 @@ class DiceVisualAndroid(
         }
         diceHardware?.setInteractionLambdaSubscription { this.roll() }
         diceShakePopup?.showShakePromptDialog()
-        diceHardware?.sensorRegisterListener()
     }
 
     override fun clickSubscription(lambda: (IDiceVisual) -> Unit) {
