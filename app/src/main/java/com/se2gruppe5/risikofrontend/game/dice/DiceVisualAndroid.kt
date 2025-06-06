@@ -64,7 +64,7 @@ class DiceVisualAndroid(
         if(diceHardware==null){
             roll()
         }
-        diceHardware?.setInteractionLambdaSubscription { this.roll() }
+        diceHardware?.setInteractionLambdaSubscription { this.roll() } //Pass control to HW Impl
         diceShakePopup?.showShakePromptDialog()
     }
 

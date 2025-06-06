@@ -20,16 +20,14 @@ class ShakePhoneAlert(context: Context) {
         //Wire up buttons
         // (this is a very hacky workaround and only allows 3 buttons, sufficient for this project)
         // (Better solution would be custom xml)
-        .setPositiveButton("Back") { _, _ ->
+        .setNeutralButton("Back") { _, _ ->
             dismissShakePromptDialog()
         }
         .setNegativeButton("Cheat mildly") { _, _ ->
             setCheatLambda(Dice1d6Unfair())
-            popup.show() //clicking the button hides it, so show it again
         }
-        .setNeutralButton("Cheat blatantly") { _, _ ->
+        .setPositiveButton("Cheat blatantly") { _, _ ->
             setCheatLambda(Dice1d6Cheating())
-            popup.show() //clicking the button hides it, so show it again
         }
 
         .create()

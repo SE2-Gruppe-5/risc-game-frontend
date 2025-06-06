@@ -105,7 +105,15 @@ class GameActivity : AppCompatActivity() {
             diceHW.sensorDeRegisterListener()
             diceVisualAndroid.resetDice()
         }
-        shakePhoneAlert.setCheatLambda = { dice -> diceVisualAndroid.setDice(dice) }
+        shakePhoneAlert.setCheatLambda = { dice ->
+            diceHW.sensorDeRegisterListener()
+            diceVisualAndroid.setDice(dice)
+            diceVisualAndroid.roll()
+            diceVisualAndroid.resetDice()
+            // By Design i have chosen to let the two cheating variants
+            // be performed without shaking the phone.
+            // (More fun to spot someone cheating when playing in person this way)
+        }
 
         turnIndicators.add(this.findViewById<TextView>(R.id.player1txt))
         turnIndicators.add(this.findViewById<TextView>(R.id.player2txt))
