@@ -169,8 +169,6 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/game/territory/PointingArrowAndroid.kt",
                 "**/com/se2gruppe5/risikofrontend/game/territory/LineAndroid.kt",
                 "**/com/se2gruppe5/risikofrontend/game/dice/DiceVisualAndroid.kt",
-                "**/com/se2gruppe5/risikofrontend/game/dice/diceHardware/**",
-                "**/com/se2gruppe5/risikofrontend/game/dice/popups/ShakePhoneAlert.kt",
                 "**/com/se2gruppe5/risikofrontend/devtools/**",
                 "**/com/se2gruppe5/risikofrontend/lobby/**",
                 "**/com/se2gruppe5/risikofrontend/network/**",
@@ -185,6 +183,7 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/Constants.kt",
                 "**/com/se2gruppe5/risikofrontend/game/dialogues/**",
                 "**/com/se2gruppe5/risikofrontend/game/popup/**",
+                "**/com/se2gruppe5/risikofrontend/game/hardware/**",
                 "**/com/se2gruppe5/risikofrontend/game/enums/**",
                 "**/com/se2gruppe5/risikofrontend/game/managers/GameViewManager.kt",
                 "**/com/se2gruppe5/risikofrontend/game/managers/ToastUtilAndroid.kt"

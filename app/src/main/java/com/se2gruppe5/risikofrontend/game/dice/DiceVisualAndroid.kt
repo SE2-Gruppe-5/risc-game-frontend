@@ -2,10 +2,10 @@ package com.se2gruppe5.risikofrontend.game.dice
 
 import android.widget.ImageButton
 import android.widget.TextView
-import com.se2gruppe5.risikofrontend.game.dice.diceHardware.IDiceHardware
+import com.se2gruppe5.risikofrontend.game.hardware.IShakeHardware
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.Dice1d6Generic
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.IDice
-import com.se2gruppe5.risikofrontend.game.dice.popups.ShakePhoneAlert
+import com.se2gruppe5.risikofrontend.game.popup.ShakePhoneAlert
 
 /**
  *  @param dice *OPTIONAL* setDice() via constructor param
@@ -16,7 +16,7 @@ class DiceVisualAndroid(
     dice: IDice? = null,
     val imgBTN: ImageButton,
     val txt: TextView? = null,
-    val diceHardware: IDiceHardware? = null,
+    val diceHardware: IShakeHardware? = null,
     val diceShakePopup: ShakePhoneAlert? = null
 ) : IDiceVisual {
 

@@ -1,4 +1,4 @@
-package com.se2gruppe5.risikofrontend.game.dice.popups
+package com.se2gruppe5.risikofrontend.game.popup
 
 import android.app.AlertDialog
 import android.content.Context

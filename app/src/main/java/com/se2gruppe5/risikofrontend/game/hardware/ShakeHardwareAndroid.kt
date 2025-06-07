@@ -1,12 +1,13 @@
-package com.se2gruppe5.risikofrontend.game.dice.diceHardware
+package com.se2gruppe5.risikofrontend.game.hardware
 
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import kotlin.math.sqrt
 
-class DiceHardwareAndroid(private val context: Context) : IDiceHardware, SensorEventListener {
+class ShakeHardwareAndroid(private val context: Context) : IShakeHardware, SensorEventListener {
 
     private var sensorManager: SensorManager? = null
     private var shakeDelta = 0f
@@ -45,7 +46,7 @@ class DiceHardwareAndroid(private val context: Context) : IDiceHardware, SensorE
         //Detect next measurement
         shakeMeasurementLast = shakeMeasurementCurrent
         //To compute linear accel. in 3d: |a| = sqrt(x^2+y^2+z^2)
-        shakeMeasurementCurrent = kotlin.math.sqrt((x * x + y * y + z * z).toDouble()).toFloat()
+        shakeMeasurementCurrent = sqrt((x * x + y * y + z * z).toDouble()).toFloat()
         //Soften out shakes by retaining recent accelerations
         shakeDelta = shakeDelta * shakeAverageSoften
         //Add newest measurement to sum
