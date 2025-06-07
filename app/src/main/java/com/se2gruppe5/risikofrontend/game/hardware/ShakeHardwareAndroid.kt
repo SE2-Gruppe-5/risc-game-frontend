@@ -7,7 +7,19 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import kotlin.math.sqrt
 
-class ShakeHardwareAndroid(private val context: Context) : IShakeHardware, SensorEventListener {
+class ShakeHardwareAndroid private constructor (private val context: Context) : IShakeHardware, SensorEventListener {
+
+    //Credit: https://stackoverflow.com/questions/40398072/singleton-with-parameter-in-kotlin
+    companion object {
+        @Volatile
+        private var INSTANCE: IShakeHardware? = null
+
+        fun getInstance(context: Context): IShakeHardware {
+            return INSTANCE ?: synchronized(this) {
+                INSTANCE ?: ShakeHardwareAndroid(context.applicationContext).also { INSTANCE = it }
+            }
+        }
+    }
 
     private var sensorManager: SensorManager? = null
     private var shakeDelta = 0f

@@ -94,7 +94,7 @@ class GameActivity : AppCompatActivity() {
         // - Dice UI/UX -
         val diceBtn = this.findViewById<ImageButton>(R.id.diceButton)
         val diceTxt = this.findViewById<TextView>(R.id.diceText)
-        val diceHW = ShakeHardwareAndroid(this)
+        val diceHW = ShakeHardwareAndroid.getInstance(this)
         val shakePhoneAlert = ShakePhoneAlert(this)
         val diceVisualAndroid =
             DiceVisualAndroid(Dice1d6Generic(), diceBtn, diceTxt, diceHW, shakePhoneAlert)
