@@ -400,5 +400,11 @@ class TerritoryManagerTestUnitTest {
         GameManager.get().receivePlayerListUpdate(playerList)
     }
 
+    @Test
+    fun testCalculateFreeTroopsMinimumReturn(){
+       var troops =  manager.calculateNewTroops(mePlayerRecord)
+        assertEquals(3,troops)
+    }
+
 
 }
