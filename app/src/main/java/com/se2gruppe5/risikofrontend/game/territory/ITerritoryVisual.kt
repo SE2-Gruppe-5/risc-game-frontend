@@ -15,7 +15,7 @@ interface ITerritoryVisual {
 
     /**
      * Visually accentuate the territory, as being currently selected
-     * @param b Is this territory currently selected?
+     * @param highlighted Is this territory currently selected?
      */
     fun setHighlightSelected(highlighted: Boolean)
 
