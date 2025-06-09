@@ -32,6 +32,9 @@ import java.util.UUID
 import android.util.Log
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dialogues.DialogueHandler
+import com.se2gruppe5.risikofrontend.game.hardware.FlashLightHardwareAndroid
+import com.se2gruppe5.risikofrontend.game.hardware.IFlashLightHardware
+import com.se2gruppe5.risikofrontend.game.hardware.IShakeHardware
 import com.se2gruppe5.risikofrontend.game.hardware.ShakeHardwareAndroid
 import com.se2gruppe5.risikofrontend.game.popup.ShakePhoneAlert
 import com.se2gruppe5.risikofrontend.game.managers.GameViewManager
@@ -91,29 +94,10 @@ class GameActivity : AppCompatActivity() {
         )
         GameManager.init(me, gameID!!, TerritoryManager.get(), client, gameStart.players)
 
-        // - Dice UI/UX -
-        val diceBtn = this.findViewById<ImageButton>(R.id.diceButton)
-        val diceTxt = this.findViewById<TextView>(R.id.diceText)
-        val diceHW = ShakeHardwareAndroid.getInstance(this)
-        val shakePhoneAlert = ShakePhoneAlert(this)
-        val diceVisualAndroid =
-            DiceVisualAndroid(Dice1d6Generic(), diceBtn, diceTxt, diceHW, shakePhoneAlert)
-        //Wire up lambda interactions
-        diceVisualAndroid.clickSubscription { it.hwInteraction() }
-        shakePhoneAlert.registerLambda = { diceHW.sensorRegisterListener() }
-        shakePhoneAlert.deregisterLambda = {
-            diceHW.sensorDeRegisterListener()
-            diceVisualAndroid.resetDice()
-        }
-        shakePhoneAlert.setCheatLambda = { dice ->
-            diceHW.sensorDeRegisterListener()
-            diceVisualAndroid.setDice(dice)
-            diceVisualAndroid.roll()
-            diceVisualAndroid.resetDice()
-            // By Design i have chosen to let the two cheating variants
-            // be performed without shaking the phone.
-            // (More fun to spot someone cheating when playing in person this way)
-        }
+        val shakeHW = ShakeHardwareAndroid.getInstance(this)
+        val flashHW = FlashLightHardwareAndroid.getInstance(this)
+
+        setupDiceInteractions(shakeHW,flashHW)
 
         turnIndicators.add(this.findViewById<TextView>(R.id.player1txt))
         turnIndicators.add(this.findViewById<TextView>(R.id.player2txt))
@@ -253,6 +237,31 @@ class GameActivity : AppCompatActivity() {
         return intent.getSerializableExtra(varName) as? T
     }
 
+    private fun setupDiceInteractions(shakeHW: IShakeHardware, flashHW: IFlashLightHardware){
+        // - Dice UI/UX -
+        val diceBtn = this.findViewById<ImageButton>(R.id.diceButton)
+        val diceTxt = this.findViewById<TextView>(R.id.diceText)
+        val shakePhoneAlert = ShakePhoneAlert(this)
+        val diceVisualAndroid =
+            DiceVisualAndroid(Dice1d6Generic(), diceBtn, diceTxt, shakeHW, shakePhoneAlert)
+        //Wire up lambda interactions
+        diceVisualAndroid.clickSubscription { it.hwInteraction() }
+        shakePhoneAlert.registerLambda = { shakeHW.sensorRegisterListener() }
+        shakePhoneAlert.deregisterLambda = {
+            shakeHW.sensorDeRegisterListener()
+            diceVisualAndroid.resetDice()
+        }
+        shakePhoneAlert.setCheatLambda = { dice ->
+            shakeHW.sensorDeRegisterListener()
+            diceVisualAndroid.setDice(dice)
+            diceVisualAndroid.roll()
+            flashHW.blink() //Make Phone's Camera Flash-Light blink when cheating ...
+            diceVisualAndroid.resetDice()
+            // By Design i have chosen to let the two cheating variants
+            // be performed without shaking the phone.
+            // (More fun to spot someone cheating when playing in person this way)
+        }
+    }
 
 }
 
