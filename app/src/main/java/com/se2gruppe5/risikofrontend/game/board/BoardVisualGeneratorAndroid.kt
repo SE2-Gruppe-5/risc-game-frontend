@@ -9,7 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.graphics.toColorInt
 import com.se2gruppe5.risikofrontend.R
-import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.game.territory.LineAndroid
@@ -30,9 +30,9 @@ class BoardVisualGeneratorAndroid {
                     LayoutInflater.from(activity).inflate(R.layout.territory_template, board, false)
                 territoryLayout.id = View.generateViewId()
 
-                val params = FrameLayout.LayoutParams(territory.size.first, territory.size.second)
-                params.leftMargin = territory.position.first
-                params.topMargin = territory.position.second
+                val params = FrameLayout.LayoutParams(territory.transform.size.x.toInt(), territory.transform.size.y.toInt())
+                params.leftMargin = territory.transform.position.x.toInt()
+                params.topMargin = territory.transform.position.y.toInt()
                 territoryLayout.layoutParams = params
 
                 val text = territoryLayout.findViewById<TextView>(R.id.territoryText)
@@ -51,8 +51,8 @@ class BoardVisualGeneratorAndroid {
 
                 for(connected in territory.connections) {
                     val line = LineAndroid(activity, "#000000".toColorInt(), 5f)
-                    val startCoordinates = intPairToFloatPair(territory.getCenter())
-                    val endCoordinates = intPairToFloatPair(connected.getCenter())
+                    val startCoordinates = territory.getCenter()
+                    val endCoordinates = connected.getCenter()
                     line.z = -1f
                     line.setCoordinates(startCoordinates, endCoordinates)
                     line.layoutParams = ViewGroup.LayoutParams(
@@ -62,10 +62,6 @@ class BoardVisualGeneratorAndroid {
                     activity.findViewById<ViewGroup>(R.id.gameBoard).addView(line)
                 }
             }
-        }
-
-        private fun intPairToFloatPair(pair: Pair<Int, Int>): Pair<Float, Float> {
-            return Pair(pair.first.toFloat(), pair.second.toFloat())
         }
     }
 }

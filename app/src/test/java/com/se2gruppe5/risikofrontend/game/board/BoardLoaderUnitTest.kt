@@ -1,6 +1,8 @@
 package com.se2gruppe5.risikofrontend.game.board
 
-import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.util.Point2D
+import com.se2gruppe5.risikofrontend.game.dataclasses.util.Size2D
 import com.se2gruppe5.risikofrontend.game.enums.Continent
 import org.junit.Test
 import org.junit.Assert.*
@@ -48,14 +50,14 @@ class BoardLoaderUnitTest {
         assertEquals(3, territory3.id)
 
         // Positions correct
-        assertEquals(Pair(100, 100), territory1.position)
-        assertEquals(Pair(200, 100), territory2.position)
-        assertEquals(Pair(300, 100), territory3.position)
+        assertEquals(Point2D(100f,100f), territory1.transform.position)
+        assertEquals(Point2D(200f,100f), territory2.transform.position)
+        assertEquals(Point2D(300f,100f), territory3.transform.position)
 
         // Sizes correct
-        assertEquals(Pair(100, 100), territory1.size)
-        assertEquals(Pair(100, 100), territory2.size)
-        assertEquals(Pair(100, 100), territory3.size)
+        assertEquals(Size2D(100f, 100f), territory1.transform.size)
+        assertEquals(Size2D(100f, 100f), territory2.transform.size)
+        assertEquals(Size2D(100f, 100f), territory3.transform.size)
 
         // Continent assignment correct
         assertEquals(Continent.RAM, territory1.continent)

@@ -1,9 +1,9 @@
 package com.se2gruppe5.risikofrontend.network
 
 import com.se2gruppe5.risikofrontend.Constants
-import com.se2gruppe5.risikofrontend.game.dataclasses.CardRecord
-import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
-import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.CardRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
 import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

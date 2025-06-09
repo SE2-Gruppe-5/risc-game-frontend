@@ -4,8 +4,11 @@ import android.app.Activity
 import android.graphics.Color
 import android.widget.TextView
 import com.se2gruppe5.risikofrontend.game.enums.Continent
-import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
-import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.util.Point2D
+import com.se2gruppe5.risikofrontend.game.dataclasses.util.Size2D
+import com.se2gruppe5.risikofrontend.game.dataclasses.util.Transform2D
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.network.INetworkClient
 import kotlinx.coroutines.runBlocking
@@ -46,8 +49,6 @@ class GameManagerUnitTest {
         }
 
 
-
-
         //Reset singletons before each test
         TerritoryManager.reset()
         GameManager.reset()
@@ -55,7 +56,7 @@ class GameManagerUnitTest {
         //Initialize singletons
         territoryManagerMock = mock()
         gameUUID = UUID.randomUUID()
-        GameManager.init(me, gameUUID,territoryManagerMock, networkClient, players)
+        GameManager.init(me, gameUUID, territoryManagerMock, networkClient, players)
         gameManager = GameManager.get()
     }
 
@@ -73,19 +74,20 @@ class GameManagerUnitTest {
     }
 
     @Test
-    fun testInitSingletonTwiceDoesntWork(){
+    fun testInitSingletonTwiceDoesntWork() {
         assertNotNull(gameManager)
         val other = PlayerRecord(UUID.randomUUID(), "a", 0xFFFFFF)
-        GameManager.init(other, gameUUID,territoryManagerMock, networkClient, players)
+        GameManager.init(other, gameUUID, territoryManagerMock, networkClient, players)
         assertEquals(me, gameManager.whoAmI())
 
     }
 
     @Test(expected = IllegalArgumentException::class)
-    fun testGetCurrentPlayerReturnsError(){
+    fun testGetCurrentPlayerReturnsError() {
         GameManager.reset()
-        val newPlayers: HashMap<UUID, PlayerRecord> = mutableMapOf<UUID, PlayerRecord>() as HashMap<UUID, PlayerRecord>
-        GameManager.init(me, gameUUID,territoryManagerMock, networkClient, newPlayers)
+        val newPlayers: HashMap<UUID, PlayerRecord> =
+            mutableMapOf<UUID, PlayerRecord>() as HashMap<UUID, PlayerRecord>
+        GameManager.init(me, gameUUID, territoryManagerMock, networkClient, newPlayers)
         GameManager.get().getCurrentPlayer()
 
     }
@@ -118,34 +120,7 @@ class GameManagerUnitTest {
     }
 
     @Test
-    fun playerMapSanityCheck() {
-        val validMap = HashMap<UUID, PlayerRecord>().apply {
-            me.isCurrentTurn = true
-            put(me.id, me)
-            put(other.id, other)
-        }
-        gameManager.playerUUIDSanityCheck(validMap)
-
-        val invalidMap = HashMap<UUID, PlayerRecord>().apply {
-            me.isCurrentTurn = true
-            put(me.id, me)
-            put(other.id, other)
-            put(UUID.randomUUID(), PlayerRecord(UUID.randomUUID(), "Invalid", Color.GREEN))
-        }
-        assertThrows(IllegalStateException::class.java) {
-            gameManager.playerUUIDSanityCheck(invalidMap)
-        }
-
-        val manyTurnsMap = HashMap<UUID, PlayerRecord>().apply {
-            me.isCurrentTurn = true
-            other.isCurrentTurn = true
-            put(me.id, me)
-            put(other.id, other)
-        }
-        assertThrows(IllegalStateException::class.java) {
-            gameManager.playerUUIDSanityCheck(manyTurnsMap)
-        }
-
+    fun playerMapSanityCheckNoTurns() {
         val noTurnsMap = HashMap<UUID, PlayerRecord>().apply {
             me.isCurrentTurn = false
             other.isCurrentTurn = false
@@ -155,6 +130,42 @@ class GameManagerUnitTest {
         assertThrows(IllegalStateException::class.java) {
             gameManager.playerUUIDSanityCheck(noTurnsMap)
         }
+    }
+
+    @Test
+    fun playerMapSanityCheckManyTurns() {
+        val manyTurnsMap = HashMap<UUID, PlayerRecord>().apply {
+            me.isCurrentTurn = true
+            other.isCurrentTurn = true
+            put(me.id, me)
+            put(other.id, other)
+        }
+        assertThrows(IllegalStateException::class.java) {
+            gameManager.playerUUIDSanityCheck(manyTurnsMap)
+        }
+    }
+
+    @Test
+    fun playerMapSanityCheckInvalid() {
+        val invalidMap = HashMap<UUID, PlayerRecord>().apply {
+            me.isCurrentTurn = true
+            put(me.id, me)
+            put(other.id, other)
+            put(UUID.randomUUID(), PlayerRecord(UUID.randomUUID(), "Invalid", Color.GREEN))
+        }
+        assertThrows(IllegalStateException::class.java) {
+            gameManager.playerUUIDSanityCheck(invalidMap)
+        }
+    }
+
+    @Test
+    fun playerMapSanityCheckValid() {
+        val validMap = HashMap<UUID, PlayerRecord>().apply {
+            me.isCurrentTurn = true
+            put(me.id, me)
+            put(other.id, other)
+        }
+        gameManager.playerUUIDSanityCheck(validMap)
     }
 
     @Test
@@ -180,8 +191,8 @@ class GameManagerUnitTest {
     @Test
     fun receiveTerritoryListUpdateDelegatesToTerritoryManager() {
         val dummyTerritories = listOf(
-            TerritoryRecord(1, 2, Continent.CPU, Pair(100, 100), Pair(100, 100)),
-            TerritoryRecord(3, 4, Continent.RAM, Pair(100, 100), Pair(100, 100))
+            TerritoryRecord(1, 2, Continent.CPU, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))),
+            TerritoryRecord(3, 4, Continent.RAM, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f)))
         )
         gameManager.receiveTerritoryListUpdate(dummyTerritories)
         verify(territoryManagerMock).updateTerritories(dummyTerritories)
@@ -215,16 +226,18 @@ class GameManagerUnitTest {
     }
 
     @Test
-    fun whoAmIreturnsMe(){
+    fun whoAmIreturnsMe() {
         assertEquals(me, gameManager.whoAmI())
     }
+
     @Test
-    fun getUUIDReturnsCorrectUUID(){
+    fun getUUIDReturnsCorrectUUID() {
         assertEquals(gameUUID, gameManager.getUUID())
     }
+
     @Test
-    fun getTerritoryManagerReturnsTerritoryManager(){
-        assertEquals(territoryManagerMock,gameManager.getTerritoryManager())
+    fun getTerritoryManagerReturnsTerritoryManager() {
+        assertEquals(territoryManagerMock, gameManager.getTerritoryManager())
     }
 
 
