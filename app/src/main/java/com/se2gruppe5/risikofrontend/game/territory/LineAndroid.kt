@@ -5,14 +5,15 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import com.se2gruppe5.risikofrontend.game.dataclasses.util.Point2D
 
 const val LINE_STROKE_COLOR: Int = 0x000000
 const val LINE_STROKE_WIDTH: Float = 5f
 
 class LineAndroid: View, ILine {
     private val paint: Paint = Paint()
-    private var startPoint: Pair<Float, Float> = Pair(0f, 0f)
-    private var endPoint: Pair<Float, Float> = Pair(0f, 0f)
+    private var startPoint: Point2D = Point2D(0f,0f)
+    private var endPoint: Point2D = Point2D(0f,0f)
 
     constructor(context: Context, color: Int, strokeWidth: Float) : super(context) {
         init(color, strokeWidth)
@@ -47,7 +48,7 @@ class LineAndroid: View, ILine {
         redraw()
     }
 
-    override fun setCoordinates(startPoint: Pair<Float, Float>, endPoint: Pair<Float, Float>) {
+    override fun setCoordinates(startPoint: Point2D, endPoint: Point2D) {
         this.startPoint = startPoint
         this.endPoint = endPoint
         redraw()
@@ -60,11 +61,11 @@ class LineAndroid: View, ILine {
             return
         }
         canvas.drawLine(
-            startPoint.first,
-            startPoint.second,
+            startPoint.x,
+            startPoint.y,
 
-            endPoint.first,
-            endPoint.second,
+            endPoint.x,
+            endPoint.y,
 
             paint
         )

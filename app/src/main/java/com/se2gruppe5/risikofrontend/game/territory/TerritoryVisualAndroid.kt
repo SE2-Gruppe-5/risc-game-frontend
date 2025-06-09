@@ -5,7 +5,8 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.graphics.toColorInt
-import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.util.Point2D
 import java.util.UUID
 
 /**
@@ -28,8 +29,12 @@ class TerritoryVisualAndroid(
     val backgroundHighlightColor: Int = Color.argb(255, 255, 255, 0)
     val backgroundNoHighlightColor: Int = Color.argb(0, 255, 255, 0)
 
-    override fun setHighlightSelected(b: Boolean) {
-        if (b) {
+    /**
+     * Toggles visual selection-highlighting of Territory
+     * @param highlighted Enable/Disable the Highlighting
+     */
+    override fun setHighlightSelected(highlighted: Boolean) {
+        if (highlighted) {
             outline.setBackgroundColor(backgroundHighlightColor)
         } else {
             outline.setBackgroundColor(backgroundNoHighlightColor)
@@ -62,7 +67,7 @@ class TerritoryVisualAndroid(
         }
     }
 
-    override fun getCoordinatesAsFloat(center: Boolean): Pair<Float, Float> {
+    override fun getCoordinates(center: Boolean): Point2D {
         val location = IntArray(2)
         imgBTN.getLocationInWindow(location)
         var x = location[0].toFloat()
@@ -71,7 +76,7 @@ class TerritoryVisualAndroid(
             x += imgBTN.width / 2
             y += imgBTN.height / 2
         }
-        return Pair(x, y)
+        return Point2D(x,y)
     }
 
     override fun getTerritoryId(): Int{
