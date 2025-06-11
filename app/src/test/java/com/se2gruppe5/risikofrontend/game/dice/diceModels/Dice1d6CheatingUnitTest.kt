@@ -4,19 +4,29 @@ import org.junit.Test
 
 import org.junit.Assert.*
 import org.junit.Before
+import kotlin.random.Random
 
 class Dice1d6CheatingUnitTest {
-    lateinit var d: IDice
+    lateinit var d1: IDice
+    lateinit var d2: IDice
 
     @Before
     fun setup() {
-        d = Dice1d6Cheating()
+        d1 = Dice1d6Cheating()
+        d2 = Dice1d6Cheating(Random)
     }
 
     @Test
     fun testCheatingDice() {
         repeat(15) {
-            var a = d.roll()
+            var a = d1.roll()
+            assertTrue(a==6)
+        }
+    }
+    @Test
+    fun testCheatingDiceCustomConstructor() {
+        repeat(15) {
+            var a = d2.roll()
             assertTrue(a==6)
         }
     }

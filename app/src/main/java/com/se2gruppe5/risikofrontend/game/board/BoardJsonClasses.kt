@@ -13,12 +13,18 @@ data class BoardData (
 data class TerritoryData(
     val id: Int,
     val continent: Continent,
-    val position: XY,
-    val size: XY
+    val position: Position,
+    val size: Size
 )
 
 @Serializable
-data class XY(
-    val x: Int,
-    val y: Int
+data class Position(
+    val x: Float,
+    val y: Float
+)
+
+@Serializable
+data class Size(
+    val x: Float,
+    val y: Float
 )

@@ -1,7 +1,7 @@
 package com.se2gruppe5.risikofrontend.game.cards
 
-import com.se2gruppe5.risikofrontend.game.dataclasses.CardRecord
-import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.CardRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.enums.CardType
 import org.junit.Test
 import org.junit.Assert.*
@@ -127,5 +127,4 @@ class CardHandlerUnitTest {
         val cards = listOf(CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry))
         assertEquals(-1, CardHandler.tradeCards(cards))
     }
-
 }

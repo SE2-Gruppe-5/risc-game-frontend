@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import com.se2gruppe5.risikofrontend.game.enums.Continent
-import com.se2gruppe5.risikofrontend.game.dataclasses.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertSame
 import org.junit.After
@@ -211,7 +211,7 @@ class TerritoryVisualAndroidUnitTest(
             //As it is supposed to be a void function, it must return null
         }.whenever(imgBTNMock).getLocationInWindow(any())
 
-        val (x, y) = territoryVisualAndroid.getCoordinatesAsFloat(false) //without center!
+        val (x, y) = territoryVisualAndroid.getCoordinates(false) //without center!
         assertEquals(imgX.toFloat(), x)
         assertEquals(imgY.toFloat(), y)
     }
@@ -240,7 +240,7 @@ class TerritoryVisualAndroidUnitTest(
         whenever(imgBTNMock.width).thenReturn(imgSizeX)
         whenever(imgBTNMock.height).thenReturn(imgSizeY)
 
-        val (x, y) = territoryVisualAndroid.getCoordinatesAsFloat(true) //with center!
+        val (x, y) = territoryVisualAndroid.getCoordinates(true) //with center!
         assertEquals(imgX.toFloat() + imgSizeX / 2, x)
         assertEquals(imgY.toFloat() + imgSizeY / 2, y)
     }

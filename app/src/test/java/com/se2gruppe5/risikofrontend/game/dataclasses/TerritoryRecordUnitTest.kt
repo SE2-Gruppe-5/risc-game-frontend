@@ -1,34 +1,45 @@
 package com.se2gruppe5.risikofrontend.game.dataclasses
 
+import com.se2gruppe5.risikofrontend.game.dataclasses.util.Point2D
+import com.se2gruppe5.risikofrontend.game.dataclasses.util.Size2D
+import com.se2gruppe5.risikofrontend.game.dataclasses.util.Transform2D
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.enums.Continent
 import org.junit.Test
 
 import org.junit.Assert.*
-import java.util.UUID
 
 class TerritoryRecordUnitTest {
-    @Test
-    fun inst() {
-        val t = TerritoryRecord(1,1, Continent.POWER_SUPPLY, Pair(100, 100), Pair(100, 100))
-        t.owner = UUID.randomUUID()
-        //Possibly needed in the future:
-        //val p = TerritoryRecord(1,1)
-        //assertNotNull(p)
-    }
 
     @Test
     fun getCenterCorrect() {
-        val t1 = TerritoryRecord(1, 1, Continent.CPU, Pair(100, 100), Pair(200, 300))
-        assertEquals(Pair(200, 250), t1.getCenter())
+        val t1 = TerritoryRecord(
+            1,
+            1,
+            Continent.CPU,
+            Transform2D(Point2D(100f, 100f), Size2D(200f, 300f))
+        )
+        assertEquals(Point2D(200f, 250f), t1.getCenter())
 
-        val t2 = TerritoryRecord(2, 1, Continent.RAM, Pair(30, 70), Pair(50, 220))
-        assertEquals(Pair(55, 180), t2.getCenter())
+        val t2 =
+            TerritoryRecord(2, 1, Continent.RAM, Transform2D(Point2D(30f, 70f), Size2D(50f, 220f)))
+        assertEquals(Point2D(55f, 180f), t2.getCenter())
     }
 
     @Test
     fun checkConnectedTerritories() {
-        val t1 = TerritoryRecord(1, 1, Continent.CPU, Pair(100, 100), Pair(100, 100))
-        val t2 = TerritoryRecord(2, 1, Continent.RAM, Pair(100, 100), Pair(100, 100))
+        val t1 = TerritoryRecord(
+            1,
+            1,
+            Continent.CPU,
+            Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))
+        )
+        val t2 = TerritoryRecord(
+            2,
+            1,
+            Continent.RAM,
+            Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))
+        )
 
         t1.connections.add(t2)
         t2.connections.add(t1)
@@ -38,9 +49,24 @@ class TerritoryRecordUnitTest {
 
     @Test
     fun checkDisconnectedTerritories() {
-        val t1 = TerritoryRecord(1, 1, Continent.CPU, Pair(100, 100), Pair(100, 100))
-        val t2 = TerritoryRecord(2, 1, Continent.RAM, Pair(100, 100), Pair(100, 100))
-        val t3 = TerritoryRecord(3, 1, Continent.MMC, Pair(100, 100), Pair(100, 100))
+        val t1 = TerritoryRecord(
+            1,
+            1,
+            Continent.CPU,
+            Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))
+        )
+        val t2 = TerritoryRecord(
+            2,
+            1,
+            Continent.RAM,
+            Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))
+        )
+        val t3 = TerritoryRecord(
+            3,
+            1,
+            Continent.MMC,
+            Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))
+        )
 
         t1.connections.add(t3)
         t2.connections.add(t3)

@@ -33,6 +33,7 @@ import android.util.Log
 import com.se2gruppe5.risikofrontend.game.cards.CardHandler
 import com.se2gruppe5.risikofrontend.game.dataclasses.CardRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dialogues.DialogueHandler
 import com.se2gruppe5.risikofrontend.game.enums.CardType
 import com.se2gruppe5.risikofrontend.game.managers.GameViewManager
