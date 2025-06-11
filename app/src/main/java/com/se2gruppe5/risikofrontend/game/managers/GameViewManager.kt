@@ -4,10 +4,8 @@ import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.transition.Visibility
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.board.BoardVisualGeneratorAndroid
-import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.enums.CardType.*
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.territory.IPointingArrowUI

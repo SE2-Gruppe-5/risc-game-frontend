@@ -6,8 +6,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.se2gruppe5.risikofrontend.databinding.DialogTradeCardsBinding
 import com.se2gruppe5.risikofrontend.game.cards.CardHandler
-import com.se2gruppe5.risikofrontend.game.dataclasses.CardRecord
-import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.CardRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.enums.CardType
 import java.util.EnumMap
 
