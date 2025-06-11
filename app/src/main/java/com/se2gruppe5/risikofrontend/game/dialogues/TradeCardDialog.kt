@@ -9,37 +9,40 @@ import com.se2gruppe5.risikofrontend.game.cards.CardHandler
 import com.se2gruppe5.risikofrontend.game.dataclasses.CardRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.enums.CardType
+import java.util.EnumMap
 
 class TradeCardDialog(
     context: Context,
     player: PlayerRecord,
     mustTrade: Boolean,
-) : AlertDialog(context) {
+) : AlertDialog(context) { //todo (maybe) change territory-binding hardcoded values
 
-    private val binding: DialogTradeCardsBinding = DialogTradeCardsBinding.inflate(LayoutInflater.from(context))
+    private val binding: DialogTradeCardsBinding =
+        DialogTradeCardsBinding.inflate(LayoutInflater.from(context))
     private var forced: Boolean = false
-    private var p: PlayerRecord? = null
-    private var c: Context? = null
-    var infantry = 0
-    var cavalry = 0
-    var artillery = 0
+    private var playerRecord: PlayerRecord? = null
+    private var ctx: Context? = null
+    val cardCountMap = EnumMap<CardType, Int>(CardType::class.java)
 
     init {
         setView(binding.root)
         forced = mustTrade
-        p = player
-        c = context
-        val cards = p!!.cards
-        for(card in cards){
-            if (card.type == CardType.Infantry) infantry++
-            if (card.type == CardType.Cavalry) cavalry++
-            if (card.type == CardType.Artillery) artillery++
+        playerRecord = player
+        ctx = context
+        val playerCards = playerRecord!!.cards
+
+        initEnum(cardCountMap)
+
+        //Count the cards up
+        for (card in playerCards) {
+            cardCountMap[card.type] = cardCountMap[card.type]!! + 1
         }
 
-        binding.type1Input.hint = "You have $infantry type 1 cards"
-        binding.type2Input.hint = "You have $cavalry type 2 cards"
-        binding.type3Input.hint = "You have $artillery type 3 cards"
-
+        //Set type hints
+        binding.type1Input.hint = "You have ${cardCountMap[CardType.Infantry] ?: 0} Infantry cards"
+        binding.type2Input.hint = "You have ${cardCountMap[CardType.Cavalry] ?: 0} Cavalry cards"
+        binding.type3Input.hint =
+            "You have ${cardCountMap[CardType.Artillery] ?: 0} Artillery cards"
 
         setButton(BUTTON_POSITIVE, "OK") { _, _ ->
             handlePositiveButton()
@@ -50,73 +53,100 @@ class TradeCardDialog(
         setTitle("Select how many cards you want to trade (3 cards in total)")
     }
 
-    private fun handlePositiveButton(){
-        var type1 = 0
-        var type2 = 0
-        var type3 = 0
-        try{
-        type1 = binding.type1Input.text.toString().toInt()
-        type2 = binding.type2Input.text.toString().toInt()
-        type3 = binding.type3Input.text.toString().toInt()
-        } catch (e: NumberFormatException) {
-            Toast.makeText(context, "Invalid number", Toast.LENGTH_SHORT).show()
+    private fun noDismissCheck() {
+        if (this.forced) {
+            TradeCardDialog(ctx!!, playerRecord!!, true)
         }
-        val amount = type3+type2+type1
-        if(amount !=3){
-            Toast.makeText(context, "You have to trade 3 cards", Toast.LENGTH_SHORT).show()
-            if(this.forced){
-                TradeCardDialog(c!!,p!!,forced)
-            }
-        }else{
-            if(type1 > infantry || type2 > cavalry || type3 > artillery){
-                Toast.makeText(context, "You do not own these cards", Toast.LENGTH_SHORT).show()
-                if(this.forced){
-                    TradeCardDialog(c!!,p!!,forced)
-                }
-            }
-            val cards = mutableListOf<CardRecord>()
-            while(type1 >0){
-                type1 -= 1
-                cards.add(CardRecord(CardType.Infantry))
-            }
-            while(type2 >0){
-                type2 -= 1
-                cards.add(CardRecord(CardType.Cavalry))
-            }
-            while(type3 >0){
-                type3 -= 1
-                cards.add(CardRecord(CardType.Artillery))
-            }
-            val troops = tradeAction(cards)
-            if(troops == -1){
-                Toast.makeText(context, "Enter a correct Selection of cards", Toast.LENGTH_SHORT).show()
-                if(this.forced){
-                    TradeCardDialog(c!!,p!!,forced)
-                }
-            }else{
-                Toast.makeText(context, "Succesfully got $troops troops", Toast.LENGTH_SHORT).show()
-            }
+    }
+
+    private fun checkTradeValid(inputCardCountMap: EnumMap<CardType, Int>): Boolean {
+
+        if (inputCardCountMap.values.sum() != 3) {
+            displayErrorMsg("You have to trade 3 cards!")
+            return false
         }
 
+        for ((cardType, count) in inputCardCountMap.entries) {
+            val available = cardCountMap[cardType] ?: 0
+            if (count > available) {
+                displayErrorMsg("You do not own enough ${cardType.name.lowercase()} cards")
+                return false
+            }
+        }
+        return true
+    }
 
+    private fun issuesCards(inputCardCountMap: EnumMap<CardType, Int>): MutableList<CardRecord> {
+        val cards = mutableListOf<CardRecord>()
+        for ((cardType, count) in inputCardCountMap.entries) {
+            repeat(count) {
+                cards.add(CardRecord(cardType))
+            }
+        }
+        return cards
+    }
 
-}
+    private fun handlePositiveButton() {
+        //Tally up binding-inputs
+        val bindingRefList = listOf(
+            binding.type1Input to CardType.Infantry,
+            binding.type2Input to CardType.Cavalry,
+            binding.type3Input to CardType.Artillery
+        )
+        val inputCardCountMap = EnumMap<CardType, Int>(CardType::class.java)
+        initEnum(cardCountMap)
+
+        for ((bindingRef, cardType) in bindingRefList) {
+            val cardCount = bindingRef.text.toString().toIntOrNull()
+            if (cardCount == null) {
+                displayErrorMsg("Invalid number!")
+                return
+            }
+            inputCardCountMap[cardType] = cardCount
+        }
+
+        if (checkTradeValid(inputCardCountMap)) {
+            val troops = tradeAction(issuesCards(inputCardCountMap))
+            if (troops == -1) {
+                displayErrorMsg("Enter a correct Selection of cards")
+            } else {
+                displayInfoMsg("Successfully got $troops troops")
+            }
+        }
+    }
+
+    private fun displayErrorMsg(msg: String) {
+        displayInfoMsg(msg)
+        noDismissCheck()
+    }
+
+    private fun displayInfoMsg(msg: String) {
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+    }
 
     private fun tradeAction(cards: MutableList<CardRecord>): Int {
         var troops = CardHandler.tradeCards(cards)
-        if(troops == -1) return troops
-        var playerCards = p!!.cards
-        for(card in cards){
-            for(pCard in playerCards){
-                if(card.type == pCard.type){
+        if (troops == -1) return troops
+        var playerCards = playerRecord!!.cards
+        for (card in cards) {
+            for (pCard in playerCards) {
+                if (card.type == pCard.type) {
                     playerCards.remove(pCard)
                     break
                 }
             }
         }
-        p!!.cards = playerCards
-        p!!.freeTroops = p!!.freeTroops + troops
+        playerRecord!!.cards = playerCards
+        playerRecord!!.freeTroops = playerRecord!!.freeTroops + troops
         return troops;
     }
+
+    //Init Enum w/ all zeroes
+    private fun initEnum(enum: EnumMap<CardType, Int>) {
+        for (cardType in CardType.entries) {
+            enum[cardType] = 0
+        }
+    }
+
 }
 
