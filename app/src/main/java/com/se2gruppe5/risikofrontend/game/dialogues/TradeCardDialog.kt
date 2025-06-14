@@ -35,7 +35,7 @@ class TradeCardDialog(
 
         //Count the cards up
         for (card in playerCards) {
-            cardCountMap[card.type] = cardCountMap[card.type]!! + 1
+            cardCountMap[card.type] = (cardCountMap[card.type] ?: 0) + 1
         }
 
         //Set type hints
