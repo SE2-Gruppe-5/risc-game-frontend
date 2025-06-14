@@ -9,28 +9,22 @@ object CardHandler :ICardHandler {
 
 
     override fun tradeCards(cards: List<CardRecord>): Int {
-        if(cards.size ==3) {
-            var infantry = 0
-            var cavalry = 0
-            var artillery = 0
-            for(card in cards){
-                    if (card.type == CardType.Infantry) infantry++
-                    if (card.type == CardType.Cavalry) cavalry++
-                    if (card.type == CardType.Artillery) artillery++
-                }
+        if (cards.size != 3) return -1
 
-            if (infantry == 3) {
-                return 4
-            } else if (cavalry == 3) {
-                return 6
-            } else if (artillery == 3) {
-                return 8
-            } else if (artillery == 1 && cavalry == 1 && infantry == 1) {
-                return 10
-            }
+        val counts = cards.groupingBy { it.type }.eachCount()
+        val infantry = counts[CardType.Infantry] ?: 0
+        val cavalry = counts[CardType.Cavalry] ?: 0
+        val artillery = counts[CardType.Artillery] ?: 0
+
+        return when {
+            infantry == 3 -> 4
+            cavalry == 3 -> 6
+            artillery == 3 -> 8
+            infantry == 1 && cavalry == 1 && artillery == 1 -> 10
+            else -> -1
         }
-        return -1
     }
+
 
 
 
