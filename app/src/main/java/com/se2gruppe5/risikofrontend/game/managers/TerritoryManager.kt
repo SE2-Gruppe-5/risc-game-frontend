@@ -161,7 +161,11 @@ class TerritoryManager private constructor(
 
     private fun requestPlace(t: ITerritoryVisual) {
         if (isMe(t.territoryRecord.owner)) {
-            dialogueManager.usePlaceTroops(t,me!!)
+            if(dialogueManager.usePlaceTroops(t,me!!)){
+                runBlocking {
+                    client.changeTerritory(GameManager.get().getUUID(), t.territoryRecord)
+                }
+                }
         }
         else {
             toastUtil.showShortToast("You can only place Troops on your own Territories")

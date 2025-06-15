@@ -28,7 +28,7 @@ territory: ITerritoryVisual
         binding.troopsInput.hint = "You have $free troops"
 
         setButton(BUTTON_POSITIVE, "OK") { _, _ ->
-            handlePositiveButton()
+           handlePositiveButton()
         }
         setButton(BUTTON_NEGATIVE, "Cancel") { _, _ ->
             dismiss()

@@ -11,7 +11,7 @@ interface IDialogueHandler {
     fun useReinforceDialog(from: ITerritoryVisual, to: ITerritoryVisual)
 
     fun useTradeCardDialog(player: PlayerRecord, forced: Boolean)
-    fun usePlaceTroops(t: ITerritoryVisual, p : PlayerRecord)
+    fun usePlaceTroops(t: ITerritoryVisual, p : PlayerRecord): Boolean
 
 
 }
