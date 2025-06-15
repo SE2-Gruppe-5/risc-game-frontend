@@ -454,6 +454,7 @@ class TerritoryManagerTestUnitTest {
         t1.territoryRecord.owner = mePlayerRecord.id
         whenever(dialogueHandler.usePlaceTroops(any(), any())).then {
             t1.changeStat(10)
+            return@then false
         }
         GameManager.get().setPhase(Phases.Reinforce)
         assertTrue(GameManager.get().getPhase() == Phases.Reinforce)
