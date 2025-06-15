@@ -44,5 +44,13 @@ class DialogueHandler (val activity: Activity) : IDialogueHandler {
         ).show()
     }
 
+    override fun usePlaceTroops(t: ITerritoryVisual, p : PlayerRecord) {
+        PlaceTroopDialog(
+            context = activity,
+            territory = t,
+            player = p
+        ).show()
+    }
+
 
 }
