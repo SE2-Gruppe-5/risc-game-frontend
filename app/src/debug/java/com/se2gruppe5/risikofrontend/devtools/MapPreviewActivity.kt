@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 import java.util.UUID
 
 class MapPreviewActivity: AppCompatActivity() {
-    private var cheatModeEnabled = false
+    public var cheatModeEnabled = false
     private val networkClient = NetworkClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,13 +32,13 @@ class MapPreviewActivity: AppCompatActivity() {
 
         setupCheatButton()
     }
-    private fun setupCheatButton() {
-        val cheatButton = findViewById<Button>(R.id.cheatButton) // du musst im Layout noch so einen Button anlegen
+    fun setupCheatButton() {
+        val cheatButton = findViewById<Button>(R.id.cheatButton)
         cheatButton.visibility = if (cheatModeEnabled) View.VISIBLE else View.GONE
 
         cheatButton.setOnClickListener {
-            val gameId: UUID = UUID.fromString("deine-game-uuid-hier")
-            val playerId: UUID = UUID.fromString("deine-player-uuid-hier")
+            val gameId: UUID = UUID.fromString("game-uuid-hier")
+            val playerId: UUID = UUID.fromString("player-uuid-hier")
             val targetTerritoryId = 2 // Testweise statisch
 
             CoroutineScope(Dispatchers.IO).launch {
