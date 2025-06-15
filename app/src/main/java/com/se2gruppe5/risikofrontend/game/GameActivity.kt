@@ -109,7 +109,6 @@ class GameActivity : AppCompatActivity() {
 
         val tradeCardButton = this.findViewById<Button>(R.id.tradeCardButton)
 
-
         tradeCardButton.setOnClickListener {
             if(me!!.cards.size>=3){
                 dialogHandler.useTradeCardDialog(me!!, false)
@@ -141,6 +140,7 @@ class GameActivity : AppCompatActivity() {
             bindService(it, serviceConnection, BIND_AUTO_CREATE)
         }
     }
+
 
     override fun onStop() {
         super.onStop()
