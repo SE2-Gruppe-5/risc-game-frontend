@@ -83,6 +83,15 @@ class LobbyActivity :AppCompatActivity() {
         for (i in playerTxt?.indices!!) {
             playerBtn!![i].visibility = View.GONE
             playerTxt!![i].visibility = View.GONE
+
+            playerBtn!![i].setOnLongClickListener {
+                kickPlayer(playerTxt!![i].text.toString())
+                true
+            }
+            playerTxt!![i].setOnLongClickListener {
+                kickPlayer(playerTxt!![i].text.toString())
+                true
+            }
         }
 
 
@@ -119,6 +128,24 @@ class LobbyActivity :AppCompatActivity() {
         super.onStop()
         if (sseService != null) {
             unbindService(serviceConnection)
+        }
+    }
+
+    private fun kickPlayer(name: String) {
+        if (amILobbyOwner) {
+            var player: PlayerRecord? = null
+            for (p in players.values) {
+                if (p.name == name) {
+                    player = p
+                    break
+                }
+            }
+
+            if (player != null) {
+                runBlocking {
+                    client.leaveLobby(joinCode, player.id, "Kicked by owner")
+                }
+            }
         }
     }
 
