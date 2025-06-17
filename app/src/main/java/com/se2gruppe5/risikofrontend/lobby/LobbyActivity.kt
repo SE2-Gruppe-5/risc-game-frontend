@@ -47,6 +47,7 @@ class LobbyActivity :AppCompatActivity() {
     var joinCode: String = ""
     var playerName: String = ""
     var me : PlayerRecord? = null
+    var amILobbyOwner: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +62,8 @@ class LobbyActivity :AppCompatActivity() {
         joinCode = intent.getStringExtra("LOBBY_CODE").toString()
         val lobbyCodeTxt = findViewById<TextView>(R.id.lobbyCodeTxt)
         lobbyCodeTxt.text = joinCode
+
+        amILobbyOwner = intent.getBooleanExtra("AM_I_LOBBY_OWNER", false)
 
 
         playerBtn?.add(this.findViewById<ImageButton>(R.id.player1Btn))
