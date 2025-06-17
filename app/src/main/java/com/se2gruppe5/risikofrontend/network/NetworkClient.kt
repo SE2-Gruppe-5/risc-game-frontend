@@ -46,6 +46,13 @@ class NetworkClient : INetworkClient{
         execute(request)
     }
 
+    override suspend fun leaveLobby(lobbyCode: String, playerId: UUID, reason: String) {
+        val request = createRequest("DELETE", Constants.LOBBY_PLAYER_URL.replace("{id}", lobbyCode)
+            .replace("{uuid}", playerId.toString()),
+            "reason", reason)
+        execute(request)
+    }
+
     override suspend fun startGame(lobbyCode: String) {
         val request = createRequest("GET", Constants.LOBBY_START_GAME_URL.replace("{id}", lobbyCode))
         execute(request)

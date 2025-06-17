@@ -11,6 +11,7 @@ interface INetworkClient {
     suspend fun deleteLobby(lobbyCode: String)
     suspend fun joinLobby(lobbyCode: String, playerName: String)
     suspend fun leaveLobby(lobbyCode: String)
+    suspend fun leaveLobby(lobbyCode: String, playerId: UUID, reason: String)
     suspend fun startGame(lobbyCode: String)
     suspend fun updatePlayer(gameId: UUID, playerId: UUID, name: String, color: Int)
     suspend fun getGameInfo(gameId: UUID)
