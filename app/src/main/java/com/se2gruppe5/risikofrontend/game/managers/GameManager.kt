@@ -97,6 +97,10 @@ class GameManager private constructor(
         for (player in this.players) {
             if (player.value.isCurrentTurn) {
                 this.currentPlayerUUID = player.key
+                if(isMyTurn()){
+                    me.freeTroops =  me.freeTroops + territoryManager.calculateNewTroops(me)
+                }
+
                 return
             }
         }
