@@ -94,10 +94,9 @@ class GameActivity : AppCompatActivity() {
         )
         GameManager.init(me, gameID!!, TerritoryManager.get(), client, gameStart.players)
 
-        val shakeHW = ShakeHardwareAndroid.getInstance(this)
-        val flashHW = FlashLightHardwareAndroid.getInstance(this)
 
-        setupDiceInteractions(shakeHW,flashHW)
+
+        setupDiceInteractions()
 
         turnIndicators.add(this.findViewById<TextView>(R.id.player1txt))
         turnIndicators.add(this.findViewById<TextView>(R.id.player2txt))
@@ -237,7 +236,9 @@ class GameActivity : AppCompatActivity() {
         return intent.getSerializableExtra(varName) as? T
     }
 
-    private fun setupDiceInteractions(shakeHW: IShakeHardware, flashHW: IFlashLightHardware){
+    private fun setupDiceInteractions(){
+        val shakeHW = ShakeHardwareAndroid.getInstance(this)
+        val flashHW = FlashLightHardwareAndroid.getInstance(this)
         // - Dice UI/UX -
         val diceBtn = this.findViewById<ImageButton>(R.id.diceButton)
         val diceTxt = this.findViewById<TextView>(R.id.diceText)

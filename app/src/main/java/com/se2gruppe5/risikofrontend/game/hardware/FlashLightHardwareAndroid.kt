@@ -2,9 +2,11 @@ package com.se2gruppe5.risikofrontend.game.hardware
 
 import android.content.Context
 import android.hardware.camera2.CameraManager
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -28,6 +30,7 @@ class FlashLightHardwareAndroid private constructor (private val context: Contex
     //Settings
     private val blinkTimes: Int = 5
     private val blinkDelay: Long = 200
+    private var blinkTasker: Job? = null
 
     private val cameraManager: CameraManager by lazy {
         context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
@@ -92,7 +95,8 @@ class FlashLightHardwareAndroid private constructor (private val context: Contex
     //I do however concede that one mustn't perform such a task without them (or similar solutions)
     @OptIn(DelicateCoroutinesApi::class)
     override fun blink() {
-        GlobalScope.launch(Dispatchers.Main) {
+        blinkTasker?.cancel()
+        blinkTasker = CoroutineScope(Dispatchers.Main + SupervisorJob()).launch {
             repeat(blinkTimes) {
                 turnOn()
                 delay(blinkDelay)
