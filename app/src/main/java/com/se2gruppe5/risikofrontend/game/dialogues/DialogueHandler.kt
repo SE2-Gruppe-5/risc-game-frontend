@@ -1,6 +1,8 @@
 package com.se2gruppe5.risikofrontend.game.dialogues
 
 import android.app.Activity
+import android.widget.TextView
+import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 
@@ -42,6 +44,21 @@ class DialogueHandler (val activity: Activity) : IDialogueHandler {
             player = player,
             mustTrade = forced
         ).show()
+        activity.findViewById<TextView>(R.id.freeTroopTxt).text = player.freeTroops.toString()
+    }
+
+    override fun usePlaceTroops(t: ITerritoryVisual, p : PlayerRecord): Boolean {
+        val before = t.territoryRecord.stat
+        PlaceTroopDialog(
+            context = activity,
+            territory = t,
+            player = p
+        ).show()
+        if(before != t.territoryRecord.stat) {
+            activity.findViewById<TextView>(R.id.freeTroopTxt).text = p.freeTroops.toString()
+        return true
+        }
+        return false
     }
 
 

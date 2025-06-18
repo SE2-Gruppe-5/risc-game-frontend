@@ -413,7 +413,8 @@ class TerritoryManagerTestUnitTest {
         var customTerritory: ITerritoryVisual
         var r: TerritoryRecord
         for(i in 0..12) {
-            r = TerritoryRecord((0..999999).random(), 1, Continent.CPU, Pair(100, 100), Pair(100, 100))
+            r = TerritoryRecord((0..999999).random(), 1, Continent.CPU, Transform2D(Point2D(100f,100f),
+                Size2D(100f,100f)))
             r.owner = mePlayerRecord.id
             customTerritory = mock {
                     on { territoryRecord } doReturn r
@@ -432,7 +433,8 @@ class TerritoryManagerTestUnitTest {
         var customTerritory: ITerritoryVisual
         var r: TerritoryRecord
         for(i in 0..5) {
-            r = TerritoryRecord((0..999999).random(), 1, Continent.CPU, Pair(100, 100), Pair(100, 100))
+            r = TerritoryRecord((0..999999).random(), 1, Continent.CPU, Transform2D(Point2D(100f,100f),
+                Size2D(100f,100f)))
             r.owner = mePlayerRecord.id
             customTerritory = mock {
                 on { territoryRecord } doReturn r
@@ -447,6 +449,40 @@ class TerritoryManagerTestUnitTest {
         assertEquals(5,troops)
     }
 
+    @Test
+    fun testPlaceTroopsWorks(){
+        t1.territoryRecord.owner = mePlayerRecord.id
+        whenever(dialogueHandler.usePlaceTroops(any(), any())).then {
+            t1.changeStat(10)
+            return@then false
+        }
+        GameManager.get().setPhase(Phases.Reinforce)
+        assertTrue(GameManager.get().getPhase() == Phases.Reinforce)
+        mePlayerRecord.isCurrentTurn = true
+        updatePlayerList()
+
+        manager.setPrevSelTerritory(t1)
+        manager.hasBeenClicked(t1)
+        assertEquals(10, t1.territoryRecord.stat)
+
+    }
+    @Test
+    fun testPlaceTroopsDoesntWorks(){
+        t1.territoryRecord.owner = mePlayerRecord.id
+        var expected = t1.territoryRecord.stat
+        whenever(dialogueHandler.usePlaceTroops(any(), any())).then {
+            t1.changeStat(10)
+        }
+        GameManager.get().setPhase(Phases.Reinforce)
+        assertTrue(GameManager.get().getPhase() == Phases.Reinforce)
+        mePlayerRecord.isCurrentTurn = true
+        updatePlayerList()
+
+        manager.setPrevSelTerritory(t2)
+        manager.hasBeenClicked(t1)
+        assertEquals(expected, t1.territoryRecord.stat)
+
+    }
 
 
 }

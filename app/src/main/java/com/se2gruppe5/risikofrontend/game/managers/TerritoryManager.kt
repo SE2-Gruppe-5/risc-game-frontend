@@ -150,10 +150,25 @@ class TerritoryManager private constructor(
                 else if (phase == Phases.Attack) {
                     requestAttack(prevSelTerritory!!, t)
                 }
+            }else if(prevSelTerritory == t && phase == Phases.Reinforce){
+                requestPlace(t)
             }
 
             updateSelected(t)
             changeTerritoryRequest(t.territoryRecord)
+        }
+    }
+
+    private fun requestPlace(t: ITerritoryVisual) {
+        if (isMe(t.territoryRecord.owner)) {
+            if(dialogueManager.usePlaceTroops(t,me!!)){
+                runBlocking {
+                    client.changeTerritory(GameManager.get().getUUID(), t.territoryRecord)
+                }
+                }
+        }
+        else {
+            toastUtil.showShortToast("You can only place Troops on your own Territories")
         }
     }
 
