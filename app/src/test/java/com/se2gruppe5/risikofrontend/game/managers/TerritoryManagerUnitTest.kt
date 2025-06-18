@@ -403,5 +403,50 @@ class TerritoryManagerTestUnitTest {
         GameManager.get().receivePlayerListUpdate(playerList)
     }
 
+    @Test
+    fun testCalculateFreeTroopsMinimumReturn(){
+       var troops =  manager.calculateNewTroops(mePlayerRecord)
+        assertEquals(3,troops)
+    }
+    @Test
+    fun testCalculateFreeTroops12TerritoriesOwned(){
+        var customTerritory: ITerritoryVisual
+        var r: TerritoryRecord
+        for(i in 0..12) {
+            r = TerritoryRecord((0..999999).random(), 1, Continent.CPU, Pair(100, 100), Pair(100, 100))
+            r.owner = mePlayerRecord.id
+            customTerritory = mock {
+                    on { territoryRecord } doReturn r
+                    on { getTerritoryId() } doReturn r.id
+                    on { changeStat(any()) } doAnswer  { r.stat = it.getArgument(0) }
+                    on { changeOwner(any())} doAnswer {r.owner = it.getArgument(0)}
+            }
+            manager.addTerritory(customTerritory)
+        }
+
+        var troops =  manager.calculateNewTroops(mePlayerRecord)
+        assertEquals(4,troops)
+    }
+    @Test
+    fun testCalculateFreeTroopsContinentBonus(){
+        var customTerritory: ITerritoryVisual
+        var r: TerritoryRecord
+        for(i in 0..5) {
+            r = TerritoryRecord((0..999999).random(), 1, Continent.CPU, Pair(100, 100), Pair(100, 100))
+            r.owner = mePlayerRecord.id
+            customTerritory = mock {
+                on { territoryRecord } doReturn r
+                on { getTerritoryId() } doReturn r.id
+                on { changeStat(any()) } doAnswer  { r.stat = it.getArgument(0) }
+                on { changeOwner(any())} doAnswer {r.owner = it.getArgument(0)}
+            }
+            manager.addTerritory(customTerritory)
+        }
+
+        var troops =  manager.calculateNewTroops(mePlayerRecord)
+        assertEquals(5,troops)
+    }
+
+
 
 }

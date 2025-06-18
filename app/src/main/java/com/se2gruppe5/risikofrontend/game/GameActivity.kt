@@ -68,10 +68,12 @@ class GameActivity : AppCompatActivity() {
     var attackIndicator: TextView? = null
     var tradeIndicator: TextView? = null
     var phaseTxt: TextView? = null
+    var viewManager: GameViewManager? = null
 
     var turnIndicators: MutableList<TextView> = mutableListOf()
     var gameManager: GameManager? = null
     var gameID: UUID? = null
+    var me: PlayerRecord? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,6 +81,7 @@ class GameActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         enableEdgeToEdge()
         setContentView(R.layout.game)
+
 
         val gameStart =
             getSerializableExtraCompat(intent, "GAME_DATA", GameStartMessage::class.java)!!
@@ -110,12 +113,30 @@ class GameActivity : AppCompatActivity() {
         attackIndicator = this.findViewById<TextView>(R.id.attackIndicator)
         tradeIndicator = this.findViewById<TextView>(R.id.tradeIndicator)
         phaseTxt = this.findViewById<TextView>(R.id.currentPhaseTxt)
+        val troopText = this.findViewById<TextView>(R.id.freeTroopTxt)
 
-        val viewManager = GameViewManager(this)
-        viewManager.initializeGame(this, turnIndicators)
+        viewManager = GameViewManager(this)
+        viewManager?.initializeGame(this, turnIndicators)
 
+        val tradeCardButton = this.findViewById<Button>(R.id.tradeCardButton)
+
+
+        tradeCardButton.setOnClickListener {
+            if(me!!.cards.size>=3){
+                dialogHandler.useTradeCardDialog(me!!, false)
+                troopText.text = me!!.freeTroops.toString()
+                viewManager?.updateCardDisplay(me!!)
+            }else{
+                Toast.makeText(this@GameActivity, "You do not have enough cards to Trade", Toast.LENGTH_SHORT).show()
+            }
+        }
         nextPhaseBtn?.setOnClickListener {
             changePhase()
+            if(me!!.cards.size == 5){
+                dialogHandler.useTradeCardDialog(me!!, true)
+            }
+            viewManager?.updateCardDisplay(me!!)
+            troopText.text = me!!.freeTroops.toString()
             Log.i("GameManger", gameID.toString())
         }
         val showContinentButton: Button = this.findViewById(R.id.btn_show_continents)
@@ -147,6 +168,7 @@ class GameActivity : AppCompatActivity() {
                 Toast.makeText(this@GameActivity, "It's not your turn", Toast.LENGTH_SHORT).show()
             }
         }
+
     }
 
     private fun getGameInfo() {
