@@ -184,6 +184,8 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/game/dialogues/**",
                 "**/com/se2gruppe5/risikofrontend/game/popup/**",
                 "**/com/se2gruppe5/risikofrontend/game/hardware/**",
+                "**/com/se2gruppe5/risikofrontend/game/dataclasses/util/**",
+                "**/com/se2gruppe5/risikofrontend/game/dataclasses/game/CardRecord.kt", //todo re-include and test iff contains functionality in future
                 "**/com/se2gruppe5/risikofrontend/game/enums/**",
                 "**/com/se2gruppe5/risikofrontend/game/managers/GameViewManager.kt",
                 "**/com/se2gruppe5/risikofrontend/game/managers/ToastUtilAndroid.kt"

@@ -1,4 +1,4 @@
-package com.se2gruppe5.risikofrontend.game.dataclasses
+package com.se2gruppe5.risikofrontend.game.dataclasses.game
 
 import java.io.Serializable
 import java.util.UUID

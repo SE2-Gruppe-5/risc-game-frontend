@@ -7,10 +7,16 @@ import kotlin.random.Random
  * Returns a number 1-6, skewed towards higher rolls
  */
 class Dice1d6Unfair : IDice {
+    private val rng: Random
+
+    constructor(random: Random = Random.Default) {
+        this.rng = random
+    }
+
     override fun roll(): Int {
         var rdmNumber = 0
         repeat(3) { //Best of 3
-            val rdmNew = Random.Default.nextInt(1, 6 + 1)
+            val rdmNew = rng.nextInt(1, 6 + 1)
             if (rdmNew > rdmNumber) {
                 rdmNumber = rdmNew
             }
