@@ -7,11 +7,11 @@
     android:layout_height="match_parent">
 
     <ScrollView
-        android:id="@+id/scrollView2"
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        tools:layout_editor_absoluteX="-144dp"
+        tools:layout_editor_absoluteY="76dp">
 
         <HorizontalScrollView
             android:layout_width="match_parent"
@@ -40,15 +40,12 @@
         android:id="@+id/diceButton"
         android:layout_width="61dp"
         android:layout_height="55dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="54dp"
-        android:layout_marginBottom="335dp"
         android:accessibilityHeading="false"
+        android:background="#00FFFFFF"
         android:contentDescription="Press me to roll the dice!"
+        app:tint="#64548E"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/dice_symbol" />
 
     <TextView
@@ -83,14 +80,13 @@
 
     <TextView
         android:id="@+id/diceText"
-        android:layout_width="wrap_content"
+        android:layout_width="72dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="120dp"
         android:text="Dice Button"
         android:textColor="#090000"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/PhaseBar"
+        app:layout_constraintEnd_toEndOf="@+id/PhaseBar"
+        app:layout_constraintStart_toStartOf="@+id/PhaseBar" />
 
     <Button
         android:id="@+id/tradeCardButton"
