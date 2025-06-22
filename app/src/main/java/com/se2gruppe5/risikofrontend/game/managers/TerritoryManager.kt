@@ -3,6 +3,7 @@ package com.se2gruppe5.risikofrontend.game.managers
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.dialogues.IDialogueHandler
+import com.se2gruppe5.risikofrontend.game.enums.Continent
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.territory.IPointingArrowUI
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
@@ -10,6 +11,8 @@ import com.se2gruppe5.risikofrontend.network.INetworkClient
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
+import kotlin.math.floor
+import kotlin.math.round
 
 const val TERRITORY_NO_OWNER_COLOR: Int = 0x999999
 
@@ -147,10 +150,25 @@ class TerritoryManager private constructor(
                 else if (phase == Phases.Attack) {
                     requestAttack(prevSelTerritory!!, t)
                 }
+            }else if(prevSelTerritory == t && phase == Phases.Reinforce){
+                requestPlace(t)
             }
 
             updateSelected(t)
             changeTerritoryRequest(t.territoryRecord)
+        }
+    }
+
+    private fun requestPlace(t: ITerritoryVisual) {
+        if (isMe(t.territoryRecord.owner)) {
+            if(dialogueManager.usePlaceTroops(t,me!!)){
+                runBlocking {
+                    client.changeTerritory(GameManager.get().getUUID(), t.territoryRecord)
+                }
+                }
+        }
+        else {
+            toastUtil.showShortToast("You can only place Troops on your own Territories")
         }
     }
 
@@ -210,5 +228,36 @@ class TerritoryManager private constructor(
     }
     fun getPrevSelTerritory(): ITerritoryVisual? {
         return prevSelTerritory
+    }
+
+    private fun getOwnedTerritoriesPerPlayer(record: PlayerRecord): List<TerritoryRecord> {
+        var l = mutableListOf<TerritoryRecord>()
+        for(t in territoryList){
+            if(t.territoryRecord.owner!! == record.id) l.add(t.territoryRecord)
+        }
+
+        return l;
+    }
+
+    fun calculateNewTroops(p: PlayerRecord): Int{
+        var territoryList = getOwnedTerritoriesPerPlayer(p)
+        var newTroops = (territoryList.size / 3).toInt()
+        if(newTroops<3) newTroops = 3
+        newTroops += calculateContinentBonus(territoryList)
+        return newTroops
+
+    }
+
+    private fun calculateContinentBonus(records: List<TerritoryRecord>) :Int {
+        var bonus = 0
+        for (type in Continent.entries){
+            var regions = type.regions
+            for(t in records){
+                if (t.continent == type) regions -=1
+            }
+            if(regions == 0) bonus+= type.bonus
+        }
+        return bonus
+
     }
 }

@@ -5,14 +5,20 @@ import com.se2gruppe5.risikofrontend.game.dice.diceModels.IDice
 interface IDiceVisual {
     /**
      * Wrapped Dice-Model (e.g. "Fair", "Unfair" or "Cheating")
-     * //todo: could possibly be needed mutable with getter and setter in future
      */
-    val dice: IDice
+    fun setDice(dice: IDice)
+    fun getDice(): IDice
+    fun resetDice()
 
     /**
      * Roll the dice!
      */
     fun roll()
+
+    /**
+     * Perform input interaction with device hardware
+     */
+    fun hwInteraction()
 
     /**
      * Observer-Pattern like system
@@ -24,7 +30,6 @@ interface IDiceVisual {
      * For APKs with different event systems,
      * additional adapters to facilitate the lambda functions may be needed)
      *
-     * **Default implementation registers roll()**
      */
     fun clickSubscription(lambda: (IDiceVisual) -> Unit)
 }

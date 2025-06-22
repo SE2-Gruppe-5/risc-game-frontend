@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
+import com.se2gruppe5.risikofrontend.game.cards.CardHandler
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.enums.Phases
@@ -96,6 +97,10 @@ class GameManager private constructor(
         for (player in this.players) {
             if (player.value.isCurrentTurn) {
                 this.currentPlayerUUID = player.key
+                if(isMyTurn()){
+                    me.freeTroops =  me.freeTroops + territoryManager.calculateNewTroops(me)
+                }
+
                 return
             }
         }
@@ -125,6 +130,10 @@ class GameManager private constructor(
     suspend fun nextPhase(): Boolean {
         if (isMyTurn()) {
             networkClient.changePhase(gameManagerUUID)
+            if(me.capturedTerritory){
+                CardHandler.getCard(me)
+                me.capturedTerritory = false
+            }
             return true
         }
         return false
@@ -151,6 +160,7 @@ class GameManager private constructor(
     fun whoAmI(): PlayerRecord{
         return me
     }
+
 
 
 }
