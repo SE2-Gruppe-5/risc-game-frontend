@@ -9,6 +9,9 @@ import android.os.IBinder
 import android.util.Log
 import com.launchdarkly.eventsource.EventSource
 import com.se2gruppe5.risikofrontend.Constants
+import com.se2gruppe5.risikofrontend.game.managers.GameManager
+import com.se2gruppe5.risikofrontend.game.vibrateonterritoryloss.PhoneHWViberInstance
+import com.se2gruppe5.risikofrontend.game.vibrateonterritoryloss.VibrateClientMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.SetUuidMessage
 import java.net.URI
 import java.time.Duration
@@ -55,6 +58,12 @@ class SseClientService : Service() {
             handlers.clear()
             handler(MessageType.SET_UUID) { it as SetUuidMessage
                 uuid = it.uuid
+            }
+            handler(MessageType.VIBRATE_CLIENT) { it as VibrateClientMessage
+                val localPlayer = GameManager.get().whoAmI()
+                if (localPlayer.id == it.playerId) {
+                    PhoneHWViberInstance.instance.vibrate(it.durationMs.toLong(), it.intensity)
+                }
             }
         } finally {
             lock.unlock()
