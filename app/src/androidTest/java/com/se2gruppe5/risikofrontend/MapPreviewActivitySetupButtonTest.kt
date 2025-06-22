@@ -163,6 +163,17 @@ class MapPreviewActivityTest {
                     onSuccess: (Int) -> Unit
                 ) { /* no-op */
                 }
+                override fun useTradeCardDialog(
+                    player: PlayerRecord, forced: Boolean) {
+                    // no-op
+                }
+                override fun usePlaceTroops(
+                    t: ITerritoryVisual,
+                    p: PlayerRecord
+                ): Boolean {
+                    // no-op
+                    return false
+                }
 
                 override fun useReinforceDialog(
                     fromTerritory: ITerritoryVisual,
