@@ -168,7 +168,7 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/game/territory/TerritoryVisualAndroid.kt",
                 "**/com/se2gruppe5/risikofrontend/game/territory/PointingArrowAndroid.kt",
                 "**/com/se2gruppe5/risikofrontend/game/territory/LineAndroid.kt",
-                " **/com/se2gruppe5/risikofrontend/game/dice/DiceVisualAndroid.kt",
+                "**/com/se2gruppe5/risikofrontend/game/dice/DiceVisualAndroid.kt",
                 "**/com/se2gruppe5/risikofrontend/devtools/**",
                 "**/com/se2gruppe5/risikofrontend/lobby/**",
                 "**/com/se2gruppe5/risikofrontend/network/**",
@@ -183,6 +183,9 @@ sonar {
                 "**/com/se2gruppe5/risikofrontend/Constants.kt",
                 "**/com/se2gruppe5/risikofrontend/game/dialogues/**",
                 "**/com/se2gruppe5/risikofrontend/game/popup/**",
+                "**/com/se2gruppe5/risikofrontend/game/hardware/**",
+                "**/com/se2gruppe5/risikofrontend/game/dataclasses/util/**",
+                "**/com/se2gruppe5/risikofrontend/game/dataclasses/game/CardRecord.kt", //todo re-include and test iff contains functionality in future
                 "**/com/se2gruppe5/risikofrontend/game/enums/**",
                 "**/com/se2gruppe5/risikofrontend/game/managers/GameViewManager.kt",
                 "**/com/se2gruppe5/risikofrontend/game/managers/ToastUtilAndroid.kt"

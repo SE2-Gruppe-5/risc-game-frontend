@@ -14,7 +14,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.GameActivity
-import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import com.se2gruppe5.risikofrontend.network.sse.MessageType
 import com.se2gruppe5.risikofrontend.network.sse.SseClientService

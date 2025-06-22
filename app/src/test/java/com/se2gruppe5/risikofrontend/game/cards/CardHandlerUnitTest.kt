@@ -1,7 +1,7 @@
 package com.se2gruppe5.risikofrontend.game.cards
 
-import com.se2gruppe5.risikofrontend.game.dataclasses.CardRecord
-import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.CardRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.enums.CardType
 import org.junit.Test
 import org.junit.Assert.*
@@ -85,5 +85,46 @@ class CardHandlerUnitTest {
 
         // Verify that add was called 500 times
         verify(cardsMock, times(500)).add(org.mockito.kotlin.any())
+    }
+
+    @Test
+    fun checkIf3ArtilleryReturnsCorrectTroops(){
+        val cards = listOf(CardRecord(CardType.Artillery),CardRecord(CardType.Artillery),CardRecord(CardType.Artillery))
+        assertEquals(8, CardHandler.tradeCards(cards))
+    }
+    @Test
+    fun checkIf3InfantryReturnsCorrectTroops(){
+        val cards = listOf(CardRecord(CardType.Infantry),CardRecord(CardType.Infantry),CardRecord(CardType.Infantry))
+        assertEquals(4, CardHandler.tradeCards(cards))
+    }
+    @Test
+    fun checkIf3CavalryReturnsCorrectTroops(){
+        val cards = listOf(CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry))
+        assertEquals(6, CardHandler.tradeCards(cards))
+    }
+    @Test
+    fun checkIfOneOfEachReturnsCorrectTroops(){
+        var cards = listOf(CardRecord(CardType.Cavalry),CardRecord(CardType.Infantry),CardRecord(CardType.Artillery))
+        assertEquals(10, CardHandler.tradeCards(cards))
+        cards = listOf(CardRecord(CardType.Infantry),CardRecord(CardType.Cavalry),CardRecord(CardType.Artillery))
+        assertEquals(10, CardHandler.tradeCards(cards))
+        cards = listOf(CardRecord(CardType.Artillery),CardRecord(CardType.Cavalry),CardRecord(CardType.Infantry))
+        assertEquals(10, CardHandler.tradeCards(cards))
+    }
+
+    @Test
+    fun checkIfWrongCardSelectionReturnsCorrectTroops(){
+        val cards = listOf(CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry),CardRecord(CardType.Artillery))
+        assertEquals(-1, CardHandler.tradeCards(cards))
+    }
+    @Test
+    fun checkIfTooLittleCardsReturnsCorrectTroops(){
+        val cards = listOf(CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry))
+        assertEquals(-1, CardHandler.tradeCards(cards))
+    }
+    @Test
+    fun checkIfTooManyCardsReturnsCorrectTroops(){
+        val cards = listOf(CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry),CardRecord(CardType.Cavalry))
+        assertEquals(-1, CardHandler.tradeCards(cards))
     }
 }

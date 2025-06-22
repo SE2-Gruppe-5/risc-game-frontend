@@ -1,25 +1,30 @@
 package com.se2gruppe5.risikofrontend.game.cards
 
-import com.se2gruppe5.risikofrontend.game.dataclasses.CardRecord
-import com.se2gruppe5.risikofrontend.game.dataclasses.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.CardRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.enums.CardType
 
 object CardHandler :ICardHandler {
 
 
-    //TODO
-    override fun tradeCards(player: PlayerRecord, cards: List<CardRecord>, starCount: Int) {
-//        var infantry = 0
-//        var cavalry = 0
-//        var artillery = 0
-//        cards.forEach { card ->{
-//            if (card.type == CardType.Infantry) infantry++
-//            if(card.type == CardType.Cavalry) cavalry++
-//            if(card.type == CardType.Artillery) artillery++
-//        } }
 
+    override fun tradeCards(cards: List<CardRecord>): Int {
+        if (cards.size != 3) return -1
 
+        val counts = cards.groupingBy { it.type }.eachCount()
+        val infantry = counts[CardType.Infantry] ?: 0
+        val cavalry = counts[CardType.Cavalry] ?: 0
+        val artillery = counts[CardType.Artillery] ?: 0
+
+        return when {
+            infantry == 3 -> 4
+            cavalry == 3 -> 6
+            artillery == 3 -> 8
+            infantry == 1 && cavalry == 1 && artillery == 1 -> 10
+            else -> -1
+        }
     }
+
 
 
 
