@@ -23,6 +23,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.times
 import org.mockito.kotlin.whenever
+import java.lang.reflect.Field
 import java.util.UUID
 
 /*
@@ -62,19 +63,29 @@ class TerritoryManagerTestUnitTest {
         manager = TerritoryManager.get()
 
         // Base territory record and visual
-        record = TerritoryRecord(1, 1, Continent.CPU, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f)))
+        record = TerritoryRecord(
+            1,
+            1,
+            Continent.CPU,
+            Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))
+        )
         t1 = mock {
             on { territoryRecord } doReturn record
             on { getTerritoryId() } doReturn record.id
-            on { changeStat(any()) } doAnswer  { record.stat = it.getArgument(0) }
-            on { changeOwner(any())} doAnswer {record.owner = it.getArgument(0)}
+            on { changeStat(any()) } doAnswer { record.stat = it.getArgument(0) }
+            on { changeOwner(any()) } doAnswer { record.owner = it.getArgument(0) }
         }
-        record3 = TerritoryRecord(1, 1, Continent.CPU, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f)))
+        record3 = TerritoryRecord(
+            1,
+            1,
+            Continent.CPU,
+            Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))
+        )
         t2 = mock {
             on { territoryRecord } doReturn record3
             on { getTerritoryId() } doReturn record3.id
-            on { changeStat(any()) } doAnswer  { record3.stat = it.getArgument(0) }
-            on { changeOwner(any())} doAnswer {record3.owner = it.getArgument(0)}
+            on { changeStat(any()) } doAnswer { record3.stat = it.getArgument(0) }
+            on { changeOwner(any()) } doAnswer { record3.owner = it.getArgument(0) }
         }
 
         mockClient = mock()
@@ -83,7 +94,7 @@ class TerritoryManagerTestUnitTest {
         playerList[mePlayerRecord.id] = mePlayerRecord
         playerList[newOwner.id] = newOwner
         GameManager.reset()
-        GameManager.init(mePlayerRecord,UUID.randomUUID(),manager, mockClient, playerList)
+        GameManager.init(mePlayerRecord, UUID.randomUUID(), manager, mockClient, playerList)
     }
 
     @Test
@@ -98,8 +109,18 @@ class TerritoryManagerTestUnitTest {
 
     @Test
     fun highlightTest() {
-        val record1 = TerritoryRecord(123, 1, Continent.CMOS, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f)))
-        val record2 = TerritoryRecord(321, 1, Continent.DCON, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f)))
+        val record1 = TerritoryRecord(
+            123,
+            1,
+            Continent.CMOS,
+            Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))
+        )
+        val record2 = TerritoryRecord(
+            321,
+            1,
+            Continent.DCON,
+            Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))
+        )
 
 
         val territory1 = mock<ITerritoryVisual> {
@@ -184,7 +205,12 @@ class TerritoryManagerTestUnitTest {
 
     @Test(expected = IllegalArgumentException::class)
     fun addTerritoryDuplicateIDTest() {
-        val record2 = TerritoryRecord(1, 5, Continent.CPU, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f)))
+        val record2 = TerritoryRecord(
+            1,
+            5,
+            Continent.CPU,
+            Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))
+        )
         val t2 = mock<ITerritoryVisual> {
             on { territoryRecord } doReturn record2
             on { getTerritoryId() } doReturn record2.id
@@ -251,13 +277,18 @@ class TerritoryManagerTestUnitTest {
     @Test
     fun updateCallsTerrManagerUpdateTest() {
         manager.addTerritory(t1)
-        val record2 = TerritoryRecord(1, 2, Continent.MMC, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))).apply { owner = null }
+        val record2 = TerritoryRecord(
+            1,
+            2,
+            Continent.MMC,
+            Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))
+        ).apply { owner = null }
         manager.updateTerritories(listOf(record, record2))
         verify(t1, times(2)).changeStat(any())
     }
 
     @Test
-    fun testNoTerritoryUpdateIfNotMyTurn(){
+    fun testNoTerritoryUpdateIfNotMyTurn() {
         t1.territoryRecord.connections.add(t2.territoryRecord)
         t2.territoryRecord.connections.add(t1.territoryRecord)
         t1.territoryRecord.owner = mePlayerRecord.id
@@ -276,7 +307,7 @@ class TerritoryManagerTestUnitTest {
 
     }
     @Test
-    fun testTerritoryUpdateIfMyTurn(){
+    fun testTerritoryUpdateIfMyTurn() {
         t1.territoryRecord.connections.add(t2.territoryRecord)
         t2.territoryRecord.connections.add(t1.territoryRecord)
         t1.territoryRecord.owner = mePlayerRecord.id
@@ -295,7 +326,7 @@ class TerritoryManagerTestUnitTest {
 
     }
     @Test
-    fun testNoTerritoryUpdateIfNotConnected(){
+    fun testNoTerritoryUpdateIfNotConnected() {
 
         t1.territoryRecord.owner = mePlayerRecord.id
         t2.territoryRecord.owner = mePlayerRecord.id
@@ -313,7 +344,7 @@ class TerritoryManagerTestUnitTest {
 
     }
     @Test
-    fun testNoTerritoryUpdateIfSameTerritory(){
+    fun testNoTerritoryUpdateIfSameTerritory() {
         t1.territoryRecord.connections.add(t2.territoryRecord)
         t2.territoryRecord.connections.add(t1.territoryRecord)
         t1.territoryRecord.owner = mePlayerRecord.id
@@ -333,7 +364,7 @@ class TerritoryManagerTestUnitTest {
     }
 
     @Test
-    fun testAttackMoveCapturesTerritory(){
+    fun testAttackMoveCapturesTerritory() {
         t1.territoryRecord.connections.add(t2.territoryRecord)
         t2.territoryRecord.connections.add(t1.territoryRecord)
         t1.territoryRecord.owner = mePlayerRecord.id
