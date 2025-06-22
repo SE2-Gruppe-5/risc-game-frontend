@@ -205,4 +205,10 @@ class TerritoryManager private constructor(
             client.changeTerritory(GameManager.get().getUUID(), t)
         }
     }
+    fun getTerritoryById(id: Int): ITerritoryVisual? {
+        return territoryList.find { it.getTerritoryId() == id }
+    }
+    fun getPrevSelTerritory(): ITerritoryVisual? {
+        return prevSelTerritory
+    }
 }

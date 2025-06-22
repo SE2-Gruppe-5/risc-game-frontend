@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.graphics.toColorInt
 import com.se2gruppe5.risikofrontend.R
+import com.se2gruppe5.risikofrontend.devtools.MapPreviewActivity
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
@@ -43,6 +44,12 @@ class BoardVisualGeneratorAndroid {
 
                 val visual: ITerritoryVisual =
                     TerritoryVisualAndroid(territory, text, text, button, bg, outline)
+
+                if (activity is MapPreviewActivity && standalone) {
+                    button.setOnClickListener {
+                        activity.onTerritoryClicked(territory.id, visual)
+                    }
+                }
 
                 if(!standalone) {
                     val territoryManager = TerritoryManager.get()
