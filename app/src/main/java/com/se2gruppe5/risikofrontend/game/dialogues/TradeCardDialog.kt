@@ -24,6 +24,7 @@ class TradeCardDialog(
     private var ctx: Context? = null
     val cardCountMap = EnumMap<CardType, Int>(CardType::class.java)
 
+
     init {
         setView(binding.root)
         forced = mustTrade
