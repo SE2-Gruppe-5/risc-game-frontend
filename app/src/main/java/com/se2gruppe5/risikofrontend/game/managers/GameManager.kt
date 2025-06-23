@@ -1,12 +1,12 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
-import android.util.Log
 import com.se2gruppe5.risikofrontend.game.cards.CardHandler
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.network.INetworkClient
+import kotlinx.coroutines.runBlocking
 import java.util.UUID
 
 
@@ -191,8 +191,9 @@ class GameManager private constructor(
                         t.territoryRecord.transform
                     )
                     newT.owner = me.id
-                    territoryManager.updateTerritory(newT)
-
+                    runBlocking {
+                        networkClient.changeTerritory(gameManagerUUID, newT)
+                    }
                     break
                 }
             }
@@ -214,6 +215,9 @@ class GameManager private constructor(
                 )
                 newT.owner = me.id
                 territoryManager.updateTerritory(newT)
+                runBlocking {
+                    networkClient.changeTerritory(gameManagerUUID, newT)
+                }
 
             }
         }
