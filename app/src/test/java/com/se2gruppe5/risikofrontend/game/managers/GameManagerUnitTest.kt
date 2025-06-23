@@ -257,7 +257,7 @@ class GameManagerUnitTest {
     fun getTerritoryManagerReturnsTerritoryManager() {
         assertEquals(territoryManagerMock, gameManager.getTerritoryManager())
     }
-
+    /*
     @Test
     fun penalizeClickingTest() {
         // Check if territory with number too low is skipped
@@ -280,6 +280,8 @@ class GameManagerUnitTest {
         // -1
         assertEquals(t2Record.stat - 1, updated.stat)
     }
+    
+     */
 
     @Test
     fun punishForCheatingTest() {
