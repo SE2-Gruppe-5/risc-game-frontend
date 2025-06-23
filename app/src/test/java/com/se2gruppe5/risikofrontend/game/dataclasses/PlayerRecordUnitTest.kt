@@ -29,6 +29,7 @@ class PlayerRecordUnitTest {
         player.freeTroops += 10
         assertEquals(before + 10, player.freeTroops)
 
+
     }
 
     @Test
