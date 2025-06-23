@@ -258,7 +258,7 @@ class GameActivity : AppCompatActivity() {
 
     private fun displayWinner(s: String) {
     runOnUiThread {
-        var msg = s + "Won the Game!!"
+        var msg = s + " Won the Game!!"
         var wonMessage = this.findViewById<TextView>(R.id.txtWonMessage)
         wonMessage.text = msg
         wonMessage.visibility = View.VISIBLE
