@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
+import android.util.Log
 import com.se2gruppe5.risikofrontend.game.cards.CardHandler
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
@@ -192,7 +193,7 @@ class GameManager private constructor(
                     newT.owner = me.id
                     territoryManager.updateTerritory(newT)
 
-                    break;
+                    break
                 }
             }
         }
@@ -203,7 +204,8 @@ class GameManager private constructor(
     fun punishMyselfForCheating(omitRandom: Boolean =false) {
         //Set Troops of some (about 1/3 of all) territories to 1
         for (t: ITerritoryVisual in territoryManager.getTerritoryList()) {
-            if (t.territoryRecord.owner == me && (((0..2).random() == 0)||omitRandom)) {
+            if (t.territoryRecord.owner == me.id && (((0..2).random() == 0)||omitRandom)) {
+
                 val newT = TerritoryRecord(
                     t.territoryRecord.id,
                     1,
@@ -212,6 +214,7 @@ class GameManager private constructor(
                 )
                 newT.owner = me.id
                 territoryManager.updateTerritory(newT)
+
             }
         }
     }
