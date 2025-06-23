@@ -177,14 +177,15 @@ class GameManager private constructor(
         return me
     }
 
-    fun penalizeForClicking() {
+    //omitRandom is only for tests!
+    fun penalizeForClicking(omitRandom: Boolean =false) {
         //penalize by removing one unit from a random territory >1 units
         for (t: ITerritoryVisual in territoryManager.getTerritoryList().shuffled()) {
-            if (t.territoryRecord.owner == me) {
+            if (t.territoryRecord.owner == me.id) {
                 if (t.territoryRecord.stat > 1) {
                     val newT = TerritoryRecord(
                         t.territoryRecord.id,
-                        t.territoryRecord.id - 1,
+                        t.territoryRecord.stat - 1,
                         t.territoryRecord.continent,
                         t.territoryRecord.transform
                     )
@@ -195,10 +196,12 @@ class GameManager private constructor(
         }
     }
 
-    private fun punishMyselfForCheating() {
+    //public for unit tests
+    //omitRandom is only for tests!
+    fun punishMyselfForCheating(omitRandom: Boolean =false) {
         //Set Troops of some (about 1/3 of all) territories to 1
         for (t: ITerritoryVisual in territoryManager.getTerritoryList()) {
-            if (t.territoryRecord.owner == me && ((0..2).random() == 0)) {
+            if (t.territoryRecord.owner == me && (((0..2).random() == 0)||omitRandom)) {
                 val newT = TerritoryRecord(
                     t.territoryRecord.id,
                     1,
