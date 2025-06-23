@@ -186,15 +186,6 @@ class TerritoryManager private constructor(
         }
     }
 
-    private fun attackTerritory(t: ITerritoryVisual) {
-        me!!.capturedTerritory = true
-
-        //TODO we should roll dice here instead of just taking over the territory
-        t.territoryRecord.owner = me.id
-        runBlocking {
-            client.changeTerritory(GameManager.get().getUUID(), t.territoryRecord)
-        }
-    }
 
     private fun updateSelected(t: ITerritoryVisual) {
         prevSelTerritory?.setHighlightSelected(false)
