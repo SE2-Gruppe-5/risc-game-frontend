@@ -338,7 +338,7 @@ class TerritoryManagerTestUnitTest {
         t2.territoryRecord.connections.add(t1.territoryRecord)
         t1.territoryRecord.owner = mePlayerRecord.id
         t2.territoryRecord.owner = newOwner.id
-        whenever(dialogueHandler.useAttackDialog(any(), any(), any())).then {
+        whenever(dialogueHandler.useAttackDialog(any(), any())).then {
             t2.changeOwner(mePlayerRecord.id)
         }
 
