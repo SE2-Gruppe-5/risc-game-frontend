@@ -27,7 +27,8 @@ class PlayerRecordUnitTest {
         var player = PlayerRecord(UUID.randomUUID(), "a", 0xFFFFFF)
         var before = player.freeTroops
         player.freeTroops += 10
-        assertEquals(before+10, player.freeTroops)
+        assertEquals(before + 10, player.freeTroops)
+
 
     }
 

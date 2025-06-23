@@ -30,6 +30,7 @@ import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePlayersMessage
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
 import android.util.Log
+import androidx.transition.Visibility
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dialogues.DialogueHandler
 import com.se2gruppe5.risikofrontend.game.hardware.FlashLightHardwareAndroid
@@ -42,28 +43,14 @@ import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.managers.ToastUtilAndroid
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
+import com.se2gruppe5.risikofrontend.network.sse.messages.PlayerWonMessage
+import org.w3c.dom.Text
 import java.io.Serializable
 
 
 class GameActivity : AppCompatActivity() {
     val client = NetworkClient()
     var sseService: SseClientService? = null
-    val serviceConnection = constructServiceConnection { service ->
-        // Allow network calls on main thread for testing purposes
-        // GitHub Actions Android emulator action with stricter policy fails otherwise
-        StrictMode.setThreadPolicy(
-            StrictMode.ThreadPolicy.Builder().permitAll().build()
-        )
-        sseService = service
-        if (service != null) {
-            gameManager = GameManager.get()
-            setupHandlers(service)
-            getGameInfo()
-
-        }
-
-
-    }
     var nextPhaseBtn: Button? = null
     var reinforceIndicator: TextView? = null
     var attackIndicator: TextView? = null
@@ -72,10 +59,25 @@ class GameActivity : AppCompatActivity() {
     var viewManager: GameViewManager? = null
 
     var turnIndicators: MutableList<TextView> = mutableListOf()
-    var gameManager: GameManager? = null
     var gameID: UUID? = null
     var me: PlayerRecord? = null
     var troopText: TextView? = null
+    val serviceConnection = constructServiceConnection { service ->
+        // Allow network calls on main thread for testing purposes
+        // GitHub Actions Android emulator action with stricter policy fails otherwise
+        StrictMode.setThreadPolicy(
+            StrictMode.ThreadPolicy.Builder().permitAll().build()
+        )
+        sseService = service
+        if (service != null) {
+            setupHandlers(service)
+            getGameInfo()
+
+        }
+
+
+    }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,17 +89,17 @@ class GameActivity : AppCompatActivity() {
 
         val gameStart =
             getSerializableExtraCompat(intent, "GAME_DATA", GameStartMessage::class.java)!!
-        val me = getSerializableExtraCompat(intent, "LOCAL_PLAYER", PlayerRecord::class.java)!!
+         me = getSerializableExtraCompat(intent, "LOCAL_PLAYER", PlayerRecord::class.java)!!
         val dialogHandler = DialogueHandler(this)
         gameID = gameStart.gameId
 
         TerritoryManager.init(
-            me,
+            me!!,
             PointingArrowAndroid(this),
             ToastUtilAndroid(this),
             dialogHandler
         )
-        GameManager.init(me, gameID!!, TerritoryManager.get(), client, gameStart.players)
+        GameManager.init(me!!, gameID!!, TerritoryManager.get(), client, gameStart.players)
         setupDiceInteractions()
 
         turnIndicators.add(this.findViewById<TextView>(R.id.player1txt))
@@ -117,23 +119,25 @@ class GameActivity : AppCompatActivity() {
         viewManager = GameViewManager(this)
         viewManager?.initializeGame(this, turnIndicators)
 
+        this.findViewById<TextView>(R.id.txtWonMessage).visibility = View.INVISIBLE
+
         val tradeCardButton = this.findViewById<Button>(R.id.tradeCardButton)
 
         tradeCardButton.setOnClickListener {
-            if(me.cards.size>=3){
-                dialogHandler.useTradeCardDialog(me, false)
+            if(me!!.cards.size>=3){
+                dialogHandler.useTradeCardDialog(me!!, false)
 
-                viewManager?.updateCardDisplay(me)
+                viewManager?.updateCardDisplay(me!!)
             }else{
                 Toast.makeText(this@GameActivity, "You do not have enough cards to Trade", Toast.LENGTH_SHORT).show()
             }
         }
         nextPhaseBtn?.setOnClickListener {
             changePhase()
-            if(me.cards.size == 5){
-                dialogHandler.useTradeCardDialog(me, true)
+            if(me!!.cards.size == 5){
+                dialogHandler.useTradeCardDialog(me!!, true)
             }
-            viewManager?.updateCardDisplay(me)
+            viewManager?.updateCardDisplay(me!!)
             updateFreeTroops()
             Log.i("GameManger", gameID.toString())
         }
@@ -145,8 +149,9 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun updateFreeTroops(){
-        troopText!!.text = me!!.freeTroops.toString()
+      troopText!!.text = me!!.freeTroops.toString()
     }
+
     override fun onStart() {
         super.onStart()
         Intent(this, SseClientService::class.java).also {
@@ -241,7 +246,21 @@ class GameActivity : AppCompatActivity() {
             GameManager.get().getTerritoryManager().updateTerritories(it.territories)
 
         }
+        sseService?.handler(MessageType.PLAYER_WON){
+            it as PlayerWonMessage
+            displayWinner(GameManager.get().getPlayer(it.winner)!!.name)
+        }
 
+
+    }
+
+    private fun displayWinner(s: String) {
+    runOnUiThread {
+        var msg = s + " Won the Game!!"
+        var wonMessage = this.findViewById<TextView>(R.id.txtWonMessage)
+        wonMessage.text = msg
+        wonMessage.visibility = View.VISIBLE
+    }
     }
 
     /**
