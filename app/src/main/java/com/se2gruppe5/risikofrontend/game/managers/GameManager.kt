@@ -55,7 +55,7 @@ class GameManager private constructor(
 
     private fun reset() {
         runBlocking {
-            networkClient.abandonGame(gameManagerUUID, me.id)
+            networkClient.killPlayer(gameManagerUUID, me.id)
         }
     }
 
