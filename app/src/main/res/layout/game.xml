@@ -43,10 +43,10 @@
         android:accessibilityHeading="false"
         android:background="#00FFFFFF"
         android:contentDescription="Press me to roll the dice!"
-        app:tint="#64548E"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/dice_symbol" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/dice_symbol"
+        app:tint="#64548E" />
 
     <TextView
         android:id="@+id/textView8"
