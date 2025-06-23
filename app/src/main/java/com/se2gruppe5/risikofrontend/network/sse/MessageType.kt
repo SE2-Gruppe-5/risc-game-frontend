@@ -6,6 +6,7 @@ import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.JoinLobbyMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.LeaveLobbyMessage
+import com.se2gruppe5.risikofrontend.network.sse.messages.PlayerWonMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.SetUuidMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePhaseMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePlayersMessage
@@ -21,6 +22,7 @@ enum class MessageType(val messageClass: KClass<out IMessage>) {
     UPDATE_PLAYERS(UpdatePlayersMessage::class),
     UPDATE_TERRITORIES(ChangeTerritoryMessage::class),
     ACCUSE_CHEATING(AccuseCheatingMessage::class)
+    PLAYER_WON(PlayerWonMessage::class);
 }
 
 fun getMessageType(type: String): MessageType? {

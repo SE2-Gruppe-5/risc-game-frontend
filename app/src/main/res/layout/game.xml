@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <Button
         android:id="@+id/btn_accuse_cheating"
         android:layout_width="wrap_content"
@@ -45,6 +46,22 @@
 
         </HorizontalScrollView>
     </ScrollView>
+
+
+    <TextView
+        android:id="@+id/txtWonMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/gray"
+        android:fontFamily="sans-serif-condensed"
+        android:text="asdad"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="96sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/diceButton"
@@ -361,4 +378,5 @@
             android:textSize="24sp"
             android:visibility="invisible" />
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
