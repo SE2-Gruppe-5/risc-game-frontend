@@ -4,6 +4,7 @@ import com.se2gruppe5.risikofrontend.game.cards.CardHandler
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.enums.Phases
+import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.network.INetworkClient
 import java.util.UUID
 
@@ -15,7 +16,8 @@ class GameManager private constructor(
     private val networkClient: INetworkClient,
     private var players: HashMap<UUID, PlayerRecord>,
     private var currentPlayerUUID: UUID,
-    private var currentPhase: Phases
+    private var currentPhase: Phases,
+    private var amICurrentlyCheating: Boolean = false
 ) {
     companion object {
 
@@ -64,15 +66,21 @@ class GameManager private constructor(
             ?: throw IllegalArgumentException("Current Player not found in player list")
     }
 
+    fun setCurrentlyCheating(amICheating: Boolean) {
+        amICurrentlyCheating = amICheating
+    }
+
     fun getPhase(): Phases {
         return this.currentPhase
     }
+
     /**
      * Unit Test only, do not call
      */
-    fun setPhase(p : Phases){
+    fun setPhase(p: Phases) {
         this.currentPhase = p
     }
+
     //todo sprint 3 refactoring possibility: PlayerManager
     fun playerUUIDSanityCheck(players: HashMap<UUID, PlayerRecord>) {
         var c = 0
@@ -97,8 +105,10 @@ class GameManager private constructor(
         for (player in this.players) {
             if (player.value.isCurrentTurn) {
                 this.currentPlayerUUID = player.key
-                if(isMyTurn()){
-                    me.freeTroops =  me.freeTroops + territoryManager.calculateNewTroops(me)
+                if (isMyTurn()) {
+                    me.freeTroops = me.freeTroops + territoryManager.calculateNewTroops(me)
+                } else {
+                    setCurrentlyCheating(false)
                 }
 
                 return
@@ -109,14 +119,14 @@ class GameManager private constructor(
     /**
      * Get from Server
      */
-    fun receiveTerritoryListUpdate(territories: List<TerritoryRecord>){
+    fun receiveTerritoryListUpdate(territories: List<TerritoryRecord>) {
         this.territoryManager.updateTerritories(territories)
     }
 
     /**
      * Get form Server
      */
-    fun receivePhaseUpdate(newPhase: Phases){
+    fun receivePhaseUpdate(newPhase: Phases) {
         this.currentPhase = newPhase
     }
 
@@ -130,7 +140,7 @@ class GameManager private constructor(
     suspend fun nextPhase(): Boolean {
         if (isMyTurn()) {
             networkClient.changePhase(gameManagerUUID)
-            if(me.capturedTerritory){
+            if (me.capturedTerritory) {
                 CardHandler.getCard(me)
                 me.capturedTerritory = false
             }
@@ -145,22 +155,60 @@ class GameManager private constructor(
         return currentPlayer?.equals(me) == true
     }
 
-    fun getCurrentPhase(): Phases{
+    fun getCurrentPhase(): Phases {
         return currentPhase
     }
 
-    fun getUUID(): UUID{
+    fun getUUID(): UUID {
         return gameManagerUUID
     }
 
-    fun getTerritoryManager(): TerritoryManager{
+    fun getTerritoryManager(): TerritoryManager {
         return territoryManager
     }
 
-    fun whoAmI(): PlayerRecord{
+    fun checkIHaveBeenAccusedCheating(accusedPlayerUUID: UUID) {
+        if (accusedPlayerUUID == me.id && amICurrentlyCheating) {
+            punishMyselfForCheating();
+        }
+    }
+
+    fun whoAmI(): PlayerRecord {
         return me
     }
 
+    fun penalizeForClicking() {
+        //penalize by removing one unit from a random territory >1 units
+        for (t: ITerritoryVisual in territoryManager.getTerritoryList().shuffled()) {
+            if (t.territoryRecord.owner == me) {
+                if (t.territoryRecord.stat > 1) {
+                    val newT = TerritoryRecord(
+                        t.territoryRecord.id,
+                        t.territoryRecord.id - 1,
+                        t.territoryRecord.continent,
+                        t.territoryRecord.transform
+                    )
+                    territoryManager.updateTerritory(newT)
+                    break;
+                }
+            }
+        }
+    }
+
+    private fun punishMyselfForCheating() {
+        //Set Troops of some (about 1/3 of all) territories to 1
+        for (t: ITerritoryVisual in territoryManager.getTerritoryList()) {
+            if (t.territoryRecord.owner == me && ((0..2).random() == 0)) {
+                val newT = TerritoryRecord(
+                    t.territoryRecord.id,
+                    1,
+                    t.territoryRecord.continent,
+                    t.territoryRecord.transform
+                )
+                territoryManager.updateTerritory(newT)
+            }
+        }
+    }
 
 
 }

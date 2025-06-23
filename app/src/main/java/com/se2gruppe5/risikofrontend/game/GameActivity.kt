@@ -30,18 +30,19 @@ import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePlayersMessage
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
 import android.util.Log
+import androidx.lifecycle.lifecycleScope
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dialogues.DialogueHandler
 import com.se2gruppe5.risikofrontend.game.hardware.FlashLightHardwareAndroid
-import com.se2gruppe5.risikofrontend.game.hardware.IFlashLightHardware
-import com.se2gruppe5.risikofrontend.game.hardware.IShakeHardware
 import com.se2gruppe5.risikofrontend.game.hardware.ShakeHardwareAndroid
 import com.se2gruppe5.risikofrontend.game.popup.ShakePhoneAlert
 import com.se2gruppe5.risikofrontend.game.managers.GameViewManager
 import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.managers.ToastUtilAndroid
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
+import com.se2gruppe5.risikofrontend.network.sse.messages.AccuseCheatingMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
+import kotlinx.coroutines.launch
 import java.io.Serializable
 
 
@@ -73,7 +74,6 @@ class GameActivity : AppCompatActivity() {
     var turnIndicators: MutableList<TextView> = mutableListOf()
     var gameManager: GameManager? = null
     var gameID: UUID? = null
-    var me: PlayerRecord? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,6 +118,17 @@ class GameActivity : AppCompatActivity() {
 
         viewManager = GameViewManager(this)
         viewManager?.initializeGame(this, turnIndicators)
+
+
+        val accuseCheatButton =  this.findViewById<Button>(R.id.btn_accuse_cheating)
+
+        accuseCheatButton.setOnClickListener {
+            lifecycleScope.launch {
+                client.issueCheatAccusation(gameID!!, me.id)
+            }
+            gameManager?.penalizeForClicking();
+        }
+
 
         val tradeCardButton = this.findViewById<Button>(R.id.tradeCardButton)
 
@@ -210,7 +221,6 @@ class GameActivity : AppCompatActivity() {
 
     }
 
-
     private fun setupHandlers(service: SseClientService) {
         sseService?.handler(MessageType.UPDATE_PHASE) {
             it as UpdatePhaseMessage
@@ -238,6 +248,11 @@ class GameActivity : AppCompatActivity() {
         sseService?.handler(MessageType.UPDATE_TERRITORIES) {
             it as ChangeTerritoryMessage
             GameManager.get().getTerritoryManager().updateTerritories(it.territories)
+
+        }
+        sseService?.handler(MessageType.ACCUSE_CHEATING) {
+            it as AccuseCheatingMessage
+            GameManager.get().checkIHaveBeenAccusedCheating(it.accusedPlayerUUID);
 
         }
 
@@ -281,6 +296,7 @@ class GameActivity : AppCompatActivity() {
             diceVisualAndroid.roll()
             flashHW.blink() //Make Phone's Camera Flash-Light blink when cheating ...
             diceVisualAndroid.resetDice()
+            GameManager.get().setCurrentlyCheating(true)
             // By Design i have chosen to let the two cheating variants
             // be performed without shaking the phone.
             // (More fun to spot someone cheating when playing in person this way)

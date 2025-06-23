@@ -17,4 +17,5 @@ interface INetworkClient {
     suspend fun changePhase(gameId: UUID)
     suspend fun changeTerritory(gameId: UUID, territory: TerritoryRecord)
     suspend fun cardAction(gameId: UUID, action: String, player: PlayerRecord, card: CardRecord)
+    suspend fun issueCheatAccusation(gameId: UUID, accusedPlayerUUID: UUID);
 }

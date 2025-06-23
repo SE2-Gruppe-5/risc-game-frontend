@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikofrontend.network.sse
 
+import com.se2gruppe5.risikofrontend.network.sse.messages.AccuseCheatingMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.ChangeTerritoryMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
@@ -18,7 +19,8 @@ enum class MessageType(val messageClass: KClass<out IMessage>) {
     START_GAME(GameStartMessage::class),
     UPDATE_PHASE(UpdatePhaseMessage::class),
     UPDATE_PLAYERS(UpdatePlayersMessage::class),
-    UPDATE_TERRITORIES(ChangeTerritoryMessage::class);
+    UPDATE_TERRITORIES(ChangeTerritoryMessage::class),
+    ACCUSE_CHEATING(AccuseCheatingMessage::class)
 }
 
 fun getMessageType(type: String): MessageType? {
