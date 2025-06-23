@@ -147,7 +147,6 @@ class GameActivity : AppCompatActivity() {
             }
             viewManager?.updateCardDisplay(me!!)
             updateFreeTroops()
-            Log.i("GameManger", gameID.toString())
         }
         val showContinentButton: Button = this.findViewById(R.id.btn_show_continents)
         showContinentButton.setOnClickListener {
