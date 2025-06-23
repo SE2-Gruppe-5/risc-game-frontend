@@ -189,7 +189,9 @@ class GameManager private constructor(
                         t.territoryRecord.continent,
                         t.territoryRecord.transform
                     )
+                    newT.owner = me.id
                     territoryManager.updateTerritory(newT)
+
                     break;
                 }
             }
@@ -208,6 +210,7 @@ class GameManager private constructor(
                     t.territoryRecord.continent,
                     t.territoryRecord.transform
                 )
+                newT.owner = me.id
                 territoryManager.updateTerritory(newT)
             }
         }

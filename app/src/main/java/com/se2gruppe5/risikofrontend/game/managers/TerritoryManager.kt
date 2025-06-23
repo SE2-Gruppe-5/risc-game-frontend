@@ -87,6 +87,7 @@ class TerritoryManager private constructor(
                 } else {
                     i.changeRibbonColor(TERRITORY_NO_OWNER_COLOR)
                 }
+                changeTerritoryRequest(t)
                 break
             }
         }
