@@ -88,7 +88,7 @@ class GameActivity : AppCompatActivity() {
 
         val gameStart =
             getSerializableExtraCompat(intent, "GAME_DATA", GameStartMessage::class.java)!!
-        val me = getSerializableExtraCompat(intent, "LOCAL_PLAYER", PlayerRecord::class.java)!!
+        me = getSerializableExtraCompat(intent, "LOCAL_PLAYER", PlayerRecord::class.java)!!
         val dialogHandler = DialogueHandler(this)
         gameID = gameStart.gameId
 
