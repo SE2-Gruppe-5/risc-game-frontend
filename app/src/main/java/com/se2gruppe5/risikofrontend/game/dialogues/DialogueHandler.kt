@@ -1,16 +1,17 @@
 package com.se2gruppe5.risikofrontend.game.dialogues
 
 import android.app.Activity
+import android.util.Log
 import android.widget.TextView
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
+import java.io.Console
 
 class DialogueHandler (val activity: Activity) : IDialogueHandler {
     override fun useAttackDialog(
         from: ITerritoryVisual,
         to: ITerritoryVisual,
-        attackFun: (Int) -> Unit,
     ) {
         AttackTroopDialog(
             context = activity,
@@ -18,7 +19,7 @@ class DialogueHandler (val activity: Activity) : IDialogueHandler {
             minTroops = 1,
             fromTerritory = from,
             toTerritory = to,
-            attackFun = attackFun)
+            )
         .show()
     }
 
@@ -47,18 +48,13 @@ class DialogueHandler (val activity: Activity) : IDialogueHandler {
         activity.findViewById<TextView>(R.id.freeTroopTxt).text = player.freeTroops.toString()
     }
 
-    override fun usePlaceTroops(t: ITerritoryVisual, p : PlayerRecord): Boolean {
-        val before = t.territoryRecord.stat
+    override fun usePlaceTroops(t: ITerritoryVisual, p : PlayerRecord){
         PlaceTroopDialog(
             context = activity,
             territory = t,
             player = p
         ).show()
-        if(before != t.territoryRecord.stat) {
-            activity.findViewById<TextView>(R.id.freeTroopTxt).text = p.freeTroops.toString()
-        return true
-        }
-        return false
+
     }
 
 

@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.se2gruppe5.risikofrontend.databinding.DialogMoveTroopsBinding
+import com.se2gruppe5.risikofrontend.network.INetworkClient
+import com.se2gruppe5.risikofrontend.network.NetworkClient
 
 abstract class TroopDialog(
     context: Context,
@@ -13,6 +15,7 @@ abstract class TroopDialog(
 ) : AlertDialog(context) {
 
     private val binding: DialogMoveTroopsBinding = DialogMoveTroopsBinding.inflate(LayoutInflater.from(context))
+    val client: INetworkClient = NetworkClient()
 
     init {
         setView(binding.root)
