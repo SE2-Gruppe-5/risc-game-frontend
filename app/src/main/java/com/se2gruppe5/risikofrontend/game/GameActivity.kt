@@ -59,7 +59,6 @@ class GameActivity : AppCompatActivity() {
     var viewManager: GameViewManager? = null
 
     var turnIndicators: MutableList<TextView> = mutableListOf()
-    var gameManager: GameManager? = null
     var gameID: UUID? = null
     var me: PlayerRecord? = null
     var troopText: TextView? = null
@@ -71,7 +70,6 @@ class GameActivity : AppCompatActivity() {
         )
         sseService = service
         if (service != null) {
-            gameManager = GameManager.get()
             setupHandlers(service)
             getGameInfo()
 
@@ -250,7 +248,7 @@ class GameActivity : AppCompatActivity() {
         }
         sseService?.handler(MessageType.PLAYER_WON){
             it as PlayerWonMessage
-            displayWinner(gameManager!!.getPlayer(it.winner)!!.name)
+            displayWinner(GameManager.get().getPlayer(it.winner)!!.name)
         }
 
 
