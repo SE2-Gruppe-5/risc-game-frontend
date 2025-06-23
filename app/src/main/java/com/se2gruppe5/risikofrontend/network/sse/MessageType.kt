@@ -21,8 +21,8 @@ enum class MessageType(val messageClass: KClass<out IMessage>) {
     UPDATE_PHASE(UpdatePhaseMessage::class),
     UPDATE_PLAYERS(UpdatePlayersMessage::class),
     UPDATE_TERRITORIES(ChangeTerritoryMessage::class),
-    ACCUSE_CHEATING(AccuseCheatingMessage::class)
-    PLAYER_WON(PlayerWonMessage::class);
+    ACCUSE_CHEATING(AccuseCheatingMessage::class),
+    PLAYER_WON(PlayerWonMessage::class)
 }
 
 fun getMessageType(type: String): MessageType? {

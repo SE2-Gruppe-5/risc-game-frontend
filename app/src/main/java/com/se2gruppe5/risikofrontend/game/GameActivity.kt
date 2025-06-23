@@ -122,11 +122,12 @@ class GameActivity : AppCompatActivity() {
         viewManager = GameViewManager(this)
         viewManager?.initializeGame(this, turnIndicators)
 
-
+        val gameManager = GameManager.get()
 
         val accuseCheatButton = this.findViewById<Button>(R.id.btn_accuse_cheating)
 
         accuseCheatButton.setOnClickListener {
+
             if (gameManager?.getCurrentPlayer() != gameManager?.whoAmI()) {
                 lifecycleScope.launch {
                     client.issueCheatAccusation(gameID!!, gameManager!!.getCurrentPlayer().id)
