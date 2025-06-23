@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
+
 import com.se2gruppe5.risikofrontend.game.cards.CardHandler
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
@@ -18,7 +19,8 @@ class GameManager private constructor(
     private var players: HashMap<UUID, PlayerRecord>,
     private var currentPlayerUUID: UUID,
     private var currentPhase: Phases,
-    private var amICurrentlyCheating: Boolean = false
+    private var amICurrentlyCheating: Boolean = false,
+    private var haveAlreadyBeenPunished: Boolean = false
 ) {
     companion object {
 
@@ -69,6 +71,9 @@ class GameManager private constructor(
 
     fun setCurrentlyCheating(amICheating: Boolean) {
         amICurrentlyCheating = amICheating
+        if (amICheating == false) {
+            haveAlreadyBeenPunished = false
+        }
     }
 
     fun getPhase(): Phases {
@@ -169,8 +174,11 @@ class GameManager private constructor(
     }
 
     fun checkIHaveBeenAccusedCheating(accusedPlayerUUID: UUID) {
-        if (accusedPlayerUUID == me.id && amICurrentlyCheating) {
-            punishMyselfForCheating();
+        if (accusedPlayerUUID == me.id && amICurrentlyCheating && currentPlayerUUID == me.id) {
+            if (!haveAlreadyBeenPunished) {
+                punishMyselfForCheating();
+            }
+            haveAlreadyBeenPunished = true
         }
     }
 
@@ -179,7 +187,7 @@ class GameManager private constructor(
     }
 
     //omitRandom is only for tests!
-    fun penalizeForClicking(omitRandom: Boolean =false) {
+    fun penalizeForClicking(omitRandom: Boolean = false) {
         //penalize by removing one unit from a random territory >1 units
         for (t: ITerritoryVisual in territoryManager.getTerritoryList().shuffled()) {
             if (t.territoryRecord.owner == me.id) {
@@ -202,10 +210,10 @@ class GameManager private constructor(
 
     //public for unit tests
     //omitRandom is only for tests!
-    fun punishMyselfForCheating(omitRandom: Boolean =false) {
+    fun punishMyselfForCheating(omitRandom: Boolean = false) {
         //Set Troops of some (about 1/3 of all) territories to 1
         for (t: ITerritoryVisual in territoryManager.getTerritoryList()) {
-            if (t.territoryRecord.owner == me.id && (((0..2).random() == 0)||omitRandom)) {
+            if (t.territoryRecord.owner == me.id && (((0..2).random() == 0) || omitRandom)) {
 
                 val newT = TerritoryRecord(
                     t.territoryRecord.id,

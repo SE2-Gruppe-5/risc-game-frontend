@@ -90,8 +90,8 @@ class NetworkClient : INetworkClient{
         gameId: UUID,
         accusedPlayerUUID: UUID
     ) {
-        val request = createRequest("POST", Constants.CHANGE_TERRITORY_URL.replace("{id}", gameId.toString()),
-            "accusedPlayer", accusedPlayerUUID.toString())
+        val request = createRequest("POST", Constants.ACCUSE_CHEATING.replace("{id}", gameId.toString()),
+            "uuid", accusedPlayerUUID.toString())
         execute(request)
     }
 

@@ -29,7 +29,6 @@ import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePhaseMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePlayersMessage
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
-import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dialogues.DialogueHandler
@@ -119,11 +118,16 @@ class GameActivity : AppCompatActivity() {
         viewManager?.initializeGame(this, turnIndicators)
 
 
-        val accuseCheatButton =  this.findViewById<Button>(R.id.btn_accuse_cheating)
+        val accuseCheatButton = this.findViewById<Button>(R.id.btn_accuse_cheating)
 
         accuseCheatButton.setOnClickListener {
-            lifecycleScope.launch {
-                client.issueCheatAccusation(gameID!!, me!!.id)
+            if (gameManager?.getCurrentPlayer() != gameManager?.whoAmI()) {
+                lifecycleScope.launch {
+                    client.issueCheatAccusation(gameID!!, gameManager!!.getCurrentPlayer().id)
+                }
+            }else{
+                val toastUtil = ToastUtilAndroid(this)
+                toastUtil.showShortToast("You want to accuse yourself of cheating? ...")
             }
             gameManager?.penalizeForClicking();
         }
@@ -132,17 +136,21 @@ class GameActivity : AppCompatActivity() {
         val tradeCardButton = this.findViewById<Button>(R.id.tradeCardButton)
 
         tradeCardButton.setOnClickListener {
-            if(me!!.cards.size>=3){
+            if (me!!.cards.size >= 3) {
                 dialogHandler.useTradeCardDialog(me!!, false)
 
                 viewManager?.updateCardDisplay(me!!)
-            }else{
-                Toast.makeText(this@GameActivity, "You do not have enough cards to Trade", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(
+                    this@GameActivity,
+                    "You do not have enough cards to Trade",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         nextPhaseBtn?.setOnClickListener {
             changePhase()
-            if(me!!.cards.size == 5){
+            if (me!!.cards.size == 5) {
                 dialogHandler.useTradeCardDialog(me!!, true)
             }
             viewManager?.updateCardDisplay(me!!)
@@ -155,9 +163,10 @@ class GameActivity : AppCompatActivity() {
 
     }
 
-    private fun updateFreeTroops(){
+    private fun updateFreeTroops() {
         troopText!!.text = me!!.freeTroops.toString()
     }
+
     override fun onStart() {
         super.onStart()
         Intent(this, SseClientService::class.java).also {
@@ -185,7 +194,6 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun getGameInfo() {
-        Log.i("GameManager", gameID.toString())
         runBlocking {
             client.getGameInfo(gameID!!)
         }
@@ -237,18 +245,13 @@ class GameActivity : AppCompatActivity() {
         sseService?.handler(MessageType.UPDATE_PLAYERS) {
             it as UpdatePlayersMessage
             GameManager.get().receivePlayerListUpdate(it.players)
-            for (player in it.players) {
-                Log.i(
-                    "GameManger",
-                    "${player.value.id} ${player.key} ${player.value.isCurrentTurn}"
-                )
-            }
             val currentPlayerIndex = it.players.values.indexOfFirst { it.isCurrentTurn }
             changeHighlightedPlayer(currentPlayerIndex, turnIndicators)
         }
         sseService?.handler(MessageType.UPDATE_TERRITORIES) {
             it as ChangeTerritoryMessage
             GameManager.get().getTerritoryManager().updateTerritories(it.territories)
+
 
         }
         sseService?.handler(MessageType.ACCUSE_CHEATING) {
@@ -275,7 +278,7 @@ class GameActivity : AppCompatActivity() {
         return intent.getSerializableExtra(varName) as? T
     }
 
-    private fun setupDiceInteractions(){
+    private fun setupDiceInteractions() {
         val shakeHW = ShakeHardwareAndroid.getInstance(this)
         val flashHW = FlashLightHardwareAndroid.getInstance(this)
         // - Dice UI/UX -
