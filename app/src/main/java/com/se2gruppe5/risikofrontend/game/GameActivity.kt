@@ -88,7 +88,7 @@ class GameActivity : AppCompatActivity() {
 
         val gameStart =
             getSerializableExtraCompat(intent, "GAME_DATA", GameStartMessage::class.java)!!
-        val me = getSerializableExtraCompat(intent, "LOCAL_PLAYER", PlayerRecord::class.java)!!
+        me = getSerializableExtraCompat(intent, "LOCAL_PLAYER", PlayerRecord::class.java)!!
         val dialogHandler = DialogueHandler(this)
         gameID = gameStart.gameId
 
@@ -98,7 +98,7 @@ class GameActivity : AppCompatActivity() {
             ToastUtilAndroid(this),
             dialogHandler
         )
-        GameManager.init(me, gameID!!, TerritoryManager.get(), client, gameStart.players)
+        GameManager.init(me!!, gameID!!, TerritoryManager.get(), client, gameStart.players)
         setupDiceInteractions()
 
         turnIndicators.add(this.findViewById<TextView>(R.id.player1txt))
@@ -123,7 +123,7 @@ class GameActivity : AppCompatActivity() {
 
         accuseCheatButton.setOnClickListener {
             lifecycleScope.launch {
-                client.issueCheatAccusation(gameID!!, me.id)
+                client.issueCheatAccusation(gameID!!, me!!.id)
             }
             gameManager?.penalizeForClicking();
         }
@@ -132,20 +132,20 @@ class GameActivity : AppCompatActivity() {
         val tradeCardButton = this.findViewById<Button>(R.id.tradeCardButton)
 
         tradeCardButton.setOnClickListener {
-            if(me.cards.size>=3){
-                dialogHandler.useTradeCardDialog(me, false)
+            if(me!!.cards.size>=3){
+                dialogHandler.useTradeCardDialog(me!!, false)
 
-                viewManager?.updateCardDisplay(me)
+                viewManager?.updateCardDisplay(me!!)
             }else{
                 Toast.makeText(this@GameActivity, "You do not have enough cards to Trade", Toast.LENGTH_SHORT).show()
             }
         }
         nextPhaseBtn?.setOnClickListener {
             changePhase()
-            if(me.cards.size == 5){
-                dialogHandler.useTradeCardDialog(me, true)
+            if(me!!.cards.size == 5){
+                dialogHandler.useTradeCardDialog(me!!, true)
             }
-            viewManager?.updateCardDisplay(me)
+            viewManager?.updateCardDisplay(me!!)
             updateFreeTroops()
             Log.i("GameManger", gameID.toString())
         }
