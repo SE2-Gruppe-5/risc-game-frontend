@@ -166,11 +166,7 @@ class TerritoryManager private constructor(
 
     private fun requestPlace(t: ITerritoryVisual) {
         if (isMe(t.territoryRecord.owner)) {
-            if(dialogueManager.usePlaceTroops(t,me!!)){
-                runBlocking {
-                    client.changeTerritory(GameManager.get().getUUID(), t.territoryRecord)
-                }
-                }
+            dialogueManager.usePlaceTroops(t,me!!)
         }
         else {
             toastUtil.showShortToast("You can only place Troops on your own Territories")
@@ -188,24 +184,13 @@ class TerritoryManager private constructor(
 
     private fun requestAttack(fromTerritory: ITerritoryVisual, toTerritory: ITerritoryVisual) {
         if (isMe(fromTerritory.territoryRecord.owner) && !isMe(toTerritory.territoryRecord.owner)) {
-            dialogueManager.useAttackDialog(fromTerritory, toTerritory) { troops ->
-                attackTerritory(toTerritory)
-            }
+            dialogueManager.useAttackDialog(fromTerritory, toTerritory)
         }
         else {
             toastUtil.showShortToast("You cannot attack your own territories")
         }
     }
 
-    private fun attackTerritory(t: ITerritoryVisual) {
-        me!!.capturedTerritory = true
-
-        //TODO we should roll dice here instead of just taking over the territory
-        t.territoryRecord.owner = me.id
-        runBlocking {
-            client.changeTerritory(GameManager.get().getUUID(), t.territoryRecord)
-        }
-    }
 
     private fun updateSelected(t: ITerritoryVisual) {
         prevSelTerritory?.setHighlightSelected(false)
@@ -259,4 +244,6 @@ class TerritoryManager private constructor(
         return bonus
 
     }
+
+
 }

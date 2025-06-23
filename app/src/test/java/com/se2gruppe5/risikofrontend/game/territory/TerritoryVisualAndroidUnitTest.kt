@@ -198,16 +198,16 @@ class TerritoryVisualAndroidUnitTest(
         //posAndSizeTestData is Pair containing two Elements:
         // First Element = Pair containing x and y location int
         // Second Element = Pair containing x and y size
-        val imgX: Int = posAndSizePTestData.first.first;
-        val imgY: Int = posAndSizePTestData.first.second;
+        val imgX: Int = posAndSizePTestData.first.first
+        val imgY: Int = posAndSizePTestData.first.second
 
         //Specify Mock-Object behaviour
         //Simulate by-reference array value overwriting, as it works with the real function
         doAnswer { invocation ->
             val arr = invocation.getArgument(0) as IntArray
-            arr[0] = imgX;
-            arr[1] = imgY;
-            null; //Kotlin-Lambdas automatically return the value of the last expression
+            arr[0] = imgX
+            arr[1] = imgY
+            null //Kotlin-Lambdas automatically return the value of the last expression
             //As it is supposed to be a void function, it must return null
         }.whenever(imgBTNMock).getLocationInWindow(any())
 
@@ -222,18 +222,18 @@ class TerritoryVisualAndroidUnitTest(
         //posAndSizeTestData is Pair containing two Elements:
         // First Element = Pair containing x and y location int
         // Second Element = Pair containing x and y size
-        val imgX: Int = posAndSizePTestData.first.first;
-        val imgY: Int = posAndSizePTestData.first.second;
-        val imgSizeX: Int = posAndSizePTestData.second.first;
-        val imgSizeY: Int = posAndSizePTestData.second.second;
+        val imgX: Int = posAndSizePTestData.first.first
+        val imgY: Int = posAndSizePTestData.first.second
+        val imgSizeX: Int = posAndSizePTestData.second.first
+        val imgSizeY: Int = posAndSizePTestData.second.second
 
         //Specify Mock-Object behaviour
         //Simulate by-reference array value overwriting, as it works with the real function
         doAnswer { invocation ->
             val arr = invocation.getArgument(0) as IntArray
-            arr[0] = imgX;
-            arr[1] = imgY;
-            null; //Kotlin-Lambdas automatically return the value of the last expression
+            arr[0] = imgX
+            arr[1] = imgY
+            null //Kotlin-Lambdas automatically return the value of the last expression
             //As it is supposed to be a void function, it must return null
         }.whenever(imgBTNMock).getLocationInWindow(any())
         // Simulate returning size
