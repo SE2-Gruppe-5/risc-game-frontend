@@ -3,7 +3,7 @@ package com.se2gruppe5.risikofrontend.game.popup
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.widget.*
+import android.widget.ListView
 import androidx.fragment.app.DialogFragment
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.enums.Continent

@@ -6,8 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.board.BoardVisualGeneratorAndroid
-import com.se2gruppe5.risikofrontend.game.enums.CardType.*
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.enums.CardType.Artillery
+import com.se2gruppe5.risikofrontend.game.enums.CardType.Cavalry
+import com.se2gruppe5.risikofrontend.game.enums.CardType.Infantry
 import com.se2gruppe5.risikofrontend.game.territory.IPointingArrowUI
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import java.util.UUID

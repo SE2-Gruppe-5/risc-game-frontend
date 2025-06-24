@@ -3,13 +3,14 @@ package com.se2gruppe5.risikofrontend.game.cards
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.CardRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.enums.CardType
-import org.junit.Test
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Test
 import org.mockito.Mockito.mock
-import org.mockito.kotlin.whenever
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 class CardHandlerUnitTest {
 

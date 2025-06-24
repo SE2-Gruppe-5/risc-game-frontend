@@ -1,23 +1,18 @@
 package com.se2gruppe5.risikofrontend.game.dialogues
 
 import android.app.Activity
-import android.content.Context
 import android.view.LayoutInflater
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.databinding.DialogMoveTroopsBinding
-import com.se2gruppe5.risikofrontend.databinding.DialogTradeCardsBinding
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
-import com.se2gruppe5.risikofrontend.game.enums.CardType
 import com.se2gruppe5.risikofrontend.game.managers.GameManager
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.network.INetworkClient
 import com.se2gruppe5.risikofrontend.network.NetworkClient
-import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 import kotlinx.coroutines.runBlocking
-import kotlin.collections.set
 
 class PlaceTroopDialog(
 context: Activity,

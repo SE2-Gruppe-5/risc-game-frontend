@@ -2,7 +2,6 @@ package com.se2gruppe5.risikofrontend
 
 import android.annotation.SuppressLint
 import android.content.Intent
-
 import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
@@ -13,13 +12,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import com.se2gruppe5.risikofrontend.game.popup.ContinentDialog
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import com.se2gruppe5.risikofrontend.network.sse.MessageType
 import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
 import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
-import androidx.lifecycle.lifecycleScope
-import com.se2gruppe5.risikofrontend.game.popup.ContinentDialog
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
 import kotlinx.coroutines.launch
 

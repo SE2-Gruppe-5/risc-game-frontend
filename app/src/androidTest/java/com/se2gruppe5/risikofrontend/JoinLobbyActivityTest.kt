@@ -10,11 +10,9 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-
-import com.se2gruppe5.risikofrontend.lobby.LobbyActivity
 import com.se2gruppe5.risikofrontend.lobby.JoinLobbyActivity
+import com.se2gruppe5.risikofrontend.lobby.LobbyActivity
 import com.se2gruppe5.risikofrontend.startmenu.MenuActivity
-
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule

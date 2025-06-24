@@ -1,19 +1,17 @@
 package com.se2gruppe5.risikofrontend.game.dice
 
+
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.IDice
 import junit.framework.TestCase.assertSame
-import org.junit.Test
-
-
 import org.junit.Before
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doReturn
-
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 

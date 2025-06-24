@@ -11,8 +11,6 @@ import com.se2gruppe5.risikofrontend.network.INetworkClient
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
-import kotlin.math.floor
-import kotlin.math.round
 
 const val TERRITORY_NO_OWNER_COLOR: Int = 0x999999
 

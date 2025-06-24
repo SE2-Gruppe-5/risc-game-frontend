@@ -12,7 +12,6 @@ import com.se2gruppe5.risikofrontend.Constants
 import com.se2gruppe5.risikofrontend.network.sse.messages.SetUuidMessage
 import java.net.URI
 import java.time.Duration
-import java.util.Comparator
 import java.util.UUID
 import java.util.concurrent.locks.ReentrantLock
 import java.util.function.Consumer

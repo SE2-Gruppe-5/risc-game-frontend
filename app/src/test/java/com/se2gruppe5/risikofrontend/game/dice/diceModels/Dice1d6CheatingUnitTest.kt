@@ -1,9 +1,8 @@
 package com.se2gruppe5.risikofrontend.game.dice.diceModels
 
-import org.junit.Test
-
-import org.junit.Assert.*
+import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Test
 import kotlin.random.Random
 
 class Dice1d6CheatingUnitTest {
