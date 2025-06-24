@@ -5,6 +5,7 @@ import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.network.INetworkClient
+import kotlinx.coroutines.runBlocking
 import java.util.UUID
 
 
@@ -47,7 +48,14 @@ class GameManager private constructor(
         }
 
         fun reset() {
+            singleton?.reset()
             singleton = null
+        }
+    }
+
+    private fun reset() {
+        runBlocking {
+            networkClient.killPlayer(gameManagerUUID, me.id)
         }
     }
 

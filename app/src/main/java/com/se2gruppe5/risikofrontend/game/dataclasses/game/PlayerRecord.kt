@@ -8,6 +8,7 @@ data class PlayerRecord(val id: UUID, val name: String, val color: Int): Seriali
     var capturedTerritory = false
     var freeTroops = 25
     var isCurrentTurn = false
+    var isDead = false
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
