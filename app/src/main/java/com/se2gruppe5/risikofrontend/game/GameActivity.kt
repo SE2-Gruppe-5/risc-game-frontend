@@ -68,7 +68,7 @@ class GameActivity : AppCompatActivity() {
         )
         sseService = service
         if (service != null) {
-            setupHandlers(service)
+            setupHandlers()
             getGameInfo()
 
         }
@@ -125,15 +125,15 @@ class GameActivity : AppCompatActivity() {
 
         accuseCheatButton.setOnClickListener {
 
-            if (gameManager?.getCurrentPlayer() != gameManager?.whoAmI()) {
+            if (gameManager.getCurrentPlayer() != gameManager.whoAmI()) {
                 lifecycleScope.launch {
-                    client.issueCheatAccusation(gameID!!, gameManager!!.getCurrentPlayer().id)
+                    client.issueCheatAccusation(gameID!!, gameManager.getCurrentPlayer().id)
                 }
             }else{
                 val toastUtil = ToastUtilAndroid(this)
                 toastUtil.showShortToast("You want to accuse yourself of cheating? ...")
             }
-            gameManager?.penalizeForClicking();
+            gameManager.penalizeForClicking()
         }
 
 
@@ -238,7 +238,7 @@ class GameActivity : AppCompatActivity() {
 
     }
 
-    private fun setupHandlers(service: SseClientService) {
+    private fun setupHandlers() {
         sseService?.handler(MessageType.UPDATE_PHASE) {
             it as UpdatePhaseMessage
             val phase: Phases = Phases.entries[it.phase]
@@ -264,7 +264,7 @@ class GameActivity : AppCompatActivity() {
         }
         sseService?.handler(MessageType.ACCUSE_CHEATING) {
             it as AccuseCheatingMessage
-            GameManager.get().checkIHaveBeenAccusedCheating(it.accusedPlayerUUID);
+            GameManager.get().checkIHaveBeenAccusedCheating(it.accusedPlayerUUID)
 
         }
         sseService?.handler(MessageType.PLAYER_WON){
@@ -277,7 +277,7 @@ class GameActivity : AppCompatActivity() {
 
     private fun displayWinner(s: String) {
     runOnUiThread {
-        var msg = s + " Won the Game!!"
+        var msg = "$s Won the Game!!"
         var wonMessage = this.findViewById<TextView>(R.id.txtWonMessage)
         wonMessage.text = msg
         wonMessage.visibility = View.VISIBLE
