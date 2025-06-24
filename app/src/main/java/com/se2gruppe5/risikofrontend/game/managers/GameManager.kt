@@ -76,6 +76,14 @@ class GameManager private constructor(
         }
     }
 
+    fun getAlreadyBeenPunished():Boolean{
+        return haveAlreadyBeenPunished
+    }
+
+    fun getCurrentlyCheating(): Boolean{
+        return amICurrentlyCheating
+    }
+
     fun getPhase(): Phases {
         return this.currentPhase
     }
@@ -187,7 +195,7 @@ class GameManager private constructor(
     }
 
     //omitRandom is only for tests!
-    fun penalizeForClicking(omitRandom: Boolean = false) {
+    fun penalizeForClicking() {
         //penalize by removing one unit from a random territory >1 units
         for (t: ITerritoryVisual in territoryManager.getTerritoryList().shuffled()) {
             if (t.territoryRecord.owner == me.id) {

@@ -17,9 +17,12 @@ import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atMost
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.spy
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.times
 import org.mockito.kotlin.whenever
@@ -61,7 +64,7 @@ class GameManagerUnitTest {
         territoryManagerMock = mock()
         gameUUID = UUID.randomUUID()
         GameManager.init(me, gameUUID, territoryManagerMock, networkClient, players)
-        gameManager = GameManager.get()
+        gameManager = spy(GameManager.get())
     }
 
     @After
@@ -195,8 +198,18 @@ class GameManagerUnitTest {
     @Test
     fun receiveTerritoryListUpdateDelegatesToTerritoryManager() {
         val dummyTerritories = listOf(
-            TerritoryRecord(1, 2, Continent.CPU, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))),
-            TerritoryRecord(3, 4, Continent.RAM, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f)))
+            TerritoryRecord(
+                1,
+                2,
+                Continent.CPU,
+                Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))
+            ),
+            TerritoryRecord(
+                3,
+                4,
+                Continent.RAM,
+                Transform2D(Point2D(100f, 100f), Size2D(100f, 100f))
+            )
         )
         gameManager.receiveTerritoryListUpdate(dummyTerritories)
         verify(territoryManagerMock).updateTerritories(dummyTerritories)
@@ -207,13 +220,15 @@ class GameManagerUnitTest {
         gameManager.nextPhase()
         verify(networkClient, times(1)).changePhase(gameManager.getUUID())
     }
+
     @Test
     fun nextPhaseAddsCardWhenCapturedATerritory() = runBlocking {
         me.capturedTerritory = true
         val before = me.cards.size
         gameManager.nextPhase()
-        assertEquals(before+1, me.cards.size)
+        assertEquals(before + 1, me.cards.size)
     }
+
     @Test
     fun nextPhaseDoesntAddACardWhenNotCapturedATerritory() = runBlocking {
         me.capturedTerritory = false
@@ -257,41 +272,68 @@ class GameManagerUnitTest {
     fun getTerritoryManagerReturnsTerritoryManager() {
         assertEquals(territoryManagerMock, gameManager.getTerritoryManager())
     }
-    /*
-    @Test
-    fun penalizeClickingTest() {
-        // Check if territory with number too low is skipped
-        val t1 = mock<ITerritoryVisual>()
-        val t2 = mock<ITerritoryVisual>()
-        val t1Record = TerritoryRecord(id = 123, stat = 1, continent = Continent.CPU, transform = Transform2D(Point2D(0f,0f), Size2D(0f,0f)))
-        val t2Record = TerritoryRecord(id = 321, stat = 3, continent = Continent.RAM, transform = Transform2D(Point2D(0f,0f), Size2D(0f,0f)))
-        t1Record.owner = me.id
-        t2Record.owner = me.id
-        whenever(t1.territoryRecord).thenReturn(t1Record)
-        whenever(t2.territoryRecord).thenReturn(t2Record)
-        whenever(territoryManagerMock.getTerritoryList()).thenReturn(listOf(t1, t2) as MutableList<ITerritoryVisual>?)
-        gameManager.penalizeForClicking()
 
-        // Make sure only one troop reduction has been invoked
-        val captor = argumentCaptor<TerritoryRecord>()
-        verify(territoryManagerMock, times(1)).updateTerritory(captor.capture())
-        val updated = captor.firstValue
-        assertEquals(t2Record.id, updated.id)
-        // -1
-        assertEquals(t2Record.stat - 1, updated.stat)
+    @Test
+    fun setCurrentlyCheatingTest() {
+        val a = gameManager.getCurrentlyCheating()
+        gameManager.setCurrentlyCheating(!a)
+        assertEquals(!a, gameManager.getCurrentlyCheating())
     }
-    
-     */
+
+    @Test
+    fun turnEndStopCheatingTest() {
+        me = PlayerRecord(UUID.randomUUID(), "Markus", Color.RED)
+        me.isCurrentTurn = false
+        other = PlayerRecord(UUID.randomUUID(), "Leo", Color.BLUE)
+        other.isCurrentTurn = true
+        players = HashMap<UUID, PlayerRecord>().apply {
+            put(me.id, me)
+            put(other.id, other)
+        }
+        gameManager.setCurrentlyCheating(true)
+        gameManager.receivePlayerListUpdate(players)
+        assertFalse(gameManager.getCurrentlyCheating())
+    }
+
+    @Test
+    fun getAccusedForCheatingWhenNotCheatingTest() {
+        gameManager.setCurrentlyCheating(false)
+        assertFalse(gameManager.getAlreadyBeenPunished())
+        gameManager.checkIHaveBeenAccusedCheating(me.id)
+        assertFalse(gameManager.getAlreadyBeenPunished())
+    }
+
+    @Test
+    fun getAccusedForCheatingWhenCheatingTest() {
+
+
+        gameManager.setCurrentlyCheating(false)
+        assertFalse(gameManager.getAlreadyBeenPunished())
+        gameManager.setCurrentlyCheating(true)
+        gameManager.checkIHaveBeenAccusedCheating(me.id)
+        verify(gameManager).punishMyselfForCheating()
+        assertTrue(gameManager.getAlreadyBeenPunished())
+        gameManager.checkIHaveBeenAccusedCheating(me.id)
+        verify(gameManager, times(1)).punishMyselfForCheating()
+
+    }
 
     @Test
     fun punishForCheatingTest() {
         val t1 = mock<ITerritoryVisual>()
         val t2 = mock<ITerritoryVisual>()
-        val t1Record = TerritoryRecord(123, 5, Continent.CPU, Transform2D(Point2D(0f,0f), Size2D(0f,0f)))
-        val t2Record = TerritoryRecord(321, 2, Continent.RAM, Transform2D(Point2D(0f,0f), Size2D(0f,0f)))
+        val t1Record =
+            TerritoryRecord(123, 5, Continent.CPU, Transform2D(Point2D(0f, 0f), Size2D(0f, 0f)))
+        val t2Record =
+            TerritoryRecord(321, 2, Continent.RAM, Transform2D(Point2D(0f, 0f), Size2D(0f, 0f)))
         whenever(t1.territoryRecord).thenReturn(t1Record)
         whenever(t2.territoryRecord).thenReturn(t2Record)
-        whenever(territoryManagerMock.getTerritoryList()).thenReturn(listOf(t1, t2) as MutableList<ITerritoryVisual>?)
+        whenever(territoryManagerMock.getTerritoryList()).thenReturn(
+            listOf(
+                t1,
+                t2
+            ) as MutableList<ITerritoryVisual>?
+        )
 
         gameManager.punishMyselfForCheating(omitRandom = true)
 
@@ -301,4 +343,39 @@ class GameManagerUnitTest {
             assertEquals(1, updated.stat)
         }
     }
+
+    @Test
+    fun clickPenalizeDecrementTest() = runBlocking {
+        val t = mock<ITerritoryVisual>()
+        val tRecord =
+            TerritoryRecord(123, 5, Continent.CPU, Transform2D(Point2D(0f, 0f), Size2D(0f, 0f)))
+        tRecord.owner = me.id
+        whenever(t.territoryRecord).thenReturn(tRecord)
+        whenever(territoryManagerMock.getTerritoryList()).thenReturn(mutableListOf(t))
+
+        gameManager.penalizeForClicking()
+
+        val captor = argumentCaptor<TerritoryRecord>()
+        verify(networkClient, times(1)).changeTerritory(eq(gameManager.getUUID()), captor.capture())
+        val tRecordChanged = captor.firstValue
+        assertEquals(tRecord.id, tRecordChanged.id)
+        assertEquals(tRecord.stat-1, tRecordChanged.stat)
+        assertEquals(tRecord.continent, tRecordChanged.continent)
+        assertEquals(tRecord.transform, tRecordChanged.transform)
+        assertEquals(me.id, tRecordChanged.owner)
+    }
+
+    @Test
+    fun clickPenalizeDecrementNotApplicableTest() = runBlocking {
+        val t = mock<ITerritoryVisual>()
+        val tRecord =
+            TerritoryRecord(123, 1, Continent.CPU, Transform2D(Point2D(0f, 0f), Size2D(0f, 0f)))
+        whenever(t.territoryRecord).thenReturn(tRecord)
+        whenever(territoryManagerMock.getTerritoryList()).thenReturn(mutableListOf(t))
+        gameManager.penalizeForClicking()
+
+        verify(networkClient, times(0)).changeTerritory(any(), any())
+    }
+
+
 }
