@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.se2gruppe5.risikofrontend.R
@@ -21,6 +22,7 @@ import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
 import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.JoinLobbyMessage
+import com.se2gruppe5.risikofrontend.network.sse.messages.LeaveLobbyMessage
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
 
@@ -47,6 +49,7 @@ class LobbyActivity :AppCompatActivity() {
     var joinCode: String = ""
     var playerName: String = ""
     var me : PlayerRecord? = null
+    var amILobbyOwner: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +64,8 @@ class LobbyActivity :AppCompatActivity() {
         joinCode = intent.getStringExtra("LOBBY_CODE").toString()
         val lobbyCodeTxt = findViewById<TextView>(R.id.lobbyCodeTxt)
         lobbyCodeTxt.text = joinCode
+
+        amILobbyOwner = intent.getBooleanExtra("AM_I_LOBBY_OWNER", false)
 
 
         playerBtn?.add(this.findViewById<ImageButton>(R.id.player1Btn))
@@ -80,6 +85,15 @@ class LobbyActivity :AppCompatActivity() {
         for (i in playerTxt?.indices!!) {
             playerBtn!![i].visibility = View.GONE
             playerTxt!![i].visibility = View.GONE
+
+            playerBtn!![i].setOnLongClickListener {
+                kickPlayer(playerTxt!![i].text.toString())
+                true
+            }
+            playerTxt!![i].setOnLongClickListener {
+                kickPlayer(playerTxt!![i].text.toString())
+                true
+            }
         }
 
 
@@ -119,6 +133,24 @@ class LobbyActivity :AppCompatActivity() {
         }
     }
 
+    private fun kickPlayer(name: String) {
+        if (amILobbyOwner) {
+            var player: PlayerRecord? = null
+            for (p in players.values) {
+                if (p.name == name) {
+                    player = p
+                    break
+                }
+            }
+
+            if (player != null) {
+                runBlocking {
+                    client.leaveLobby(joinCode, player.id, "Kicked by owner")
+                }
+            }
+        }
+    }
+
     private fun setupHandlers(service: SseClientService) {
         sseService?.handler(MessageType.JOIN_LOBBY) {
             it as JoinLobbyMessage
@@ -141,6 +173,31 @@ class LobbyActivity :AppCompatActivity() {
                 }
                 players[player.id] = player
                 Log.i("LobbyJoin", player.toString())
+            }
+        }
+        sseService?.handler(MessageType.LEAVE_LOBBY) {
+            it as LeaveLobbyMessage
+            runOnUiThread {
+                val uuid: UUID = it.uuid
+
+                if (uuid == me?.id) {
+                    Log.i("NAVIGATION", "Force-quit lobby: reason=${it.reason}")
+                    if (it.reason != null) {
+                        Toast.makeText(this, "Kicked from lobby: ${it.reason}", Toast.LENGTH_LONG).show()
+                    }
+                    finish()
+                    return@runOnUiThread
+                }
+                val name: String = players[uuid]?.name!!
+                for (i in playerTxt?.indices!!) {
+                    if (playerTxt!![i].text == name) {
+                        playerTxt!![i].visibility = View.GONE
+                        playerBtn!![i].visibility = View.GONE
+                        joinedPlayers--
+                        players.remove(uuid)
+                        break
+                    }
+                }
             }
         }
         sseService?.handler(MessageType.START_GAME) {

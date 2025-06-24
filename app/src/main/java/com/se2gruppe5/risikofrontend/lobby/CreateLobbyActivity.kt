@@ -42,6 +42,7 @@ class CreateLobbyActivity :AppCompatActivity() {
             val intent = Intent(this, LobbyActivity::class.java)
             intent.putExtra("PLAYER_NAME", name)
             intent.putExtra("LOBBY_CODE", code)
+            intent.putExtra("AM_I_LOBBY_OWNER", true)
             startActivity(intent)
         }
 
