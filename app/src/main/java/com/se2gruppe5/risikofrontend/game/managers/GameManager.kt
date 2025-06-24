@@ -83,11 +83,11 @@ class GameManager private constructor(
         }
     }
 
-    fun getAlreadyBeenPunished():Boolean{
+    fun getAlreadyBeenPunished(): Boolean {
         return haveAlreadyBeenPunished
     }
 
-    fun getCurrentlyCheating(): Boolean{
+    fun getCurrentlyCheating(): Boolean {
         return amICurrentlyCheating
     }
 
@@ -205,21 +205,21 @@ class GameManager private constructor(
     fun penalizeForClicking() {
         //penalize by removing one unit from a random territory >1 units
         for (t: ITerritoryVisual in territoryManager.getTerritoryList().shuffled()) {
-            if (t.territoryRecord.owner == me.id) {
-                if (t.territoryRecord.stat > 1) {
-                    val newT = TerritoryRecord(
-                        t.territoryRecord.id,
-                        t.territoryRecord.stat - 1,
-                        t.territoryRecord.continent,
-                        t.territoryRecord.transform
-                    )
-                    newT.owner = me.id
-                    runBlocking {
-                        networkClient.changeTerritory(gameManagerUUID, newT)
-                    }
-                    break
+
+            if (t.territoryRecord.owner == me.id && t.territoryRecord.stat > 1) {
+                val newT = TerritoryRecord(
+                    t.territoryRecord.id,
+                    t.territoryRecord.stat - 1,
+                    t.territoryRecord.continent,
+                    t.territoryRecord.transform
+                )
+                newT.owner = me.id
+                runBlocking {
+                    networkClient.changeTerritory(gameManagerUUID, newT)
                 }
+                break
             }
+
         }
     }
 

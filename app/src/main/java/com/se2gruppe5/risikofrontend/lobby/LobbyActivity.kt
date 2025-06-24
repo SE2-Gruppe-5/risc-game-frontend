@@ -38,7 +38,7 @@ class LobbyActivity :AppCompatActivity() {
         )
         sseService = service
         if (service != null) {
-            setupHandlers(service)
+            setupHandlers()
                 joinLobby(joinCode, playerName)
         }
     }
@@ -151,7 +151,7 @@ class LobbyActivity :AppCompatActivity() {
         }
     }
 
-    private fun setupHandlers(service: SseClientService) {
+    private fun setupHandlers() {
         sseService?.handler(MessageType.JOIN_LOBBY) {
             it as JoinLobbyMessage
             runOnUiThread {
