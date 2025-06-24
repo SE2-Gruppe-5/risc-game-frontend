@@ -258,6 +258,9 @@ class GameActivity : AppCompatActivity() {
             GameManager.get().receivePlayerListUpdate(it.players)
             val currentPlayerIndex = it.players.values.indexOfFirst { it.isCurrentTurn }
             changeHighlightedPlayer(currentPlayerIndex, turnIndicators)
+            runOnUiThread {
+                updateFreeTroops()
+            }
         }
         sseService?.handler(MessageType.UPDATE_TERRITORIES) {
             it as ChangeTerritoryMessage
