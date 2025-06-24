@@ -28,25 +28,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <FrameLayout
-                android:id="@+id/gameBoard"
+            <com.se2gruppe5.risikofrontend.layouts.BackgroundFrameLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@drawable/solid"
-                android:backgroundTint="#ffffff"
-                android:paddingStart="25dp"
-                android:paddingEnd="60dp"
-                android:paddingTop="60dp"
-                android:paddingBottom="80dp">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/textView4"
+                <FrameLayout
+                    android:id="@+id/gameBoard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:alpha="0"
-                    android:text="Game Board" />
+                    android:paddingStart="25dp"
+                    android:paddingEnd="60dp"
+                    android:paddingTop="60dp"
+                    android:paddingBottom="80dp">
 
-            </FrameLayout>
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:alpha="0"
+                        android:text="Game Board" />
+
+                </FrameLayout>
+            </com.se2gruppe5.risikofrontend.layouts.BackgroundFrameLayout>
 
         </HorizontalScrollView>
     </ScrollView>
