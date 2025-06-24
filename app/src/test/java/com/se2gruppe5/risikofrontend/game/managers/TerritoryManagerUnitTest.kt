@@ -423,7 +423,7 @@ class TerritoryManagerTestUnitTest {
     fun testCalculateFreeTroops12TerritoriesOwned(){
         var customTerritory: ITerritoryVisual
         var r: TerritoryRecord
-        for(i in 0..12) {
+        repeat(12) {
             r = TerritoryRecord((0..999999).random(), 1, Continent.CPU, Transform2D(Point2D(100f,100f),
                 Size2D(100f,100f)))
             r.owner = mePlayerRecord.id
@@ -443,7 +443,7 @@ class TerritoryManagerTestUnitTest {
     fun testCalculateFreeTroopsContinentBonus(){
         var customTerritory: ITerritoryVisual
         var r: TerritoryRecord
-        for(i in 0..5) {
+        repeat(5) {
             r = TerritoryRecord((0..999999).random(), 1, Continent.CPU, Transform2D(Point2D(100f,100f),
                 Size2D(100f,100f)))
             r.owner = mePlayerRecord.id
