@@ -319,7 +319,7 @@ class GameManagerUnitTest {
     }
 
     @Test
-    fun punishForCheatingTest() {
+    fun punishForCheatingTest() = runBlocking{
         val t1 = mock<ITerritoryVisual>()
         val t2 = mock<ITerritoryVisual>()
         val t1Record =
@@ -341,7 +341,18 @@ class GameManagerUnitTest {
         verify(territoryManagerMock, atMost(2)).updateTerritory(captor.capture())
         captor.allValues.forEach { updated ->
             assertEquals(1, updated.stat)
+            assertTrue(listOf(t1Record.id, t2Record.id).contains(updated.id))
+            assertEquals(me.id, updated.owner)
+
+            if (updated.id == t1Record.id) {
+                assertEquals(t1Record.continent, updated.continent)
+                assertEquals(t1Record.transform, updated.transform)
+            } else {
+                assertEquals(t2Record.continent, updated.continent)
+                assertEquals(t2Record.transform, updated.transform)
+            }
         }
+        verify(networkClient, atMost(2)).changeTerritory(eq(gameManager.getUUID()), any())
     }
 
     @Test

@@ -230,7 +230,6 @@ class GameManager private constructor(
                     t.territoryRecord.transform
                 )
                 newT.owner = me.id
-                territoryManager.updateTerritory(newT)
                 runBlocking {
                     networkClient.changeTerritory(gameManagerUUID, newT)
                 }
