@@ -112,9 +112,6 @@ class NetworkClient : INetworkClient{
             MultipartBody.Builder()
                 .apply {
                     for (i in params.indices step 2) {
-                        if (params[i] == null || params[i + 1] == null) {
-                            continue
-                        }
                         addFormDataPart(params[i]!!, params[i + 1]!!)
                     }
                 }
