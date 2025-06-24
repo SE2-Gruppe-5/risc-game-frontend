@@ -59,7 +59,7 @@ class NetworkClient : INetworkClient{
     }
 
     override suspend fun killPlayer(gameId: UUID, playerId: UUID) {
-        val request = createRequest("POST", Constants.KILL_PLAYER_URL.replace("{id}", gameId.toString()).replace("{playerId}", playerId.toString()))
+        val request = createRequest("DELETE", Constants.KILL_PLAYER_URL.replace("{id}", gameId.toString()).replace("{playerId}", playerId.toString()))
         execute(request)
     }
 
