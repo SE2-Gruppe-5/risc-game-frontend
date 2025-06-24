@@ -42,6 +42,10 @@ class TerritoryManager private constructor(
     private val territoryList: MutableList<ITerritoryVisual> = mutableListOf()
     private var prevSelTerritory: ITerritoryVisual? = null
 
+    fun getTerritoryList(): MutableList<ITerritoryVisual>{
+        return territoryList;
+    }
+
     /**
      * Unit Test only, do not call
      */

@@ -98,6 +98,15 @@ class NetworkClient : INetworkClient{
         TODO("Not yet implemented")
     }
 
+    override suspend fun issueCheatAccusation(
+        gameId: UUID,
+        accusedPlayerUUID: UUID
+    ) {
+        val request = createRequest("POST", Constants.ACCUSE_CHEATING.replace("{id}", gameId.toString()),
+            "uuid", accusedPlayerUUID.toString())
+        execute(request)
+    }
+
     private fun createRequest(method: String, path: String, vararg params: String?): Request {
         val body = if (params.isNotEmpty()) {
             MultipartBody.Builder()

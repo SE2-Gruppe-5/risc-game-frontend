@@ -155,8 +155,6 @@ class LobbyActivity :AppCompatActivity() {
         sseService?.handler(MessageType.JOIN_LOBBY) {
             it as JoinLobbyMessage
             runOnUiThread {
-                Log.i("lobby", "Hello from lobbyhandler")
-                Log.i("lobby", "$it")
                 val uuid: UUID = it.uuid
                 val name: String = it.playerName
                 playerTxt?.get(joinedPlayers - 1)?.visibility = View.VISIBLE

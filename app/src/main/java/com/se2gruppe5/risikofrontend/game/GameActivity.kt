@@ -29,20 +29,21 @@ import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePhaseMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePlayersMessage
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
+import androidx.lifecycle.lifecycleScope
 import android.util.Log
 import androidx.transition.Visibility
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dialogues.DialogueHandler
 import com.se2gruppe5.risikofrontend.game.hardware.FlashLightHardwareAndroid
-import com.se2gruppe5.risikofrontend.game.hardware.IFlashLightHardware
-import com.se2gruppe5.risikofrontend.game.hardware.IShakeHardware
 import com.se2gruppe5.risikofrontend.game.hardware.ShakeHardwareAndroid
 import com.se2gruppe5.risikofrontend.game.popup.ShakePhoneAlert
 import com.se2gruppe5.risikofrontend.game.managers.GameViewManager
 import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.managers.ToastUtilAndroid
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
+import com.se2gruppe5.risikofrontend.network.sse.messages.AccuseCheatingMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
+import kotlinx.coroutines.launch
 import com.se2gruppe5.risikofrontend.network.sse.messages.PlayerWonMessage
 import org.w3c.dom.Text
 import java.io.Serializable
@@ -89,7 +90,9 @@ class GameActivity : AppCompatActivity() {
 
         val gameStart =
             getSerializableExtraCompat(intent, "GAME_DATA", GameStartMessage::class.java)!!
-         me = getSerializableExtraCompat(intent, "LOCAL_PLAYER", PlayerRecord::class.java)!!
+
+        me = getSerializableExtraCompat(intent, "LOCAL_PLAYER", PlayerRecord::class.java)!!
+
         val dialogHandler = DialogueHandler(this)
         gameID = gameStart.gameId
 
@@ -119,11 +122,31 @@ class GameActivity : AppCompatActivity() {
         viewManager = GameViewManager(this)
         viewManager?.initializeGame(this, turnIndicators)
 
+        val gameManager = GameManager.get()
+
+        val accuseCheatButton = this.findViewById<Button>(R.id.btn_accuse_cheating)
+
+        accuseCheatButton.setOnClickListener {
+
+            if (gameManager?.getCurrentPlayer() != gameManager?.whoAmI()) {
+                lifecycleScope.launch {
+                    client.issueCheatAccusation(gameID!!, gameManager!!.getCurrentPlayer().id)
+                }
+            }else{
+                val toastUtil = ToastUtilAndroid(this)
+                toastUtil.showShortToast("You want to accuse yourself of cheating? ...")
+            }
+            gameManager?.penalizeForClicking();
+        }
+
+
         this.findViewById<TextView>(R.id.txtWonMessage).visibility = View.INVISIBLE
+
 
         val tradeCardButton = this.findViewById<Button>(R.id.tradeCardButton)
 
         tradeCardButton.setOnClickListener {
+
             if(me!!.cards.size>=3){
                 dialogHandler.useTradeCardDialog(me!!, false)
 
@@ -134,12 +157,13 @@ class GameActivity : AppCompatActivity() {
         }
         nextPhaseBtn?.setOnClickListener {
             changePhase()
-            if(me!!.cards.size == 5){
+
+            if (me!!.cards.size == 5) {
+
                 dialogHandler.useTradeCardDialog(me!!, true)
             }
             viewManager?.updateCardDisplay(me!!)
             updateFreeTroops()
-            Log.i("GameManger", gameID.toString())
         }
         val showContinentButton: Button = this.findViewById(R.id.btn_show_continents)
         showContinentButton.setOnClickListener {
@@ -148,8 +172,10 @@ class GameActivity : AppCompatActivity() {
 
     }
 
-    private fun updateFreeTroops(){
-      troopText!!.text = me!!.freeTroops.toString()
+
+    private fun updateFreeTroops() {
+        troopText!!.text = me!!.freeTroops.toString()
+
     }
 
     override fun onStart() {
@@ -179,7 +205,6 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun getGameInfo() {
-        Log.i("GameManager", gameID.toString())
         runBlocking {
             client.getGameInfo(gameID!!)
         }
@@ -216,7 +241,6 @@ class GameActivity : AppCompatActivity() {
 
     }
 
-
     private fun setupHandlers(service: SseClientService) {
         sseService?.handler(MessageType.UPDATE_PHASE) {
             it as UpdatePhaseMessage
@@ -232,18 +256,18 @@ class GameActivity : AppCompatActivity() {
         sseService?.handler(MessageType.UPDATE_PLAYERS) {
             it as UpdatePlayersMessage
             GameManager.get().receivePlayerListUpdate(it.players)
-            for (player in it.players) {
-                Log.i(
-                    "GameManger",
-                    "${player.value.id} ${player.key} ${player.value.isCurrentTurn}"
-                )
-            }
             val currentPlayerIndex = it.players.values.indexOfFirst { it.isCurrentTurn }
             changeHighlightedPlayer(currentPlayerIndex, turnIndicators)
         }
         sseService?.handler(MessageType.UPDATE_TERRITORIES) {
             it as ChangeTerritoryMessage
             GameManager.get().getTerritoryManager().updateTerritories(it.territories)
+
+
+        }
+        sseService?.handler(MessageType.ACCUSE_CHEATING) {
+            it as AccuseCheatingMessage
+            GameManager.get().checkIHaveBeenAccusedCheating(it.accusedPlayerUUID);
 
         }
         sseService?.handler(MessageType.PLAYER_WON){
@@ -279,7 +303,7 @@ class GameActivity : AppCompatActivity() {
         return intent.getSerializableExtra(varName) as? T
     }
 
-    private fun setupDiceInteractions(){
+    private fun setupDiceInteractions() {
         val shakeHW = ShakeHardwareAndroid.getInstance(this)
         val flashHW = FlashLightHardwareAndroid.getInstance(this)
         // - Dice UI/UX -
@@ -301,6 +325,7 @@ class GameActivity : AppCompatActivity() {
             diceVisualAndroid.roll()
             flashHW.blink() //Make Phone's Camera Flash-Light blink when cheating ...
             diceVisualAndroid.resetDice()
+            GameManager.get().setCurrentlyCheating(true)
             // By Design i have chosen to let the two cheating variants
             // be performed without shaking the phone.
             // (More fun to spot someone cheating when playing in person this way)

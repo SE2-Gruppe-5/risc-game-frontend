@@ -69,7 +69,7 @@ class TerritoryManagerTestUnitTest {
             on { changeStat(any()) } doAnswer  { record.stat = it.getArgument(0) }
             on { changeOwner(any())} doAnswer {record.owner = it.getArgument(0)}
         }
-        record3 = TerritoryRecord(1, 1, Continent.CPU, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f)))
+        record3 = TerritoryRecord(2, 1, Continent.CPU, Transform2D(Point2D(100f, 100f), Size2D(100f, 100f)))
         t2 = mock {
             on { territoryRecord } doReturn record3
             on { getTerritoryId() } doReturn record3.id
@@ -84,6 +84,12 @@ class TerritoryManagerTestUnitTest {
         playerList[newOwner.id] = newOwner
         GameManager.reset()
         GameManager.init(mePlayerRecord,UUID.randomUUID(),manager, mockClient, playerList)
+    }
+    @Test
+    fun territoryListGetterTest(){
+        manager.addTerritory(t1)
+        manager.addTerritory(t2)
+        assertEquals(listOf(t1, t2), manager.getTerritoryList())
     }
 
     @Test
