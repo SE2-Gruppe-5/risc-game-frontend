@@ -319,13 +319,15 @@ class GameManagerUnitTest {
     }
 
     @Test
-    fun punishForCheatingTest() = runBlocking{
+    fun punishForCheatingTest() = runBlocking {
         val t1 = mock<ITerritoryVisual>()
         val t2 = mock<ITerritoryVisual>()
         val t1Record =
             TerritoryRecord(123, 5, Continent.CPU, Transform2D(Point2D(0f, 0f), Size2D(0f, 0f)))
+        t1Record.owner = me.id
         val t2Record =
             TerritoryRecord(321, 2, Continent.RAM, Transform2D(Point2D(0f, 0f), Size2D(0f, 0f)))
+        t2Record.owner = me.id
         whenever(t1.territoryRecord).thenReturn(t1Record)
         whenever(t2.territoryRecord).thenReturn(t2Record)
         whenever(territoryManagerMock.getTerritoryList()).thenReturn(
@@ -352,7 +354,24 @@ class GameManagerUnitTest {
                 assertEquals(t2Record.transform, updated.transform)
             }
         }
-        verify(networkClient, atMost(2)).changeTerritory(eq(gameManager.getUUID()), any())
+        val captor2 = argumentCaptor<TerritoryRecord>()
+        verify(networkClient, atMost(2)).changeTerritory(
+            eq(gameManager.getUUID()),
+            captor2.capture()
+        )
+        captor2.allValues.forEach { updated ->
+            assertEquals(1, updated.stat)
+            assertTrue(listOf(t1Record.id, t2Record.id).contains(updated.id))
+            assertEquals(me.id, updated.owner)
+
+            if (updated.id == t1Record.id) {
+                assertEquals(t1Record.continent, updated.continent)
+                assertEquals(t1Record.transform, updated.transform)
+            } else {
+                assertEquals(t2Record.continent, updated.continent)
+                assertEquals(t2Record.transform, updated.transform)
+            }
+        }
     }
 
     @Test
@@ -370,7 +389,7 @@ class GameManagerUnitTest {
         verify(networkClient, times(1)).changeTerritory(eq(gameManager.getUUID()), captor.capture())
         val tRecordChanged = captor.firstValue
         assertEquals(tRecord.id, tRecordChanged.id)
-        assertEquals(tRecord.stat-1, tRecordChanged.stat)
+        assertEquals(tRecord.stat - 1, tRecordChanged.stat)
         assertEquals(tRecord.continent, tRecordChanged.continent)
         assertEquals(tRecord.transform, tRecordChanged.transform)
         assertEquals(me.id, tRecordChanged.owner)
