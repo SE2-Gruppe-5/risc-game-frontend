@@ -1,6 +1,7 @@
 package com.se2gruppe5.risikofrontend.game.dialogues
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -23,21 +24,22 @@ class TradeCardDialog(
     private var playerRecord: PlayerRecord? = null
     private var ctx: Context? = null
     val cardCountMap = EnumMap<CardType, Int>(CardType::class.java)
-
+    var playerCards : MutableList<CardRecord>? = null
 
     init {
         setView(binding.root)
         forced = mustTrade
         playerRecord = player
         ctx = context
-        val playerCards = playerRecord!!.cards
+        playerCards = playerRecord!!.cards
 
         initEnum(cardCountMap)
-
-        //Count the cards up
-        for (card in playerCards) {
-            cardCountMap[card.type] = (cardCountMap[card.type] ?: 0) + 1
+        for (card in playerCards!!) {
+            cardCountMap[card.type] = cardCountMap[card.type]!! + 1
         }
+        //Count the cards up
+
+        Log.i("cards", cardCountMap.values.toString())
 
         //Set type hints
         binding.type1Input.hint = "You have ${cardCountMap[CardType.Infantry] ?: 0} Infantry cards"
@@ -61,6 +63,10 @@ class TradeCardDialog(
     }
 
     private fun checkTradeValid(inputCardCountMap: EnumMap<CardType, Int>): Boolean {
+        initEnum(cardCountMap)
+        for (card in playerCards!!) {
+            cardCountMap[card.type] = cardCountMap[card.type]!! + 1
+        }
 
         if (inputCardCountMap.values.sum() != 3) {
             displayErrorMsg("You have to trade 3 cards!")
@@ -68,8 +74,8 @@ class TradeCardDialog(
         }
 
         for ((cardType, count) in inputCardCountMap.entries) {
-            val available = cardCountMap[cardType] ?: 0
-            if (count > available) {
+            val available = cardCountMap[cardType]
+            if (count > available!!) {
                 displayErrorMsg("You do not own enough ${cardType.name.lowercase()} cards")
                 return false
             }
@@ -99,13 +105,13 @@ class TradeCardDialog(
 
         for ((bindingRef, cardType) in bindingRefList) {
             val cardCount = bindingRef.text.toString().toIntOrNull()
-            if (cardCount == null) {
-                displayErrorMsg("Invalid number!")
-                return
-            }
-            inputCardCountMap[cardType] = cardCount
-        }
 
+            if (cardCount == null) {
+                inputCardCountMap[cardType] = 0
+            }else {
+                inputCardCountMap[cardType] = cardCount
+            }
+        }
         if (checkTradeValid(inputCardCountMap)) {
             val troops = tradeAction(issuesCards(inputCardCountMap))
             if (troops == -1) {
