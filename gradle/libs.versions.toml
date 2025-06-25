@@ -1,5 +1,5 @@
 [versions]
-agp = "8.10.0"
+agp = "8.11.0"
 byteBuddyAgent = "1.15.11"
 dotenvKotlin = "6.5.1"
 kotlin = "2.1.20"

@@ -12,7 +12,7 @@ class MapPreviewActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         enableEdgeToEdge()
-        setContentView(R.layout.devtools_map_preview)
+        setContentView(R.layout.game)
 
         BoardVisualGeneratorAndroid.initTerritoryViews(this, true)
     }
