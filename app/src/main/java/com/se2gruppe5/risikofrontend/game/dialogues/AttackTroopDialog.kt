@@ -11,7 +11,7 @@ import kotlin.math.min
 class AttackTroopDialog(
     context: Context,
     maxTroops: Int,
-    minTroops: Int = 2,
+    minTroops: Int = 1,
     fromTerritory: ITerritoryVisual,
     toTerritory: ITerritoryVisual
 ) : TroopDialog(context, maxTroops, minTroops) {
@@ -21,10 +21,11 @@ class AttackTroopDialog(
 
     private val gameManager = GameManager.get()
 
-    private var myDiceRolled: Boolean = true
+    private var myDiceRolled: Boolean = false
     private var myRoll: List<Int> = ArrayList()
-    private var enemyDiceRolled: Boolean = true
+    private var enemyDiceRolled: Boolean = false
     private var enemyRoll: List<Int> = ArrayList()
+    private val alert = WaitingAlert(context)
 
     init {
         setTitle("Attack territory ${toTerritory.getTerritoryId()} from ${fromTerritory.getTerritoryId()}")
@@ -45,6 +46,9 @@ class AttackTroopDialog(
     private fun myDiceRolledCallback(result: List<Int>) {
         myRoll = result
         myDiceRolled = true
+        runBlocking {
+            client.reportDiceStatus(to.territoryRecord.owner!!, myRoll)
+        }
         applyAllRolls()
     }
 
@@ -54,7 +58,6 @@ class AttackTroopDialog(
         applyAllRolls()
     }
 
-    private val alert = WaitingAlert(context)
     private fun applyAllRolls() {
         if(myDiceRolled && enemyDiceRolled) {
             applyRollsToTerritories(myRoll, enemyRoll)
@@ -62,8 +65,9 @@ class AttackTroopDialog(
             alert.update(
                 "Attack results",
                 "Your roll: ${myRoll.joinToString()}" +
-                        "\nEnemy roll: ${enemyRoll.joinToString()}}"
+                        "\nEnemy roll: ${enemyRoll.joinToString()}"
             )
+            alert.show()
             alert.setCancelable(true)
 
             runBlocking {

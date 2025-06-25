@@ -280,7 +280,9 @@ class GameActivity : AppCompatActivity() {
         }
         sseService?.handler(MessageType.ATTACK_TERRITORY) {
             it as AttackTerritoryMessage
-            dialogHandler.useDefendDialog(it.from, it.target, it.troops)
+            runOnUiThread {
+                dialogHandler.useDefendDialog(it.from, it.target, it.troops)
+            }
         }
         sseService?.handler(MessageType.REPORT_DICE_STATUS) {
             it as ReportDiceStatusMessage
