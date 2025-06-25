@@ -35,7 +35,7 @@ class TradeCardDialog(
 
         initEnum(cardCountMap)
         for (card in playerCards!!) {
-            cardCountMap[card.type] = cardCountMap[card.type]!! + 1
+            cardCountMap[card.type] = (cardCountMap[card.type]?: 0) + 1
         }
         //Count the cards up
 
@@ -65,7 +65,7 @@ class TradeCardDialog(
     private fun checkTradeValid(inputCardCountMap: EnumMap<CardType, Int>): Boolean {
         initEnum(cardCountMap)
         for (card in playerCards!!) {
-            cardCountMap[card.type] = cardCountMap[card.type]!! + 1
+            cardCountMap[card.type] = (cardCountMap[card.type]?: 0) + 1
         }
 
         if (inputCardCountMap.values.sum() != 3) {
