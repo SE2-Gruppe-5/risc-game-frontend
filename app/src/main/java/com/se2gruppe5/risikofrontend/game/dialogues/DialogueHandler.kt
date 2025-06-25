@@ -5,6 +5,7 @@ import android.widget.TextView
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
+import kotlin.math.min
 
 class DialogueHandler (val activity: Activity) : IDialogueHandler {
     override fun useAttackDialog(
@@ -13,7 +14,7 @@ class DialogueHandler (val activity: Activity) : IDialogueHandler {
     ) {
         AttackTroopDialog(
             context = activity,
-            maxTroops = from.territoryRecord.stat - 1,
+            maxTroops = min(from.territoryRecord.stat - 1, 3),
             minTroops = 1,
             fromTerritory = from,
             toTerritory = to,
