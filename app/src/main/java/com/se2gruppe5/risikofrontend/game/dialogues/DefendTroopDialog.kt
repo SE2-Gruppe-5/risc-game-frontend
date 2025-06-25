@@ -39,7 +39,7 @@ class DefendTroopDialog(
         myRoll = result
         myDiceRolled = true
         runBlocking {
-            client.reportDiceStatus(from.owner!!, result)
+            client.reportDiceStatus(gameManager.getUUID(), from.owner!!, result)
         }
         applyAllRolls()
     }

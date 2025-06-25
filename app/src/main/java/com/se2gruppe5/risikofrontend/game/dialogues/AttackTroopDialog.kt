@@ -47,7 +47,7 @@ class AttackTroopDialog(
         myRoll = result
         myDiceRolled = true
         runBlocking {
-            client.reportDiceStatus(to.territoryRecord.owner!!, myRoll)
+            client.reportDiceStatus(gameManager.getUUID(), to.territoryRecord.owner!!, myRoll)
         }
         applyAllRolls()
     }

@@ -97,8 +97,8 @@ class NetworkClient : INetworkClient{
         execute(request)
     }
 
-    override suspend fun reportDiceStatus(recipient: UUID, results: List<Int>) {
-        val request = createRequest("POST", Constants.REPORT_DICE_STATUS_URL,
+    override suspend fun reportDiceStatus(gameId: UUID, recipient: UUID, results: List<Int>) {
+        val request = createRequest("POST",  Constants.REPORT_DICE_STATUS_URL.replace("{id}", gameId.toString()),
             "recipient", recipient.toString(),
             "results", results.joinToString())
         execute(request)
