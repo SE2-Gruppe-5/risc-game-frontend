@@ -3,8 +3,6 @@ package com.se2gruppe5.risikofrontend.game.dialogues
 import android.content.Context
 import com.se2gruppe5.risikofrontend.game.managers.GameManager
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
-import com.se2gruppe5.risikofrontend.network.INetworkClient
-import com.se2gruppe5.risikofrontend.network.NetworkClient
 import kotlinx.coroutines.runBlocking
 
 class MoveTroopDialog(

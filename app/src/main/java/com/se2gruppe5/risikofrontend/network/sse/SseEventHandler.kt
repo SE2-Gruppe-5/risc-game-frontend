@@ -12,9 +12,11 @@ class SseEventHandler(val client: SseClientService) : EventHandler {
     }
 
     override fun onOpen() {
+        //Do nothing
     }
 
     override fun onClosed() {
+        //Do nothing
     }
 
     override fun onMessage(event: String?, messageEvent: MessageEvent?) {
@@ -40,9 +42,11 @@ class SseEventHandler(val client: SseClientService) : EventHandler {
     }
 
     override fun onComment(comment: String?) {
+        //Do nothing
     }
 
     override fun onError(t: Throwable?) {
+        //Do nothing
     }
 
 }

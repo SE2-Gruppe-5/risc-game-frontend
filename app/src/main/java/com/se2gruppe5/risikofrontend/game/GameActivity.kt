@@ -14,39 +14,36 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.se2gruppe5.risikofrontend.game.popup.ContinentDialog
+import androidx.lifecycle.lifecycleScope
 import com.se2gruppe5.risikofrontend.R
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dialogues.DialogueHandler
 import com.se2gruppe5.risikofrontend.game.dice.DiceVisualAndroid
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.Dice1d6Generic
 import com.se2gruppe5.risikofrontend.game.enums.Phases
+import com.se2gruppe5.risikofrontend.game.hardware.FlashLightHardwareAndroid
+import com.se2gruppe5.risikofrontend.game.hardware.ShakeHardwareAndroid
 import com.se2gruppe5.risikofrontend.game.managers.GameManager
+import com.se2gruppe5.risikofrontend.game.managers.GameViewManager
+import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
+import com.se2gruppe5.risikofrontend.game.managers.ToastUtilAndroid
+import com.se2gruppe5.risikofrontend.game.popup.ContinentDialog
+import com.se2gruppe5.risikofrontend.game.popup.ShakePhoneAlert
+import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import com.se2gruppe5.risikofrontend.network.sse.MessageType
 import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
+import com.se2gruppe5.risikofrontend.network.sse.messages.AccuseCheatingMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.ChangeTerritoryMessage
+import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
+import com.se2gruppe5.risikofrontend.network.sse.messages.PlayerWonMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePhaseMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePlayersMessage
-import kotlinx.coroutines.runBlocking
-import java.util.UUID
-import androidx.lifecycle.lifecycleScope
-import android.util.Log
-import androidx.transition.Visibility
-import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
-import com.se2gruppe5.risikofrontend.game.dialogues.DialogueHandler
-import com.se2gruppe5.risikofrontend.game.hardware.FlashLightHardwareAndroid
-import com.se2gruppe5.risikofrontend.game.hardware.ShakeHardwareAndroid
-import com.se2gruppe5.risikofrontend.game.popup.ShakePhoneAlert
-import com.se2gruppe5.risikofrontend.game.managers.GameViewManager
-import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
-import com.se2gruppe5.risikofrontend.game.managers.ToastUtilAndroid
-import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
-import com.se2gruppe5.risikofrontend.network.sse.messages.AccuseCheatingMessage
-import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
 import kotlinx.coroutines.launch
-import com.se2gruppe5.risikofrontend.network.sse.messages.PlayerWonMessage
-import org.w3c.dom.Text
+import kotlinx.coroutines.runBlocking
 import java.io.Serializable
+import java.util.UUID
 
 
 class GameActivity : AppCompatActivity() {
@@ -71,7 +68,7 @@ class GameActivity : AppCompatActivity() {
         )
         sseService = service
         if (service != null) {
-            setupHandlers(service)
+            setupHandlers()
             getGameInfo()
 
         }
@@ -128,15 +125,15 @@ class GameActivity : AppCompatActivity() {
 
         accuseCheatButton.setOnClickListener {
 
-            if (gameManager?.getCurrentPlayer() != gameManager?.whoAmI()) {
+            if (gameManager.getCurrentPlayer() != gameManager.whoAmI()) {
                 lifecycleScope.launch {
-                    client.issueCheatAccusation(gameID!!, gameManager!!.getCurrentPlayer().id)
+                    client.issueCheatAccusation(gameID!!, gameManager.getCurrentPlayer().id)
                 }
             }else{
                 val toastUtil = ToastUtilAndroid(this)
                 toastUtil.showShortToast("You want to accuse yourself of cheating? ...")
             }
-            gameManager?.penalizeForClicking();
+            gameManager.penalizeForClicking()
         }
 
 
@@ -241,7 +238,7 @@ class GameActivity : AppCompatActivity() {
 
     }
 
-    private fun setupHandlers(service: SseClientService) {
+    private fun setupHandlers() {
         sseService?.handler(MessageType.UPDATE_PHASE) {
             it as UpdatePhaseMessage
             val phase: Phases = Phases.entries[it.phase]
@@ -270,7 +267,7 @@ class GameActivity : AppCompatActivity() {
         }
         sseService?.handler(MessageType.ACCUSE_CHEATING) {
             it as AccuseCheatingMessage
-            GameManager.get().checkIHaveBeenAccusedCheating(it.accusedPlayerUUID);
+            GameManager.get().checkIHaveBeenAccusedCheating(it.accusedPlayerUUID)
 
         }
         sseService?.handler(MessageType.PLAYER_WON){
@@ -283,7 +280,7 @@ class GameActivity : AppCompatActivity() {
 
     private fun displayWinner(s: String) {
     runOnUiThread {
-        var msg = s + " Won the Game!!"
+        var msg = "$s Won the Game!!"
         var wonMessage = this.findViewById<TextView>(R.id.txtWonMessage)
         wonMessage.text = msg
         wonMessage.visibility = View.VISIBLE

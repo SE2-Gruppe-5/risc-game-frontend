@@ -3,9 +3,10 @@ package com.se2gruppe5.risikofrontend.game.dataclasses
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.CardRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.enums.CardType
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
-
-import org.junit.Assert.*
 import org.mockito.kotlin.mock
 import java.util.UUID
 

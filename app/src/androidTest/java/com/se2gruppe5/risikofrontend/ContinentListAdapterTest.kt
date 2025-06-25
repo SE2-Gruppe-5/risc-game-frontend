@@ -7,12 +7,12 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.se2gruppe5.risikofrontend.game.enums.Continent
 import com.se2gruppe5.risikofrontend.game.popup.ContinentListAdapter
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertSame
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
 
 
 @RunWith(AndroidJUnit4::class)

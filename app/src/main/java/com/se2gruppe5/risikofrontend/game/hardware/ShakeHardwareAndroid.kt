@@ -74,6 +74,8 @@ class ShakeHardwareAndroid private constructor (private val context: Context) : 
         }
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        //Nothing to do, this is never called.
+    }
 }
 

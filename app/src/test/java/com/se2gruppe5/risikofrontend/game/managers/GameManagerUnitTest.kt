@@ -3,18 +3,24 @@ package com.se2gruppe5.risikofrontend.game.managers
 import android.app.Activity
 import android.graphics.Color
 import android.widget.TextView
-import com.se2gruppe5.risikofrontend.game.enums.Continent
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.util.Point2D
 import com.se2gruppe5.risikofrontend.game.dataclasses.util.Size2D
 import com.se2gruppe5.risikofrontend.game.dataclasses.util.Transform2D
+import com.se2gruppe5.risikofrontend.game.enums.Continent
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.network.INetworkClient
 import kotlinx.coroutines.runBlocking
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertSame
+import org.junit.Assert.assertThrows
+import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
@@ -23,11 +29,11 @@ import org.mockito.kotlin.atMost
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.mockito.Mockito.mock as mockStatic
 import java.util.UUID
+import org.mockito.Mockito.mock as mockStatic
 
 class GameManagerUnitTest {
     private lateinit var activity: Activity

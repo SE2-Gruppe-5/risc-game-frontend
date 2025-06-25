@@ -112,9 +112,12 @@ class NetworkClient : INetworkClient{
             MultipartBody.Builder()
                 .apply {
                     for (i in params.indices step 2) {
+                        //-----------------
+                        //do not remove this! sonar will tell you something else but don't
                         if (params[i] == null || params[i + 1] == null) {
                             continue
                         }
+                        //-----------------
                         addFormDataPart(params[i]!!, params[i + 1]!!)
                     }
                 }

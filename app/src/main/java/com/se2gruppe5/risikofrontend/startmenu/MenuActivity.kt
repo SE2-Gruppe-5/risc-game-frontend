@@ -7,17 +7,14 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.ReinforcementActivity
 import com.se2gruppe5.risikofrontend.lobby.CreateLobbyActivity
 import com.se2gruppe5.risikofrontend.lobby.JoinLobbyActivity
 import com.se2gruppe5.risikofrontend.network.NetworkClient
-import com.se2gruppe5.risikofrontend.network.sse.MessageType
 import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
-import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
 
 
 class MenuActivity : AppCompatActivity() {

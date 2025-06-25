@@ -11,8 +11,6 @@ import com.se2gruppe5.risikofrontend.network.INetworkClient
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
-import kotlin.math.floor
-import kotlin.math.round
 
 const val TERRITORY_NO_OWNER_COLOR: Int = 0x999999
 
@@ -43,7 +41,7 @@ class TerritoryManager private constructor(
     private var prevSelTerritory: ITerritoryVisual? = null
 
     fun getTerritoryList(): MutableList<ITerritoryVisual>{
-        return territoryList;
+        return territoryList
     }
 
     /**
@@ -53,25 +51,7 @@ class TerritoryManager private constructor(
         prevSelTerritory = t
     }
 
-    private fun territoriesSanityCheck(t: ITerritoryVisual) {
-        //todo
-        return
-    }
-
-    private fun territoriesSanityCheck(t: TerritoryRecord) {
-        //todo
-        return
-    }
-
-    private fun territoriesSanityCheck(tList: List<TerritoryRecord>) {
-        //todo
-        for (t in tList) {
-            territoriesSanityCheck(t)
-        }
-    }
-
     fun updateTerritories(tList: List<TerritoryRecord>) {
-        territoriesSanityCheck(tList)
         for (t in tList) {
             updateTerritory(t)
         }
@@ -93,7 +73,6 @@ class TerritoryManager private constructor(
     }
 
     fun addTerritory(t: ITerritoryVisual) {
-        territoriesSanityCheck(t)
 
         require(!(territoryList.contains(t))) { "Territory (object) already in list." }
         require(!(territoryList.any { it.territoryRecord.id == t.territoryRecord.id })) {
@@ -106,15 +85,11 @@ class TerritoryManager private constructor(
 
     //This should never be needed
     fun removeTerritory(t: ITerritoryVisual) {
-        territoriesSanityCheck(t)
         require(territoryList.contains(t)) { "Territory not in list." }
         territoryList.remove(t)
     }
 
-    //fun removeTerritoryById(id: Int){} //todo if needed (but this being needed would indicate a smell
-
     fun containsTerritory(t: ITerritoryVisual): Boolean {
-        territoriesSanityCheck(t)
         return (territoryList.contains(t))
     }
 
@@ -122,7 +97,6 @@ class TerritoryManager private constructor(
      * let player:=null semantically mean "no owner"
      */
     fun assignOwner(t: ITerritoryVisual, playerRecord: PlayerRecord?) {
-        territoriesSanityCheck(t)
         if (playerRecord != null) {
             t.changeRibbonColor(playerRecord.color)
         } else {
@@ -132,7 +106,6 @@ class TerritoryManager private constructor(
     }
 
     private fun addLambdaSubscriptions(t: ITerritoryVisual) {
-        territoriesSanityCheck(t)
         t.clickSubscription(::hasBeenClicked) //Observer design pattern
     }
 
@@ -219,7 +192,7 @@ class TerritoryManager private constructor(
             if(t.territoryRecord.owner!! == record.id) l.add(t.territoryRecord)
         }
 
-        return l;
+        return l
     }
 
     fun calculateNewTroops(p: PlayerRecord): Int{

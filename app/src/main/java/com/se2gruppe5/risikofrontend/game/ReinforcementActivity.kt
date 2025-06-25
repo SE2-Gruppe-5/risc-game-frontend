@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikofrontend.game
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
@@ -9,15 +10,14 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.graphics.drawable.Drawable
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.se2gruppe5.risikofrontend.R
-import androidx.core.view.isGone
 
 class ReinforcementActivity : AppCompatActivity() {
 

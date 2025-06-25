@@ -6,10 +6,10 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
-import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -38,7 +38,7 @@ class LobbyActivity :AppCompatActivity() {
         )
         sseService = service
         if (service != null) {
-            setupHandlers(service)
+            setupHandlers()
                 joinLobby(joinCode, playerName)
         }
     }
@@ -151,7 +151,7 @@ class LobbyActivity :AppCompatActivity() {
         }
     }
 
-    private fun setupHandlers(service: SseClientService) {
+    private fun setupHandlers() {
         sseService?.handler(MessageType.JOIN_LOBBY) {
             it as JoinLobbyMessage
             runOnUiThread {
