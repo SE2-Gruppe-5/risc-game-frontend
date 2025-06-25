@@ -4,6 +4,7 @@ package com.se2gruppe5.risikofrontend.game.managers
 import com.se2gruppe5.risikofrontend.game.cards.CardHandler
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dice.IDiceVisual
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.network.INetworkClient
@@ -16,11 +17,12 @@ class GameManager private constructor(
     private val gameManagerUUID: UUID,
     private val territoryManager: TerritoryManager,
     private val networkClient: INetworkClient,
+    private var dice: IDiceVisual,
     private var players: HashMap<UUID, PlayerRecord>,
     private var currentPlayerUUID: UUID,
     private var currentPhase: Phases,
     private var amICurrentlyCheating: Boolean = false,
-    private var haveAlreadyBeenPunished: Boolean = false
+    private var haveAlreadyBeenPunished: Boolean = false,
 ) {
     companion object {
 
@@ -31,6 +33,7 @@ class GameManager private constructor(
             gameManagerUUID: UUID,
             territoryManager: TerritoryManager,
             networkClient: INetworkClient,
+            dice: IDiceVisual,
             players: HashMap<UUID, PlayerRecord>
         ) {
             if (this.singleton == null) {
@@ -39,6 +42,7 @@ class GameManager private constructor(
                     gameManagerUUID,
                     territoryManager,
                     networkClient,
+                    dice,
                     players,
                     me.id,
                     Phases.Reinforce
@@ -74,6 +78,41 @@ class GameManager private constructor(
     fun getCurrentPlayer(): PlayerRecord {
         return this.players[this.currentPlayerUUID]
             ?: throw IllegalArgumentException("Current Player not found in player list")
+    }
+
+    fun requestDiceRolls(count: Int): List<Int> {
+        val diceRolls: ArrayList<Int> = ArrayList()
+        for(i in 0..count) {
+            diceRolls.add(performDiceThrow())
+        }
+        return diceRolls.sorted()
+    }
+
+    private fun performDiceThrow(): Int {
+        dice.hwInteraction()
+
+        var diceValue: Int? = dice.getValue()
+        while(diceValue == null) {
+            diceValue = dice.getValue()
+        }
+
+        return diceValue
+    }
+
+    private var lastDiceStatus: List<Int> = ArrayList()
+    private var diceStatusActive: Boolean = false
+
+    fun setReceivedDiceStatus(results: List<Int>) {
+        lastDiceStatus = results
+        diceStatusActive = true
+    }
+
+    fun getOpponentDiceThrow(): List<Int> {
+        while(!diceStatusActive) {
+
+        }
+        diceStatusActive = false
+        return lastDiceStatus
     }
 
     fun setCurrentlyCheating(amICheating: Boolean) {

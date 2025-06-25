@@ -5,7 +5,7 @@ import android.widget.TextView
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.Dice1d6Generic
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.IDice
 import com.se2gruppe5.risikofrontend.game.hardware.IShakeHardware
-import com.se2gruppe5.risikofrontend.game.popup.ShakePhoneAlert
+import com.se2gruppe5.risikofrontend.game.popup.RollDiceAlert
 
 /**
  *  @param dice *OPTIONAL* setDice() via constructor param
@@ -17,13 +17,16 @@ class DiceVisualAndroid(
     val imgBTN: ImageButton,
     val txt: TextView? = null,
     val diceHardware: IShakeHardware? = null,
-    val diceShakePopup: ShakePhoneAlert? = null
+    val diceShakePopup: RollDiceAlert? = null
 ) : IDiceVisual {
 
     //To facilitate backwards compatibility (i.e. setting the die by constructor param)
     //If omitted, default to standard dice-model.
     private var diceModel: IDice = dice ?: Dice1d6Generic()
     private val defaultDiceModel = diceModel
+
+    private var value: Int = 1
+    private var consumable: Boolean = false
 
     override fun setDice(dice: IDice) {
         diceModel = dice
@@ -53,6 +56,17 @@ class DiceVisualAndroid(
         }
         //Hide popup if dice roll occurred
         diceShakePopup?.dismissShakePromptDialog()
+
+        value = result
+        consumable = true
+    }
+
+    override fun getValue() : Int? {
+        if(consumable) {
+            consumable = false
+            return value
+        }
+        return null
     }
 
     /**

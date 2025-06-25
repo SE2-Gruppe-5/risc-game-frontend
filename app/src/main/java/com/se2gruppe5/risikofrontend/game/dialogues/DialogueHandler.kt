@@ -4,6 +4,7 @@ import android.app.Activity
 import android.widget.TextView
 import com.se2gruppe5.risikofrontend.R
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
+import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import kotlin.math.min
 
@@ -20,6 +21,17 @@ class DialogueHandler (val activity: Activity) : IDialogueHandler {
             toTerritory = to,
             )
         .show()
+    }
+
+    override fun useDefendDialog(from: TerritoryRecord, at: TerritoryRecord, troops: Int) {
+       DefendTroopDialog(
+           context = activity,
+           maxTroops = min(at.stat, 2),
+           minTroops = 1,
+           fromTerritory = from,
+           atTerritory = at,
+           troopCount = troops
+       ).show()
     }
 
     override fun useReinforceDialog(

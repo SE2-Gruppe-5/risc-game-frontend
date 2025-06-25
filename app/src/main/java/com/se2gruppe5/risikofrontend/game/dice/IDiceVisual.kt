@@ -15,6 +15,13 @@ interface IDiceVisual {
      */
     fun roll()
 
+
+    /**
+     * Return the dice value after a dice roll
+     * As soon as it is read, further calls (until the next dice roll) return null
+     */
+    fun getValue(): Int?
+
     /**
      * Perform input interaction with device hardware
      */

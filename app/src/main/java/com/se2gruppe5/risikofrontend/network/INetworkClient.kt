@@ -18,6 +18,8 @@ interface INetworkClient {
     suspend fun getGameInfo(gameId: UUID)
     suspend fun changePhase(gameId: UUID)
     suspend fun changeTerritory(gameId: UUID, territory: TerritoryRecord)
+    suspend fun attackTerritory(gameId: UUID, from: TerritoryRecord, target: TerritoryRecord, troops: Int)
+    suspend fun reportDiceStatus(recipient: UUID, results: List<Int>)
     suspend fun cardAction(gameId: UUID, action: String, player: PlayerRecord, card: CardRecord)
     suspend fun issueCheatAccusation(gameId: UUID, accusedPlayerUUID: UUID);
 }

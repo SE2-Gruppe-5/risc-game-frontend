@@ -1,12 +1,14 @@
 package com.se2gruppe5.risikofrontend.network.sse
 
 import com.se2gruppe5.risikofrontend.network.sse.messages.AccuseCheatingMessage
+import com.se2gruppe5.risikofrontend.network.sse.messages.AttackTerritoryMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.ChangeTerritoryMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.ChatMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.JoinLobbyMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.LeaveLobbyMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.PlayerWonMessage
+import com.se2gruppe5.risikofrontend.network.sse.messages.ReportDiceStatusMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.SetUuidMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePhaseMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePlayersMessage
@@ -21,6 +23,8 @@ enum class MessageType(val messageClass: KClass<out IMessage>) {
     UPDATE_PHASE(UpdatePhaseMessage::class),
     UPDATE_PLAYERS(UpdatePlayersMessage::class),
     UPDATE_TERRITORIES(ChangeTerritoryMessage::class),
+    ATTACK_TERRITORY(AttackTerritoryMessage::class),
+    REPORT_DICE_STATUS(ReportDiceStatusMessage::class),
     ACCUSE_CHEATING(AccuseCheatingMessage::class),
     PLAYER_WON(PlayerWonMessage::class)
 }

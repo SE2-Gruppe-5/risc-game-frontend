@@ -89,6 +89,21 @@ class NetworkClient : INetworkClient{
         execute(request)
     }
 
+    override suspend fun attackTerritory(gameId: UUID, from: TerritoryRecord, target: TerritoryRecord, troops: Int) {
+        val request = createRequest("POST", Constants.ATTACK_TERRITORY_URL.replace("{id}", gameId.toString()),
+            "from", from.id.toString(),
+            "target", target.id.toString(),
+            "troops", troops.toString())
+        execute(request)
+    }
+
+    override suspend fun reportDiceStatus(recipient: UUID, results: List<Int>) {
+        val request = createRequest("POST", Constants.REPORT_DICE_STATUS_URL,
+            "recipient", recipient.toString(),
+            "results", results.joinToString())
+        execute(request)
+    }
+
     override suspend fun cardAction(
         gameId: UUID,
         action: String,
