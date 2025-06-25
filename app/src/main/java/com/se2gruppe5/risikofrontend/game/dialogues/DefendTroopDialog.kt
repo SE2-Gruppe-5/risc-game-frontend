@@ -3,7 +3,7 @@ package com.se2gruppe5.risikofrontend.game.dialogues
 import android.content.Context
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.managers.GameManager
-import com.se2gruppe5.risikofrontend.game.popup.WaitingAlert
+import com.se2gruppe5.risikofrontend.game.popup.SimpleAlert
 import kotlinx.coroutines.runBlocking
 
 class DefendTroopDialog(
@@ -22,18 +22,19 @@ class DefendTroopDialog(
 
     init {
         setTitle("You are being attacked at ${atTerritory.id} with $troopCount troops!")
+        setDismissable(false)
+        gameManager.requestOpponentDiceThrow { result -> enemyDiceRolledCallback(result) }
     }
 
     override fun troopAction(troops: Int) {
         gameManager.requestDiceRolls(troops) {result -> myDiceRolledCallback(result)}
-        gameManager.requestOpponentDiceThrow { result -> enemyDiceRolledCallback(result) }
     }
 
     private var myDiceRolled: Boolean = false
     private var myRoll: List<Int> = ArrayList()
     private var enemyDiceRolled: Boolean = false
     private var enemyRoll: List<Int> = ArrayList()
-    private val alert = WaitingAlert(context)
+    private val alert = SimpleAlert(context)
 
     private fun myDiceRolledCallback(result: List<Int>) {
         myRoll = result
@@ -55,12 +56,17 @@ class DefendTroopDialog(
             alert.update(
                 "Attack results",
                 "Your roll: ${myRoll.joinToString()}" +
-                        "\nEnemy roll: ${enemyRoll.joinToString()}"
+                        "\nEnemy roll: ${enemyRoll.joinToString()}",
+                true
             )
             alert.show()
-            alert.setCancelable(true)
         }
         else if(myDiceRolled) {
+            alert.update(
+                "Waiting",
+                "Waiting for other player to roll dice...",
+                false
+            )
             alert.show()
         }
     }

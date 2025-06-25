@@ -2,7 +2,7 @@ package com.se2gruppe5.risikofrontend.game.dialogues
 
 import android.content.Context
 import com.se2gruppe5.risikofrontend.game.managers.GameManager
-import com.se2gruppe5.risikofrontend.game.popup.WaitingAlert
+import com.se2gruppe5.risikofrontend.game.popup.SimpleAlert
 
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import kotlinx.coroutines.runBlocking
@@ -25,7 +25,7 @@ class AttackTroopDialog(
     private var myRoll: List<Int> = ArrayList()
     private var enemyDiceRolled: Boolean = false
     private var enemyRoll: List<Int> = ArrayList()
-    private val alert = WaitingAlert(context)
+    private val alert = SimpleAlert(context)
 
     init {
         setTitle("Attack territory ${toTerritory.getTerritoryId()} from ${fromTerritory.getTerritoryId()}")
@@ -39,8 +39,8 @@ class AttackTroopDialog(
             client.attackTerritory(gameManager.getUUID(), from.territoryRecord, to.territoryRecord, troops)
         }
 
-        gameManager.requestDiceRolls(troops) {result -> myDiceRolledCallback(result)}
         gameManager.requestOpponentDiceThrow {result -> enemyDiceRolledCallback(result)}
+        gameManager.requestDiceRolls(troops) {result -> myDiceRolledCallback(result)}
     }
 
     private fun myDiceRolledCallback(result: List<Int>) {
@@ -65,10 +65,10 @@ class AttackTroopDialog(
             alert.update(
                 "Attack results",
                 "Your roll: ${myRoll.joinToString()}" +
-                        "\nEnemy roll: ${enemyRoll.joinToString()}"
+                        "\nEnemy roll: ${enemyRoll.joinToString()}",
+                true
             )
             alert.show()
-            alert.setCancelable(true)
 
             runBlocking {
                 client.changeTerritory(gameManager.getUUID(), to.territoryRecord)
@@ -76,6 +76,11 @@ class AttackTroopDialog(
             }
         }
         else if(myDiceRolled) {
+            alert.update(
+                "Waiting",
+                "Waiting for other player to roll dice...",
+                false
+            )
             alert.show()
         }
     }
@@ -87,7 +92,7 @@ class AttackTroopDialog(
         var ownTroopsDead = 0
 
         for(i in 1..numComparisons) {
-            if(enemyRoll.last() < myRoll.last()){
+            if(enemyRoll[enemyRoll.size - i] < myRoll[myRoll.size - i]){
                 enemyTroopsDead++
             }
             else {
@@ -101,6 +106,9 @@ class AttackTroopDialog(
         if(to.territoryRecord.stat <= 0) {
             to.territoryRecord.owner = gameManager.whoAmI().id
             to.territoryRecord.stat = myRoll.size - ownTroopsDead
+            from.territoryRecord.stat -= to.territoryRecord.stat
+        }
+        else {
         }
     }
 }

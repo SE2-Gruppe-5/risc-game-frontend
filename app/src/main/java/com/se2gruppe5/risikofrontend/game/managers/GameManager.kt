@@ -1,6 +1,7 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
 
+import android.util.Log
 import com.se2gruppe5.risikofrontend.game.cards.CardHandler
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
@@ -115,10 +116,12 @@ class GameManager private constructor(
 
     var enemyDiceRollCallback: (List<Int>) -> Unit = {}
     fun requestOpponentDiceThrow(callback: (List<Int>) -> Unit) {
+        Log.i("GameManager", "enemyDiceRollCallback set")
         enemyDiceRollCallback = callback
     }
 
     fun setReceivedDiceStatus(results: List<Int>) {
+        Log.i("GameManager", "enemyDiceRollCallback called")
         enemyDiceRollCallback(results)
     }
 

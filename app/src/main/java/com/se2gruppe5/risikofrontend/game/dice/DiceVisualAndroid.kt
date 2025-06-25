@@ -65,7 +65,7 @@ class DiceVisualAndroid(
     override fun hwInteraction(callback: (Int) -> Unit) {
         //If there is no hardware... do not use it.
         if(diceHardware==null){
-            roll()
+            callback(roll())
         }
         diceHardware?.setInteractionLambdaSubscription { callback(this.roll()) } //Pass control to HW Impl
         diceShakePopup?.showShakePromptDialog()
