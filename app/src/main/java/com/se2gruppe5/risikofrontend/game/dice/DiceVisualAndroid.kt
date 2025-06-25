@@ -25,8 +25,6 @@ class DiceVisualAndroid(
     private var diceModel: IDice = dice ?: Dice1d6Generic()
     private val defaultDiceModel = diceModel
 
-    private var value: Int = 1
-    private var consumable: Boolean = false
 
     override fun setDice(dice: IDice) {
         diceModel = dice
@@ -49,7 +47,7 @@ class DiceVisualAndroid(
     /**
      * Subscribe to this with clickSubscription for simply rolling the dice by button press
      */
-    override fun roll() {
+    override fun roll(): Int {
         val result = diceModel.roll()
         if (txt != null) {
             txt.text = result.toString()
@@ -57,28 +55,19 @@ class DiceVisualAndroid(
         //Hide popup if dice roll occurred
         diceShakePopup?.dismissShakePromptDialog()
 
-        value = result
-        consumable = true
-    }
-
-    override fun getValue() : Int? {
-        if(consumable) {
-            consumable = false
-            return value
-        }
-        return null
+        return result
     }
 
     /**
      * Subscribe to this with clickSubscription for initiating Hardware-Roll-Interaction
      * (HW omitted if not set, calls roll() instead)
      */
-    override fun hwInteraction(){
+    override fun hwInteraction(callback: (Int) -> Unit) {
         //If there is no hardware... do not use it.
         if(diceHardware==null){
             roll()
         }
-        diceHardware?.setInteractionLambdaSubscription { this.roll() } //Pass control to HW Impl
+        diceHardware?.setInteractionLambdaSubscription { callback(this.roll()) } //Pass control to HW Impl
         diceShakePopup?.showShakePromptDialog()
     }
 

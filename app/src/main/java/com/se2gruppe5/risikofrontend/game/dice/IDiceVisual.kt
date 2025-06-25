@@ -13,19 +13,13 @@ interface IDiceVisual {
     /**
      * Roll the dice!
      */
-    fun roll()
-
-
-    /**
-     * Return the dice value after a dice roll
-     * As soon as it is read, further calls (until the next dice roll) return null
-     */
-    fun getValue(): Int?
+    fun roll(): Int
 
     /**
      * Perform input interaction with device hardware
+     * Callback is called after a dice roll has been triggered (the int argument is the result of the roll)
      */
-    fun hwInteraction()
+    fun hwInteraction(callback: (Int) -> Unit)
 
     /**
      * Observer-Pattern like system

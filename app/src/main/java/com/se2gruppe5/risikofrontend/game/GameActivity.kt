@@ -1,6 +1,5 @@
 package com.se2gruppe5.risikofrontend.game
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Color
@@ -30,7 +29,6 @@ import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.managers.ToastUtilAndroid
 import com.se2gruppe5.risikofrontend.game.popup.ContinentDialog
 import com.se2gruppe5.risikofrontend.game.popup.RollDiceAlert
-import com.se2gruppe5.risikofrontend.game.popup.WaitingAlert
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import com.se2gruppe5.risikofrontend.network.sse.MessageType
@@ -293,12 +291,12 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun displayWinner(s: String) {
-    runOnUiThread {
-        var msg = "$s Won the Game!!"
-        var wonMessage = this.findViewById<TextView>(R.id.txtWonMessage)
-        wonMessage.text = msg
-        wonMessage.visibility = View.VISIBLE
-    }
+        runOnUiThread {
+            var msg = "$s Won the Game!!"
+            var wonMessage = this.findViewById<TextView>(R.id.txtWonMessage)
+            wonMessage.text = msg
+            wonMessage.visibility = View.VISIBLE
+        }
     }
 
     /**
@@ -329,7 +327,7 @@ class GameActivity : AppCompatActivity() {
         val diceVisualAndroid =
             DiceVisualAndroid(Dice1d6Generic(), diceBtn, diceTxt, shakeHW, rollDiceAlert)
         //Wire up lambda interactions
-        diceVisualAndroid.clickSubscription { it.hwInteraction() }
+        diceVisualAndroid.clickSubscription { it.hwInteraction{} }
         rollDiceAlert.registerLambda = { shakeHW.sensorRegisterListener() }
         rollDiceAlert.deregisterLambda = {
             shakeHW.sensorDeRegisterListener()

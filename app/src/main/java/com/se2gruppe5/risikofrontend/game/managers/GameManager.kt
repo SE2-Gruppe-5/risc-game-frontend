@@ -80,39 +80,46 @@ class GameManager private constructor(
             ?: throw IllegalArgumentException("Current Player not found in player list")
     }
 
-    fun requestDiceRolls(count: Int): List<Int> {
-        val diceRolls: ArrayList<Int> = ArrayList()
-        for(i in 0..count) {
-            diceRolls.add(performDiceThrow())
-        }
-        return diceRolls.sorted()
+    private var diceRolls: ArrayList<Int> = ArrayList()
+    private var diceSeriesActive: Boolean = false
+    private var diceSeriesMax: Int = 0
+    private var diceSeriesCallback: (List<Int>) -> Unit = {}
+
+    fun requestDiceRolls(count: Int, callback: (List<Int>) -> Unit) {
+        diceRolls = ArrayList()
+        diceSeriesActive = true
+        diceSeriesMax = count
+        diceSeriesCallback = callback
+
+        // Perform initial dice throw immediately.
+        // Other alerts should already have been dismissed previously.
+        performDiceThrow()
     }
 
-    private fun performDiceThrow(): Int {
-        dice.hwInteraction()
-
-        var diceValue: Int? = dice.getValue()
-        while(diceValue == null) {
-            diceValue = dice.getValue()
+    private fun logDiceThrow(result: Int) {
+        if(diceSeriesActive && diceRolls.size < diceSeriesMax) {
+            diceRolls.add(result)
+            if(diceRolls.size == diceSeriesMax) {
+                diceSeriesCallback(diceRolls)
+                diceSeriesActive = false
+            }
+            else {
+                performDiceThrow()
+            }
         }
-
-        return diceValue
     }
 
-    private var lastDiceStatus: List<Int> = ArrayList()
-    private var diceStatusActive: Boolean = false
+    private fun performDiceThrow() {
+        dice.hwInteraction { result -> logDiceThrow(result) }
+    }
+
+    var enemyDiceRollCallback: (List<Int>) -> Unit = {}
+    fun requestOpponentDiceThrow(callback: (List<Int>) -> Unit) {
+        enemyDiceRollCallback = callback
+    }
 
     fun setReceivedDiceStatus(results: List<Int>) {
-        lastDiceStatus = results
-        diceStatusActive = true
-    }
-
-    fun getOpponentDiceThrow(): List<Int> {
-        while(!diceStatusActive) {
-
-        }
-        diceStatusActive = false
-        return lastDiceStatus
+        enemyDiceRollCallback(results)
     }
 
     fun setCurrentlyCheating(amICheating: Boolean) {

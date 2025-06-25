@@ -19,27 +19,64 @@ class AttackTroopDialog(
     val to = toTerritory
     val from = fromTerritory
 
-    val gameManager = GameManager.get()
+    private val gameManager = GameManager.get()
+
+    private var myDiceRolled: Boolean = true
+    private var myRoll: List<Int> = ArrayList()
+    private var enemyDiceRolled: Boolean = true
+    private var enemyRoll: List<Int> = ArrayList()
 
     init {
         setTitle("Attack territory ${toTerritory.getTerritoryId()} from ${fromTerritory.getTerritoryId()}")
     }
 
     override fun troopAction(troops: Int) {
+        this.dismiss()
         gameManager.whoAmI().capturedTerritory = true
 
         runBlocking {
             client.attackTerritory(gameManager.getUUID(), from.territoryRecord, to.territoryRecord, troops)
         }
 
-        val myRoll: List<Int> = gameManager.requestDiceRolls(troops)
+        gameManager.requestDiceRolls(troops) {result -> myDiceRolledCallback(result)}
+        gameManager.requestOpponentDiceThrow {result -> enemyDiceRolledCallback(result)}
+    }
 
-        // Wait for opponent dice roll
-        val alert = WaitingAlert(context)
-        alert.show()
-        val enemyRoll = gameManager.getOpponentDiceThrow().sorted()
-        alert.hide()
+    private fun myDiceRolledCallback(result: List<Int>) {
+        myRoll = result
+        myDiceRolled = true
+        applyAllRolls()
+    }
 
+    private fun enemyDiceRolledCallback(result: List<Int>) {
+        enemyRoll = result
+        enemyDiceRolled = true
+        applyAllRolls()
+    }
+
+    private val alert = WaitingAlert(context)
+    private fun applyAllRolls() {
+        if(myDiceRolled && enemyDiceRolled) {
+            applyRollsToTerritories(myRoll, enemyRoll)
+
+            alert.update(
+                "Attack results",
+                "Your roll: ${myRoll.joinToString()}" +
+                        "\nEnemy roll: ${enemyRoll.joinToString()}}"
+            )
+            alert.setCancelable(true)
+
+            runBlocking {
+                client.changeTerritory(gameManager.getUUID(), to.territoryRecord)
+                client.changeTerritory(gameManager.getUUID(), from.territoryRecord)
+            }
+        }
+        else if(myDiceRolled) {
+            alert.show()
+        }
+    }
+
+    private fun applyRollsToTerritories(myRoll: List<Int>, enemyRoll: List<Int>) {
         val numComparisons = min(myRoll.size, enemyRoll.size)
 
         var enemyTroopsDead = 0
@@ -59,12 +96,7 @@ class AttackTroopDialog(
 
         if(to.territoryRecord.stat <= 0) {
             to.territoryRecord.owner = gameManager.whoAmI().id
-            to.territoryRecord.stat = troops - ownTroopsDead
-        }
-
-        runBlocking {
-            client.changeTerritory(gameManager.getUUID(), to.territoryRecord)
-            client.changeTerritory(gameManager.getUUID(), from.territoryRecord)
+            to.territoryRecord.stat = myRoll.size - ownTroopsDead
         }
     }
 }
