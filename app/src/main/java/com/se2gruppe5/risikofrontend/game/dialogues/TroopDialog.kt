@@ -16,17 +16,30 @@ abstract class TroopDialog(
 
     private val binding: DialogMoveTroopsBinding = DialogMoveTroopsBinding.inflate(LayoutInflater.from(context))
     val client: INetworkClient = NetworkClient()
+    private var dismissable: Boolean = true
 
     init {
         setView(binding.root)
 
         binding.troopsInput.hint = "$minTroops - $maxTroops"
 
-        setButton(BUTTON_POSITIVE, "OK") { _, _ ->
+        setButton(BUTTON_POSITIVE, "OK", null, null)
+        setButton(BUTTON_NEGATIVE, "Cancel", null, null)
+    }
+
+    fun setDismissable(value: Boolean) {
+        dismissable = value
+    }
+
+    override fun onStart() {
+        super.onStart()
+        getButton(BUTTON_POSITIVE).setOnClickListener {
             handlePositiveButton()
         }
-        setButton(BUTTON_NEGATIVE, "Cancel") { _, _ ->
-            dismiss()
+        getButton(BUTTON_NEGATIVE).setOnClickListener {
+            if(dismissable) {
+                dismiss()
+            }
         }
     }
 
@@ -35,11 +48,18 @@ abstract class TroopDialog(
             val troops = binding.troopsInput.text.toString().toInt()
             if (troops in minTroops..maxTroops) {
                 troopAction(troops)
+                dismiss()
             } else {
                 Toast.makeText(context, "Enter a number between $minTroops and $maxTroops", Toast.LENGTH_SHORT).show()
+                if(dismissable) {
+                    dismiss()
+                }
             }
         } catch (e: NumberFormatException) {
             Toast.makeText(context, "Invalid number", Toast.LENGTH_SHORT).show()
+            if(dismissable) {
+                dismiss()
+            }
         }
     }
 

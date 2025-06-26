@@ -2,39 +2,113 @@ package com.se2gruppe5.risikofrontend.game.dialogues
 
 import android.content.Context
 import com.se2gruppe5.risikofrontend.game.managers.GameManager
+import com.se2gruppe5.risikofrontend.game.popup.SimpleAlert
 
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import kotlinx.coroutines.runBlocking
+import kotlin.math.min
 
 class AttackTroopDialog(
     context: Context,
     maxTroops: Int,
-    minTroops: Int = 2,
+    minTroops: Int = 1,
     fromTerritory: ITerritoryVisual,
     toTerritory: ITerritoryVisual
 ) : TroopDialog(context, maxTroops, minTroops) {
 
     val to = toTerritory
     val from = fromTerritory
+
+    private val gameManager = GameManager.get()
+
+    private var myDiceRolled: Boolean = false
+    private var myRoll: List<Int> = ArrayList()
+    private var enemyDiceRolled: Boolean = false
+    private var enemyRoll: List<Int> = ArrayList()
+    private val alert = SimpleAlert(context)
+
     init {
         setTitle("Attack territory ${toTerritory.getTerritoryId()} from ${fromTerritory.getTerritoryId()}")
     }
 
     override fun troopAction(troops: Int) {
-        GameManager.get().whoAmI().capturedTerritory = true
-
-        //TODO we should roll dice here instead of just taking over the territory
-        to.territoryRecord.owner = GameManager.get().whoAmI().id
-        if(troops - to.territoryRecord.stat > 0){
-            to.changeStat(troops - to.territoryRecord.stat)
-        }else{
-            to.changeStat(1)
-        }
-        from.changeStat(from.territoryRecord.stat - troops)
+        this.dismiss()
+        gameManager.whoAmI().capturedTerritory = true
 
         runBlocking {
-            client.changeTerritory(GameManager.get().getUUID(), to.territoryRecord)
-            client.changeTerritory(GameManager.get().getUUID(), from.territoryRecord)
+            client.attackTerritory(gameManager.getUUID(), from.territoryRecord, to.territoryRecord, troops)
+        }
+
+        gameManager.requestOpponentDiceThrow {result -> enemyDiceRolledCallback(result)}
+        gameManager.requestDiceRolls(troops) {result -> myDiceRolledCallback(result)}
+    }
+
+    private fun myDiceRolledCallback(result: List<Int>) {
+        myRoll = result
+        myDiceRolled = true
+        runBlocking {
+            client.reportDiceStatus(gameManager.getUUID(), to.territoryRecord.owner!!, myRoll)
+        }
+        applyAllRolls()
+    }
+
+    private fun enemyDiceRolledCallback(result: List<Int>) {
+        enemyRoll = result
+        enemyDiceRolled = true
+        applyAllRolls()
+    }
+
+    private fun applyAllRolls() {
+        if(myDiceRolled && enemyDiceRolled) {
+            applyRollsToTerritories(myRoll, enemyRoll)
+
+            alert.update(
+                "Attack results",
+                "Your roll: ${myRoll.joinToString()}" +
+                        "\nEnemy roll: ${enemyRoll.joinToString()}",
+                true
+            )
+            alert.show()
+
+            runBlocking {
+                client.changeTerritory(gameManager.getUUID(), to.territoryRecord)
+                client.changeTerritory(gameManager.getUUID(), from.territoryRecord)
+            }
+        }
+        else if(myDiceRolled) {
+            alert.update(
+                "Waiting",
+                "Waiting for other player to roll dice...",
+                false
+            )
+            alert.show()
+        }
+    }
+
+    private fun applyRollsToTerritories(myRoll: List<Int>, enemyRoll: List<Int>) {
+        val numComparisons = min(myRoll.size, enemyRoll.size)
+
+        var enemyTroopsDead = 0
+        var ownTroopsDead = 0
+
+        for(i in 1..numComparisons) {
+            if(enemyRoll[enemyRoll.size - i] < myRoll[myRoll.size - i]){
+                enemyTroopsDead++
+            }
+            else {
+                ownTroopsDead++
+            }
+        }
+
+        to.territoryRecord.stat -= enemyTroopsDead
+        from.territoryRecord.stat -= ownTroopsDead
+
+        if(to.territoryRecord.stat <= 0) {
+            to.territoryRecord.owner = gameManager.whoAmI().id
+            to.territoryRecord.stat = myRoll.size - ownTroopsDead
+            from.territoryRecord.stat -= to.territoryRecord.stat
+        }
+        else {
         }
     }
 }

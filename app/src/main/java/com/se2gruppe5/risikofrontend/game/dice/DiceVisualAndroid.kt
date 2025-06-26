@@ -5,7 +5,7 @@ import android.widget.TextView
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.Dice1d6Generic
 import com.se2gruppe5.risikofrontend.game.dice.diceModels.IDice
 import com.se2gruppe5.risikofrontend.game.hardware.IShakeHardware
-import com.se2gruppe5.risikofrontend.game.popup.ShakePhoneAlert
+import com.se2gruppe5.risikofrontend.game.popup.RollDiceAlert
 
 /**
  *  @param dice *OPTIONAL* setDice() via constructor param
@@ -17,13 +17,14 @@ class DiceVisualAndroid(
     val imgBTN: ImageButton,
     val txt: TextView? = null,
     val diceHardware: IShakeHardware? = null,
-    val diceShakePopup: ShakePhoneAlert? = null
+    val diceShakePopup: RollDiceAlert? = null
 ) : IDiceVisual {
 
     //To facilitate backwards compatibility (i.e. setting the die by constructor param)
     //If omitted, default to standard dice-model.
     private var diceModel: IDice = dice ?: Dice1d6Generic()
     private val defaultDiceModel = diceModel
+
 
     override fun setDice(dice: IDice) {
         diceModel = dice
@@ -46,25 +47,27 @@ class DiceVisualAndroid(
     /**
      * Subscribe to this with clickSubscription for simply rolling the dice by button press
      */
-    override fun roll() {
+    override fun roll(): Int {
         val result = diceModel.roll()
         if (txt != null) {
             txt.text = result.toString()
         }
         //Hide popup if dice roll occurred
         diceShakePopup?.dismissShakePromptDialog()
+
+        return result
     }
 
     /**
      * Subscribe to this with clickSubscription for initiating Hardware-Roll-Interaction
      * (HW omitted if not set, calls roll() instead)
      */
-    override fun hwInteraction(){
+    override fun hwInteraction(callback: (Int) -> Unit) {
         //If there is no hardware... do not use it.
         if(diceHardware==null){
-            roll()
+            callback(roll())
         }
-        diceHardware?.setInteractionLambdaSubscription { this.roll() } //Pass control to HW Impl
+        diceHardware?.setInteractionLambdaSubscription { callback(this.roll()) } //Pass control to HW Impl
         diceShakePopup?.showShakePromptDialog()
     }
 

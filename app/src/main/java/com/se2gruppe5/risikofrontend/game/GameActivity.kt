@@ -28,16 +28,18 @@ import com.se2gruppe5.risikofrontend.game.managers.GameViewManager
 import com.se2gruppe5.risikofrontend.game.managers.TerritoryManager
 import com.se2gruppe5.risikofrontend.game.managers.ToastUtilAndroid
 import com.se2gruppe5.risikofrontend.game.popup.ContinentDialog
-import com.se2gruppe5.risikofrontend.game.popup.ShakePhoneAlert
+import com.se2gruppe5.risikofrontend.game.popup.RollDiceAlert
 import com.se2gruppe5.risikofrontend.game.territory.PointingArrowAndroid
 import com.se2gruppe5.risikofrontend.network.NetworkClient
 import com.se2gruppe5.risikofrontend.network.sse.MessageType
 import com.se2gruppe5.risikofrontend.network.sse.SseClientService
 import com.se2gruppe5.risikofrontend.network.sse.constructServiceConnection
 import com.se2gruppe5.risikofrontend.network.sse.messages.AccuseCheatingMessage
+import com.se2gruppe5.risikofrontend.network.sse.messages.AttackTerritoryMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.ChangeTerritoryMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.GameStartMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.PlayerWonMessage
+import com.se2gruppe5.risikofrontend.network.sse.messages.ReportDiceStatusMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePhaseMessage
 import com.se2gruppe5.risikofrontend.network.sse.messages.UpdatePlayersMessage
 import kotlinx.coroutines.launch
@@ -55,11 +57,13 @@ class GameActivity : AppCompatActivity() {
     var tradeIndicator: TextView? = null
     var phaseTxt: TextView? = null
     var viewManager: GameViewManager? = null
+    val dialogHandler = DialogueHandler(this)
 
     var turnIndicators: MutableList<TextView> = mutableListOf()
     var gameID: UUID? = null
     var me: PlayerRecord? = null
     var troopText: TextView? = null
+
     val serviceConnection = constructServiceConnection { service ->
         // Allow network calls on main thread for testing purposes
         // GitHub Actions Android emulator action with stricter policy fails otherwise
@@ -90,7 +94,6 @@ class GameActivity : AppCompatActivity() {
 
         me = getSerializableExtraCompat(intent, "LOCAL_PLAYER", PlayerRecord::class.java)!!
 
-        val dialogHandler = DialogueHandler(this)
         gameID = gameStart.gameId
 
         TerritoryManager.init(
@@ -99,8 +102,9 @@ class GameActivity : AppCompatActivity() {
             ToastUtilAndroid(this),
             dialogHandler
         )
-        GameManager.init(me!!, gameID!!, TerritoryManager.get(), client, gameStart.players)
-        setupDiceInteractions()
+
+        val dice = setupDice()
+        GameManager.init(me!!, gameID!!, TerritoryManager.get(), client, dice, gameStart.players)
 
         turnIndicators.add(this.findViewById<TextView>(R.id.player1txt))
         turnIndicators.add(this.findViewById<TextView>(R.id.player2txt))
@@ -274,17 +278,27 @@ class GameActivity : AppCompatActivity() {
             it as PlayerWonMessage
             displayWinner(GameManager.get().getPlayer(it.winner)!!.name)
         }
+        sseService?.handler(MessageType.ATTACK_TERRITORY) {
+            it as AttackTerritoryMessage
+            runOnUiThread {
+                dialogHandler.useDefendDialog(it.from, it.target, it.troops)
+            }
+        }
+        sseService?.handler(MessageType.REPORT_DICE_STATUS) {
+            it as ReportDiceStatusMessage
+            GameManager.get().setReceivedDiceStatus(it.results)
+        }
 
 
     }
 
     private fun displayWinner(s: String) {
-    runOnUiThread {
-        var msg = "$s Won the Game!!"
-        var wonMessage = this.findViewById<TextView>(R.id.txtWonMessage)
-        wonMessage.text = msg
-        wonMessage.visibility = View.VISIBLE
-    }
+        runOnUiThread {
+            var msg = "$s Won the Game!!"
+            var wonMessage = this.findViewById<TextView>(R.id.txtWonMessage)
+            wonMessage.text = msg
+            wonMessage.visibility = View.VISIBLE
+        }
     }
 
     /**
@@ -303,7 +317,7 @@ class GameActivity : AppCompatActivity() {
         return intent.getSerializableExtra(varName) as? T
     }
 
-    private fun setupDiceInteractions() {
+    private fun setupDice() : DiceVisualAndroid {
         val shakeHW = ShakeHardwareAndroid.getInstance(this)
         val flashHW = FlashLightHardwareAndroid.getInstance(this)
         // - Dice UI/UX -
@@ -311,17 +325,17 @@ class GameActivity : AppCompatActivity() {
         val diceTxt = this.findViewById<TextView>(R.id.diceText)
         diceTxt.text = ""
 
-        val shakePhoneAlert = ShakePhoneAlert(this)
+        val rollDiceAlert = RollDiceAlert(this)
         val diceVisualAndroid =
-            DiceVisualAndroid(Dice1d6Generic(), diceBtn, diceTxt, shakeHW, shakePhoneAlert)
+            DiceVisualAndroid(Dice1d6Generic(), diceBtn, diceTxt, shakeHW, rollDiceAlert)
         //Wire up lambda interactions
-        diceVisualAndroid.clickSubscription { it.hwInteraction() }
-        shakePhoneAlert.registerLambda = { shakeHW.sensorRegisterListener() }
-        shakePhoneAlert.deregisterLambda = {
+        diceVisualAndroid.clickSubscription { it.hwInteraction{} }
+        rollDiceAlert.registerLambda = { shakeHW.sensorRegisterListener() }
+        rollDiceAlert.deregisterLambda = {
             shakeHW.sensorDeRegisterListener()
             diceVisualAndroid.resetDice()
         }
-        shakePhoneAlert.setCheatLambda = { dice ->
+        rollDiceAlert.setCheatLambda = { dice ->
             shakeHW.sensorDeRegisterListener()
             diceVisualAndroid.setDice(dice)
             diceVisualAndroid.roll()
@@ -332,6 +346,8 @@ class GameActivity : AppCompatActivity() {
             // be performed without shaking the phone.
             // (More fun to spot someone cheating when playing in person this way)
         }
+
+        return diceVisualAndroid
     }
 
 }

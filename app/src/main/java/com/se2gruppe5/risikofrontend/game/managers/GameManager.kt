@@ -1,9 +1,11 @@
 package com.se2gruppe5.risikofrontend.game.managers
 
 
+import android.util.Log
 import com.se2gruppe5.risikofrontend.game.cards.CardHandler
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.PlayerRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
+import com.se2gruppe5.risikofrontend.game.dice.IDiceVisual
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
 import com.se2gruppe5.risikofrontend.network.INetworkClient
@@ -16,11 +18,12 @@ class GameManager private constructor(
     private val gameManagerUUID: UUID,
     private val territoryManager: TerritoryManager,
     private val networkClient: INetworkClient,
+    private var dice: IDiceVisual,
     private var players: HashMap<UUID, PlayerRecord>,
     private var currentPlayerUUID: UUID,
     private var currentPhase: Phases,
     private var amICurrentlyCheating: Boolean = false,
-    private var haveAlreadyBeenPunished: Boolean = false
+    private var haveAlreadyBeenPunished: Boolean = false,
 ) {
     companion object {
 
@@ -31,6 +34,7 @@ class GameManager private constructor(
             gameManagerUUID: UUID,
             territoryManager: TerritoryManager,
             networkClient: INetworkClient,
+            dice: IDiceVisual,
             players: HashMap<UUID, PlayerRecord>
         ) {
             if (this.singleton == null) {
@@ -39,6 +43,7 @@ class GameManager private constructor(
                     gameManagerUUID,
                     territoryManager,
                     networkClient,
+                    dice,
                     players,
                     me.id,
                     Phases.Reinforce
@@ -74,6 +79,50 @@ class GameManager private constructor(
     fun getCurrentPlayer(): PlayerRecord {
         return this.players[this.currentPlayerUUID]
             ?: throw IllegalArgumentException("Current Player not found in player list")
+    }
+
+    private var diceRolls: ArrayList<Int> = ArrayList()
+    private var diceSeriesActive: Boolean = false
+    private var diceSeriesMax: Int = 0
+    private var diceSeriesCallback: (List<Int>) -> Unit = {}
+
+    fun requestDiceRolls(count: Int, callback: (List<Int>) -> Unit) {
+        diceRolls = ArrayList()
+        diceSeriesActive = true
+        diceSeriesMax = count
+        diceSeriesCallback = callback
+
+        // Perform initial dice throw immediately.
+        // Other alerts should already have been dismissed previously.
+        performDiceThrow()
+    }
+
+    private fun logDiceThrow(result: Int) {
+        if(diceSeriesActive && diceRolls.size < diceSeriesMax) {
+            diceRolls.add(result)
+            if(diceRolls.size == diceSeriesMax) {
+                diceSeriesCallback(diceRolls)
+                diceSeriesActive = false
+            }
+            else {
+                performDiceThrow()
+            }
+        }
+    }
+
+    private fun performDiceThrow() {
+        dice.hwInteraction { result -> logDiceThrow(result) }
+    }
+
+    var enemyDiceRollCallback: (List<Int>) -> Unit = {}
+    fun requestOpponentDiceThrow(callback: (List<Int>) -> Unit) {
+        Log.i("GameManager", "enemyDiceRollCallback set")
+        enemyDiceRollCallback = callback
+    }
+
+    fun setReceivedDiceStatus(results: List<Int>) {
+        Log.i("GameManager", "enemyDiceRollCallback called")
+        enemyDiceRollCallback(results)
     }
 
     fun setCurrentlyCheating(amICheating: Boolean) {

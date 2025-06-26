@@ -6,6 +6,7 @@ import com.se2gruppe5.risikofrontend.game.dataclasses.util.Point2D
 import com.se2gruppe5.risikofrontend.game.dataclasses.util.Size2D
 import com.se2gruppe5.risikofrontend.game.dataclasses.util.Transform2D
 import com.se2gruppe5.risikofrontend.game.dialogues.DialogueHandler
+import com.se2gruppe5.risikofrontend.game.dice.IDiceVisual
 import com.se2gruppe5.risikofrontend.game.enums.Continent
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
@@ -49,6 +50,7 @@ class TerritoryManagerTestUnitTest {
     private lateinit var record3: TerritoryRecord
     private lateinit var t1: ITerritoryVisual
     private lateinit var t2: ITerritoryVisual
+    private lateinit var dice: IDiceVisual
     private lateinit var toastUtil: IToastUtil
     private lateinit var mockClient: INetworkClient
 
@@ -81,6 +83,7 @@ class TerritoryManagerTestUnitTest {
             on { changeStat(any()) } doAnswer  { record3.stat = it.getArgument(0) }
             on { changeOwner(any())} doAnswer {record3.owner = it.getArgument(0)}
         }
+        dice = mock()
 
         mockClient = mock()
         val playerList: HashMap<UUID, PlayerRecord> = HashMap()
@@ -88,7 +91,7 @@ class TerritoryManagerTestUnitTest {
         playerList[mePlayerRecord.id] = mePlayerRecord
         playerList[newOwner.id] = newOwner
         GameManager.reset()
-        GameManager.init(mePlayerRecord,UUID.randomUUID(),manager, mockClient, playerList)
+        GameManager.init(mePlayerRecord,UUID.randomUUID(),manager, mockClient, dice, playerList)
     }
     @Test
     fun territoryListGetterTest(){
