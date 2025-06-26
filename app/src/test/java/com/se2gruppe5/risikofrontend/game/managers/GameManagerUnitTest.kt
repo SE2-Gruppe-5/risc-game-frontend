@@ -8,6 +8,7 @@ import com.se2gruppe5.risikofrontend.game.dataclasses.game.TerritoryRecord
 import com.se2gruppe5.risikofrontend.game.dataclasses.util.Point2D
 import com.se2gruppe5.risikofrontend.game.dataclasses.util.Size2D
 import com.se2gruppe5.risikofrontend.game.dataclasses.util.Transform2D
+import com.se2gruppe5.risikofrontend.game.dice.IDiceVisual
 import com.se2gruppe5.risikofrontend.game.enums.Continent
 import com.se2gruppe5.risikofrontend.game.enums.Phases
 import com.se2gruppe5.risikofrontend.game.territory.ITerritoryVisual
@@ -44,6 +45,7 @@ class GameManagerUnitTest {
     private lateinit var turnIndicators: List<TextView>
     private lateinit var gameManager: GameManager
     private lateinit var territoryManagerMock: TerritoryManager
+    private lateinit var dice: IDiceVisual
     private lateinit var gameUUID: UUID
 
     @Before
@@ -69,7 +71,8 @@ class GameManagerUnitTest {
         //Initialize singletons
         territoryManagerMock = mock()
         gameUUID = UUID.randomUUID()
-        GameManager.init(me, gameUUID, territoryManagerMock, networkClient, players)
+        dice = mock()
+        GameManager.init(me, gameUUID, territoryManagerMock, networkClient, dice, players)
         gameManager = spy(GameManager.get())
     }
 
@@ -90,7 +93,7 @@ class GameManagerUnitTest {
     fun testInitSingletonTwiceDoesntWork() {
         assertNotNull(gameManager)
         val other = PlayerRecord(UUID.randomUUID(), "a", 0xFFFFFF)
-        GameManager.init(other, gameUUID, territoryManagerMock, networkClient, players)
+        GameManager.init(other, gameUUID, territoryManagerMock, networkClient, dice, players)
         assertEquals(me, gameManager.whoAmI())
 
     }
@@ -100,7 +103,7 @@ class GameManagerUnitTest {
         GameManager.reset()
         val newPlayers: HashMap<UUID, PlayerRecord> =
             mutableMapOf<UUID, PlayerRecord>() as HashMap<UUID, PlayerRecord>
-        GameManager.init(me, gameUUID, territoryManagerMock, networkClient, newPlayers)
+        GameManager.init(me, gameUUID, territoryManagerMock, networkClient, dice, newPlayers)
         GameManager.get().getCurrentPlayer()
 
     }
